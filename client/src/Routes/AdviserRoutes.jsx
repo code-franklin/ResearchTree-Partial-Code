@@ -7,7 +7,8 @@ import Grading from '../Dashboards/AdviserDashboard/MyAdvisee/Grading'
 import MyAdvisee from '../Dashboards/AdviserDashboard/MyAdvisee/Tables'
 import Publishing from '../Dashboards/AdviserDashboard/Publishing/Tables'
 import ExploreManuscript from '../Dashboards/AdviserDashboard/ExploreManuscript/ArticleList'
-import ViewAnalytics from '../Dashboards/AdviserDashboard/ViewAnalytics/Chart'
+import ViewAnalytics from '../Dashboards/AdviserDashboard/AdviserAnalytics/Chart'
+import PanelistAnalytics from '../Dashboards/AdviserDashboard/PanelistAnalytics/PanelistMain'
 import UnauthorizedAccess from './UnauthorizedAccess'; // Import the UnauthorizedAccess component
 
 import Sidebar from '../Dashboards/AdviserDashboard/Sidebar/sidebar'
@@ -38,7 +39,7 @@ function AdviserRoutes() {
                 <Route path="AdviserDashboard/ViewAnalytics" element={<ViewAnalytics/>} />
 
 
-                <Route path="AdviserDashboard/ViewAnalytics" element={<ViewAnalytics/>} />
+                <Route path="AdviserDashboard/PanelistAnalytics" element={<PanelistAnalytics/>} />
               </Routes>
           
     </>

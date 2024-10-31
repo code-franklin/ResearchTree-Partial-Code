@@ -19,6 +19,8 @@ const Sidebar = ({ onSelect }) => {
     <div className="sidebar z-1 h-screen w-[313px] bg-[#1E1E1E] text-white flex flex-col fixed">
       <div>
         <img src="/src/assets/rstreelogo.png" alt="Logo" />
+        <img className="absolute mt-[210px] ml-[20px]" src="/src/assets/adviser-side.png" alt="Logo" />
+        <img className="absolute mt-[480px] ml-[20px]" src="/src/assets/panelist-side.png" alt="Logo" />
       </div>
 
       <div className="flex ml-[9px] ">
@@ -29,7 +31,9 @@ const Sidebar = ({ onSelect }) => {
         </div>
       </div>
 
-      <div className="mr-5 mt-[30px] space-y-2 text-[20px]">
+     
+
+      <div className="mr-5 mt-[60px] space-y-2 text-[15px] ml-[12px]">
         {/* My Advisee */}
         <Link
           to="AdviserDashboard/MyAdvisee"
@@ -44,19 +48,7 @@ const Sidebar = ({ onSelect }) => {
           My Advisee
         </Link>
 
-        {/* Panelist Group */}
-        <Link
-          to="AdviserDashboard/Publishing"
-          className={`exploreManuscript mx-10 px-2 ${
-            activeLink === '/AdviserDashboard/Publishing'
-              ? 'font-semibold ml-[4rem] bg-gradient-to-r from-[#0BF677] to-[#079774]'
-              : 'hover:font-medium hover:ml-[4rem] text-white'
-          }`}
-          onClick={() => handleLinkClick('/AdviserDashboard/Publishing')}
-        >
-          <img className="inline-block mr-2 mb-1" src="/src/assets/my-manuscript.png" alt="Panelist Group" />
-          Panelist Side 
-        </Link>
+      
 
         {/* Explore Manuscript */}
         <Link
@@ -113,7 +105,38 @@ const Sidebar = ({ onSelect }) => {
           <img className="inline-block mr-2 mb-1" src="/src/assets/revision-icon.png" alt="Grading" />
           Grading
         </Link>
+
+         
+          
       </div>
+       {/* Panelist Mode */}
+       <div className='mt-[125px]  ml-[12px]'>
+          <Link
+          to="AdviserDashboard/Publishing"
+          className={`exploreManuscript mx-10 px-2 ${
+            activeLink === '/AdviserDashboard/Publishing'
+              ? 'font-semibold ml-[4rem] bg-gradient-to-r from-[#0BF677] to-[#079774]'
+              : 'hover:font-medium hover:ml-[4rem] text-white'
+          }`}
+          onClick={() => handleLinkClick('/AdviserDashboard/Publishing')}
+        >
+          <img className="inline-block mr-2 mb-1" src="/src/assets/my-manuscript.png" alt="Panelist Group" />
+          My Defendee
+        </Link>
+
+        <Link
+          to="AdviserDashboard/PanelistAnalytics"
+          className={`exploreManuscript mx-10 px-2 ${
+            activeLink === '/AdviserDashboard/PanelistAnalytics'
+              ? 'font-semibold ml-[4rem] bg-gradient-to-r from-[#0BF677] to-[#079774]'
+              : 'hover:font-medium hover:ml-[4rem] text-white'
+          }`}
+          onClick={() => handleLinkClick('/AdviserDashboard/PanelistAnalytics')}
+        >
+         <img className="inline-block mr-3 mb-1" src="/src/assets/User.png" alt="View Analytics" />
+          View Analytics
+        </Link>
+          </div>
     </div>
   );
 };

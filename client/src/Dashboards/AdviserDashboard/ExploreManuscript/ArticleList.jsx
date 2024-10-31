@@ -126,11 +126,11 @@ const ArticleList = () => {
   
       <header className="header justify-between items-center fixed">
        
-        <div className="items-center space-x-2 mr-[20px] mt-[25px] ">
+        <div className="items-center space-x-2 mr-[100px] mt-[25px] ">
         
       
       <div className="ml-[600px]">
-      <h1 className="text-[38px] font-bold mt-[20px] ml-2 ">Manuscript</h1>
+      <h1 className="text-[38px] font-bold mt-[20px] ml-[0px] ">Manuscript</h1>
      <br></br>
       <CategoryComponent />
     
@@ -142,6 +142,7 @@ const ArticleList = () => {
               colorBgBase: '#222222',
               colorTextBase: 'white',
               zIndex: 1,
+              
             }}}>
         <SearchBar />
      </ConfigProvider> 

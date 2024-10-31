@@ -1,0 +1,79 @@
+
+.Tooltop {
+    display: flex;
+}
+.year-container {
+    position: absolute;
+    display: flex;
+    bottom: 178px;
+    left: 1174px;
+    width: 14%;
+}
+
+.cards-container {
+    display: flex;
+    gap: 17px;
+    position: absolute;
+    top:160px;
+    left: 350px;
+    color: white;
+}
+
+.card {
+    background-color: #1E1E1E;
+    padding: 20px;
+    border-radius: 8px;
+    border: solid #4B4B4B 1px;
+    width: 319px;
+    height: 110px;
+    margin-left: 20px;
+}
+
+.card-icon-1 {
+    position: absolute;
+    left: 275px;
+    bottom: 62px;
+    
+}
+.card-icon-2 {
+    position: absolute;
+    left: 575px;
+    bottom: 56px;
+    
+}
+.card-icon-3 {
+    position: absolute;
+    left: 896px;
+    bottom: 56px;
+
+}
+.card-title {
+    color: #08F677;
+    font-size: 14px;
+    display: flex;
+}
+
+.card-value-1 {
+    font-size: 22px;
+    margin-top: 14px;
+    display: flex;
+    margin-left: 37px ;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.card-value-2 {
+    font-size: 25px;
+    margin-top: 10px;
+    display: flex;
+    margin-left: 100px ;
+    font-weight: 700;
+}
+
+.card-value-3 {
+    font-size: 25px;
+    margin-top: 10px;
+    display: flex;
+    margin-left: 100px;
+    font-weight: 700;
+}

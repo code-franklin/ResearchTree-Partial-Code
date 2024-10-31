@@ -57,14 +57,14 @@
     height: 30px;
     gap: 5px;
     padding: 0px, 17px, 0px, 17px;
-    border-radius: 5px;
+   
 }
 
 .exploreManuscript:focus {
     height: 30px;
     gap: 5px;
     padding: 0px, 17px, 0px, 17px;
-    border-radius: 5px;
+   
 }
 
 .revision:hover {

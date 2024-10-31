@@ -71,18 +71,19 @@ const App = () => (
         algorithm: true,
 
         
+        
       }
     },
   }}
 >
   <AutoComplete
-    
+   
     type="primary"
     popupClassName="certain-category-search-dropdown"
-    popupMatchSelectWidth={980}
+    popupMatchSelectWidth={1080}
    
     style={{
-      width: 1003,
+      width: 1080, 
       
     }}
     options={options}
@@ -90,7 +91,7 @@ const App = () => (
     
   >
    
-    <Input size="large" type="primary" placeholder="Search"  className="pl-10 ml-[-12px]"/>
+    <Input size="large" type="primary" placeholder="Search"  className="pl-10 ml-[0px]"/>
   
   </AutoComplete>
   </ConfigProvider>

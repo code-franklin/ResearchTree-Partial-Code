@@ -11,31 +11,38 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
 import './Sidebar.css';
 
 export default function AccountMenu() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
-  // Define handleLogout function
-  const handleLogout = () => {
-    // Logic for handling logout can go here
-    console.log('Logging out...');
-    // Redirect to login page, clear tokens, etc.
-  };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/'; // Update the path based on your routing setup
+  };
+
 
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <Tooltip title="Account settings">
-          <IconButton 
+          <IconButton
             onClick={handleClick}
             size="small"
             sx={{ ml: 5 }}
@@ -43,7 +50,11 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar src="/src/assets/cris.png" sx={{ width: 79, height: 79 }}> </Avatar>
+            {user && user.profileImage ? (
+              <Avatar src={`http://localhost:5000/public/uploads/${user.profileImage}`} sx={{ width: 79, height: 79 }} />
+            ) : (
+              <Avatar sx={{ width: 79, height: 79 }} /> // Fallback Avatar if no user or no profile image
+            )}
           </IconButton>
         </Tooltip>
       </Box>
@@ -79,7 +90,7 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem >
           <Avatar sx={{ bgcolor: '#444' }} /> Profile
         </MenuItem>
         <MenuItem onClick={handleClose}>
@@ -98,11 +109,11 @@ export default function AccountMenu() {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem onClick={handleLogout}> {/* Use handleLogout for onClick */}
-          <ListItemIcon>
-            <Logout fontSize="small" sx={{ color: 'red' }} /> {/* Set icon color to red */}
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon onClick={handleLogout}>
+            <Logout onClick={handleLogout} fontSize="small" sx={{ color: 'red' }} /> {/* Set icon color to red */}
           </ListItemIcon>
-          <span style={{ color: 'red' }}>Logout</span> {/* Set text color to red */}
+          <span onClick={handleLogout} style={{ color: 'red' }}>Logout</span> {/* Set text color to red */}
         </MenuItem>
       </Menu>
     </React.Fragment>

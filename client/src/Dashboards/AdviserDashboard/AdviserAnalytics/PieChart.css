@@ -1,0 +1,16 @@
+/* Piechart.css */
+
+.highcharts-container {
+ background-color: rgb(79, 78, 78);
+ position: absolute;
+ 
+ 
+width: 22%;
+height: 0%;
+top: 290px;
+ border-radius: 5px;
+
+  
+
+}
+

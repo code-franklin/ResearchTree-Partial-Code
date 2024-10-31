@@ -133,7 +133,7 @@ const LoginFunction = () => {
 
         {/* Role Selection */}
         <Form.Item >
-          <Select style={{width: '180px', marginTop: '100px'}} value={formData.role} onChange={handleRoleChange}>
+          <Select name="role" style={{position:'absolute', width: '100px', marginTop: '46px'}} value={formData.role} onChange={handleRoleChange}>
             <Option value="student">Student</Option>
             <Option value="adviser">Adviser</Option>
           </Select>
@@ -142,22 +142,51 @@ const LoginFunction = () => {
         {/* Conditional Fields */}
         {formData.role === 'student' ? (
           <>
-           <Input className="GroupMembers" placeholder="Group Members (comma separated)" onChange={handleChange} />
-            <Course />
-            <Year />
+           <Input 
+            prefix={<LockOutlined />} 
+            name="Group Members" 
+            className="GroupMembers absolute mt-[-60px]" 
+            placeholder="Group Members (comma separated)" 
+            onChange={handleChange} />
+
+           <div name="Course"className='absolute ml-[110px] mt-[10px]'> <Course /> </div> 
+           <div name="Year" className='absolute ml-[230px] mt-[-15px]'> <Year /> </div> 
+            
            
           </>
         ) : (
           <>
-            <Input placeholder="Adviser Handle Number" name="handleNumber" onChange={handleChange} />
-            <Form.Item label="Specialization">
-              <Select
-                mode="multiple"
-                placeholder="Select Specializations"
-                options={specializationsOptions}
-                onChange={handleSpecializationChange}
+            <Input 
+            prefix={<LockOutlined />}
+            name="Handle"
+            style={{
+              position: 'absolute', 
+              marginLeft:'110px', 
+              marginTop: '7px', 
+              width: '80px'
+                  
+             }} 
+            placeholder="Handle"  
+            onChange={handleChange} 
+            />
+           
+            <Input
+            prefix={<LockOutlined />}
+            name="Specializations"
+            style={{
+              position: 'absolute', 
+              marginTop: '-60px', 
+              width:'364px', 
+              height:'52px',
+              borderRadius: '20px',
+              background: '#F0EDFFCC', 
+            }}
+            mode="multiple"
+            placeholder="Select Specializations"
+            options={specializationsOptions}
+            onChange={handleSpecializationChange}
               />
-            </Form.Item>
+            
           </>
         )}
 
@@ -165,14 +194,18 @@ const LoginFunction = () => {
         style= {{
           width: '124px', 
           height: '52px', 
-          marginLeft: '-500px', 
-      
+          marginLeft: '110px',
+          marginTop: '70px', 
+          background: '#0BF677',
+          borderRadius: '15px',
+          
           }} 
           
-         color='primary'
+         
         
        >
-          Register
+        <span className='text-white font-bold'>Register</span>
+          
         </Button>
       </Form>
       {message && <Alert message={message} type="info" />}

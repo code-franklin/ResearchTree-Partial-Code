@@ -1,0 +1,76 @@
+import React from 'react';
+import { Space, Table, Tag, Avatar } from 'antd';
+const { Column, ColumnGroup } = Table;
+
+const data = [
+  {
+    key: '1',
+    firstName: 'John',
+    tags: ['nice', 'developer'],
+  },
+  {
+    key: '2',
+    firstName: 'Jim',
+    tags: ['loser'],
+  },
+  {
+    key: '3',
+    firstName: 'Joe',
+    tags: ['cool', 'teacher'],
+  },
+];
+
+const App = () => (
+  <Table
+    dataSource={data}
+    style={{ position: 'absolute', top: '100px', width: '70%', marginLeft: '420px' }}
+  >
+    <ColumnGroup>
+      <Column
+        title="Name of Students"
+        key="name"
+        render={(text, record) => (
+          <Space size="middle">
+            <Avatar>{record.firstName.charAt(0)}</Avatar>
+            <span>{record.firstName}</span>
+          </Space>
+        )}
+      />
+    </ColumnGroup>
+
+    <Column
+      title="Status"
+      dataIndex="tags"
+      key="tags"
+      render={(tags) => (
+        <>
+          {tags.map((tag) => {
+            let color = tag.length > 5 ? 'geekblue' : 'green';
+            if (tag === 'loser') {
+              color = 'volcano';
+            }
+            return (
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      )}
+    />
+
+    <Column
+      title="Action"
+      key="action"
+      render={(_, record) => (
+        <Space size="middle">
+          <a>Accept</a>
+          <a>Review Title</a>
+          <a>Decline</a>
+        </Space>
+      )}
+    />
+  </Table>
+);
+
+export default App;
