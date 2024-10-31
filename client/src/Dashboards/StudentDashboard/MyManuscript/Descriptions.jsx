@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CkEditorDocuments from '../../../CKeditorDocuments'
 import './Styles/descriptions.css';
-<<<<<<< Updated upstream
 import Progresss from './Progress'
 import Categories from './Categories'
 import { SyncOutlined } from '@ant-design/icons';
@@ -9,8 +8,6 @@ import { Tooltip } from '@mui/material';
 
 
 
-=======
->>>>>>> Stashed changes
 
 const ResearchCard = () => {
   const [advisorInfo, setAdvisorInfo] = useState(null);
@@ -137,7 +134,6 @@ const ResearchCard = () => {
 {/* details for student */}
         {advisorStatus === 'accepted' && (
           <div>
-<<<<<<< Updated upstream
             <div className='fixed mt-[200px] ml-[1050px]'><Progresss/></div>
         <button 
                 type="button" 
@@ -158,8 +154,6 @@ const ResearchCard = () => {
                 <Tooltip title="Edit Title"><img src="/src/assets/edit-title-icon.png"/></Tooltip>
         </button>
             
-=======
->>>>>>> Stashed changes
             <h1 className="text-2xl font-bold mb-2">
               {isEditingProposalTitle ? (
                 <input
@@ -173,12 +167,8 @@ const ResearchCard = () => {
                 proposal?.proposalTitle
               )}
             </h1>
-<<<<<<< Updated upstream
     
 
-=======
-            <button onClick={handleEditProposalTitle}>Edit</button>
->>>>>>> Stashed changes
             <p className="text-gray-500 font-bold mb-4">
               {user.groupMembers
                 .map(member => member.replace(/([a-z])([A-Z])/g, '$1 $2')) // Insert space between lowercase and uppercase letters
@@ -232,13 +222,8 @@ const ResearchCard = () => {
 {/* <p><strong>Text:</strong> {proposal?.proposalText}</p>  */}
         {/* Advisor */}
         <p className="text-gray-400 mb-2">
-<<<<<<< Updated upstream
           <span className="font-bold text-white ">Advisor: <span className='font-normal'>{getStatusMessage(advisorStatus, advisorInfo)}</span> </span>
           <span>{advisorStatus === 'accepted' && <PanelistList panelists={panelists} />}</span>
-=======
-          <span className="font-bold text-white">Advisor: {getStatusMessage(advisorStatus, advisorInfo)}</span>
-          {advisorStatus === 'accepted' && <PanelistList panelists={panelists} />}
->>>>>>> Stashed changes
         </p>
 
 {/* Panelist */}
@@ -249,7 +234,6 @@ const ResearchCard = () => {
         )}
         
         <div className="text-gray-400 mb-4">
-<<<<<<< Updated upstream
         <span>
           <span className="font-bold text-white">Date of Uploaded:</span> 
           <span className="mr-10">{proposal?.submittedAt && new Date(proposal?.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
@@ -279,29 +263,6 @@ const ResearchCard = () => {
                 <CkEditorDocuments 
                 width={800}
                 userId={user._id} channelId={user.channelId}/> 
-=======
-        <span><span className="font-bold text-white">Date of Uploaded:</span> <span className="mr-5">{proposal?.submittedAt && new Date(proposal?.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span></span>
-          <span><span className="font-bold text-white">Date of Published: </span><span>Pending to Publish</span></span>
-          {/* <br />
-          {user.channelId} */}
-        </div>
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="mb-2 mt-4">Type of Research</h1>
-            <span className="bg-purple-500 text-white px-2 py-1 mr-2">Machine Learning</span>
-            <span className="bg-yellow-500 text-white px-2 py-1">Web and Mobile</span>
-          </div>
-          
-          <div className="flex items-center">
-            <a onClick={() => setIsEditorOpen(true)} className="rounded-full text-center text-white mr-4 cursor-pointer w-[120px] h-[37px] border 1px solid #6A6A6A " >
-            <span className='absolute bottom-[67px] ml-[-20px]'>Open</span></a>
-            {isEditorOpen && (
-            <div className="w-[50rem] -mt-9 ">
-
-             <CkEditorDocuments 
-             width={800}
-             userId={user._id} channelId={user.channelId}/> 
->>>>>>> Stashed changes
             </div>
 
             )}
