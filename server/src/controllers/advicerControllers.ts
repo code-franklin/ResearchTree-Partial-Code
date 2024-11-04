@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import Specialization from '../models/Specialization';
+import Grade, { IGrade } from '../models/Grade';
 import { ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
 dotenv.config(); // This loads the variables from your .env file
@@ -194,16 +195,13 @@ export const getAdviserStudents = async (req: Request, res: Response) => {
   const { advisorId } = req.params;
 
   try {
-    // Fetch only students with the chosen advisor and their respective statuses
+    // Fetch accepted students
     const acceptedStudents = await User.find(
-      { chosenAdvisor: advisorId, advisorStatus: 'accepted', role: 'student' }, // Ensure only students
+      { chosenAdvisor: advisorId, advisorStatus: 'accepted', role: 'student' },
       'name groupMembers channelId panelists course profileImage manuscriptStatus proposals tasks'
     ).lean();
 
-    const declinedStudents = await User.find({ chosenAdvisor: advisorId, advisorStatus: 'declined', role: 'student' });
-    const studentsToManage = await User.find({ chosenAdvisor: advisorId, advisorStatus: 'pending', role: 'student' });
-
-    // Fetch names of panelists for each student
+    // Map accepted students to include the latest proposal
     const studentData = await Promise.all(
       acceptedStudents.map(async (student) => {
         // Fetch panelist names
@@ -217,48 +215,183 @@ export const getAdviserStudents = async (req: Request, res: Response) => {
           name: student.name,
           groupMembers: student.groupMembers,
           channelId: student.channelId,
-          panelists: panelistNameList, // Return panelist names instead of IDs
+          panelists: panelistNameList,
           course: student.course,
           profileImage: student.profileImage,
           manuscriptStatus: student.manuscriptStatus,
           chosenAdvisor: student.chosenAdvisor,
           proposalTitle: latestProposal ? latestProposal.proposalTitle : 'No proposal submitted',
+          proposalText: latestProposal ? latestProposal.proposalText : 'No proposal submitted',
           submittedAt: latestProposal ? latestProposal.submittedAt : null,
         };
       })
     );
 
-    res.status(200).json({ acceptedStudents: studentData, declinedStudents, studentsToManage });
+    // Fetch declined students with their proposals
+    const declinedStudents = await User.find(
+      { chosenAdvisor: advisorId, advisorStatus: 'declined', role: 'student' },
+      'name proposals profileImage'
+    ).lean();
+
+    // Map declined students to include the latest proposal
+    const declinedStudentData = declinedStudents.map((student) => {
+      const latestProposal = student.proposals.length > 0 ? student.proposals[student.proposals.length - 1] : null;
+      return {
+        _id: student._id,
+        name: student.name,
+        profileImage: student.profileImage,
+        proposalTitle: latestProposal ? latestProposal.proposalTitle : 'No proposal submitted',
+        proposalText: latestProposal ? latestProposal.proposalText : 'No proposal submitted',
+      };
+    });
+
+    // Fetch pending students with their proposals
+    const studentsToManage = await User.find(
+      { chosenAdvisor: advisorId, advisorStatus: 'pending', role: 'student' },
+      'name proposals profileImage'
+    ).lean();
+
+    // Map pending students to include the latest proposal
+    const pendingStudentData = await Promise.all(
+      studentsToManage.map(async (student) => {
+        const latestProposal = student.proposals.length > 0 ? student.proposals[student.proposals.length - 1] : null;
+        return {
+          _id: student._id,
+          name: student.name,
+          profileImage: student.profileImage,
+          proposalTitle: latestProposal ? latestProposal.proposalTitle : 'No proposal submitted',
+          proposalText: latestProposal ? latestProposal.proposalText : 'No proposal submitted',
+        };
+      })
+    );
+
+    // Send the response back to the client
+    res.json({
+      acceptedStudents: studentData,
+      declinedStudents: declinedStudentData,
+      pendingStudents: pendingStudentData,
+    });
   } catch (error) {
-    console.error('Error fetching students:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error fetching students:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-// Add Task API - POST /api/advicer/add-task/:studentId
-export const addTaskMyAdvicee = async (req: Request, res: Response) => {
+
+// Add a task for a student
+export const postAddTaskMyAdvicee = async (req: Request, res: Response) => {
   const { studentId } = req.params;
   const { taskTitle } = req.body;
 
   try {
+    // Find the student by ID
     const student = await User.findById(studentId);
+    
+    if (!student || student.role !== 'student') {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    // Add the new task to the student's tasks array
+    student.tasks.push({ taskTitle, isCompleted: false });
+    
+    // Save the updated student
+    await student.save();
+
+    res.status(200).json({ message: 'Task added successfully', tasks: student.tasks });
+  } catch (error) {
+    console.error('Error adding task:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const getTasksMyAdvicee = async (req: Request, res: Response) => {
+  const { studentId } = req.params;
+
+  try {
+    // Log studentId for debugging
+    console.log(`Fetching tasks for studentId: ${studentId}`);
+
+    // Find the student by ID
+    const student = await User.findById(studentId).select('tasks role');
+
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found in the database' });
+    }
+
+    if (student.role !== 'student') {
+      return res.status(403).json({ message: 'User is not a student' });
+    }
+
+    // Send the tasks as the response
+    res.status(200).json({ tasks: student.tasks });
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const getTasksProgressStudent = async (req: Request, res: Response) => {
+  const { studentId } = req.params;
+
+  try {
+    // Find the student by ID and select tasks and role fields
+    const student = await User.findById(studentId).select('tasks role');
+
+    // Check if student exists and has the role of 'student'
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found in the database' });
+    }
+
+    if (student.role !== 'student') {
+      return res.status(403).json({ message: 'User is not a student' });
+    }
+
+    // Calculate task completion progress
+    const totalTasks = student.tasks.length;
+    const completedTasks = student.tasks.filter(task => task.isCompleted).length;
+
+    const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+    // Send the progress percentage as the response
+    res.status(200).json({ progress });
+  } catch (error) {
+    console.error('Error fetching task progress:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+
+export const deleteTaskFromStudent = async (req: Request, res: Response) => {
+  const { studentId, taskId } = req.params;
+
+  try {
+    // Find the student by ID
+    const student = await User.findById(studentId);
+
+    // Check if student exists
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
 
-    // Add the new task
-    student.tasks.push({
-      taskTitle, isCompleted: false,
-      _id: new ObjectId
-    });
+    // Find the task by `taskId`
+    const taskIndex = student.tasks.findIndex((task) => task._id.toString() === taskId);
+    if (taskIndex === -1) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+
+    // Remove the task
+    student.tasks.splice(taskIndex, 1);
     await student.save();
 
-    res.status(200).json({ message: 'Task added successfully' });
+    res.status(200).json({ message: 'Task deleted successfully' });
   } catch (error) {
-    console.error('Error adding task:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error('Error deleting task:', error);
+    res.status(500).json({ message: 'Failed to delete task' });
   }
 };
+
 
 
 
@@ -338,6 +471,68 @@ export const updateManuscriptStatus = async (req: Request, res: Response) => {
   }
 };
 
+export const updatePanelManuscriptStatus = async (req: Request, res: Response) => {
+  const { channelId, manuscriptStatus, userId } = req.body;
+
+  try {
+    const student = await User.findById(channelId);
+
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    let remainingVotes;
+
+    if (manuscriptStatus === 'reviseOnPanelist') {
+      // Check if user has already voted in panelistVotes
+      if (student.panelistVotes.includes(userId)) {
+        return res.status(400).json({ message: 'You have already voted for revise on panelist' });
+      }
+
+      // Add userId to panelistVotes and calculate remaining votes
+      student.panelistVotes.push(userId);
+      remainingVotes = 3 - student.panelistVotes.length;
+
+      // Update status if 3 unique panelists have voted for 'reviseOnPanelist'
+      if (student.panelistVotes.length === 3) {
+        student.manuscriptStatus = 'reviseOnPanelist';
+      }
+
+    } else if (manuscriptStatus === 'approvedOnPanel') {
+      // Check if user has already voted in publishingVotes
+      if (student.publishingVotes.includes(userId)) {
+        return res.status(400).json({ message: 'You have already voted for approval on panel' });
+      }
+
+      // Add userId to publishingVotes and calculate remaining votes
+      student.publishingVotes.push(userId);
+      remainingVotes = 4 - student.publishingVotes.length;
+
+      // Update status if 4 unique panelists have voted for 'approvedOnPanel'
+      if (student.publishingVotes.length === 4) {
+        student.manuscriptStatus = 'approvedOnPanel';
+      }
+
+    } else {
+      // Directly update manuscript status for non-voting actions
+      student.manuscriptStatus = manuscriptStatus;
+    }
+
+    await student.save();
+
+    res.status(200).json({
+      message: 'Manuscript status updated successfully',
+      student,
+      remainingVotes,
+    });
+
+  } catch (error) {
+    console.error('Error updating manuscript status:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 /* accepted opr declined the student */
 
 export const respondToStudent = async (req: Request, res: Response) => {
@@ -360,5 +555,26 @@ export const respondToStudent = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error responding to student:', error);
     res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+// Function to grade a student
+export const gradePanelToStudent = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { studentId, panelistId, gradingRubric } = req.body;
+
+    // Create new grade entry in the database
+    const grade: IGrade = new Grade({
+      studentId,
+      panelistId,
+      rubric: gradingRubric,
+      dateGraded: new Date(),
+    });
+
+    await grade.save();
+    res.status(200).json({ message: 'Grading submitted successfully' });
+  } catch (error) {
+    console.error('Error grading student:', error);
+    res.status(500).json({ message: 'Failed to submit grading' });
   }
 };

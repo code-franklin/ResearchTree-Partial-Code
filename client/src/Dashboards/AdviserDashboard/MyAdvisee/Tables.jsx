@@ -9,12 +9,12 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import TextHeader from './TextHeader'
 
-
 import CkEditorDocuments from './CkEditorDocuments';
 
 import ListManuscriptStudent from './ListManuscript'
 import OngoingReviseAdviser from './ReviseAdviser';
 import OnPanelist from './OnPanelist'
+import Monitoring from './Monitoring'
 
 
 
@@ -217,6 +217,10 @@ const ListManuscript = () => {
 
       <CustomTabPanel value={value} index={2}>
         <OnPanelist/>
+      </CustomTabPanel>
+
+      <CustomTabPanel value={value} index={3}>
+        <Monitoring/>
       </CustomTabPanel>
 
     </Box>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { List, Typography, Button, message, Modal, Input, Checkbox, ConfigProvider, Select } from "antd";
-import { EditOutlined, CheckOutlined, LoadingOutlined, DeleteOutlined } from "@ant-design/icons";
+import { List, Typography, Button, message, Modal, Input, Checkbox, ConfigProvider, Select, Progress } from "antd";
+import { EditOutlined, CheckOutlined, LoadingOutlined, DeleteOutlined, PlusOutlined, BookOutlined, StarOutlined   } from "@ant-design/icons";
 import CkEditorDocuments from './CkEditorDocuments';
 import axios from "axios";
 
@@ -23,7 +23,19 @@ export default function NewTables() {
   const [taskInput, setTaskInput] = useState("");
   const [tasks, setTasks] = useState([]); // To store tasks
 
+  const [progress, setProgress] = useState(0);
+
   
+  const panelistId = localStorage.getItem('panelistId');  // Example: retrieve panelist ID from localStorage
+
+    // Grading modal states
+    const [isGradingModalVisible, setIsGradingModalVisible] = useState(false);
+    const [gradingRubric, setGradingRubric] = useState({
+      criteria1: 0,
+      criteria2: 0,
+      criteria3: 0,
+    });
+    const [gradingData, setGradingData] = useState([]);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -79,23 +91,63 @@ export default function NewTables() {
         body: JSON.stringify({ taskTitle }),
       });
       if (response.ok) {
-        setTasks([...tasks, { title: taskTitle, completed: false }]); // Add new task
-        setTaskInput(""); // Clear task input
-        fetchStudents(); // Refresh the list after adding a task
+        setTasks((prevTasks) => [...prevTasks, { title: taskTitle, completed: false }]);
+        setTaskInput(""); // Clear the input field
+        fetchTasks(studentId); // Fetch tasks again to immediately update the task list in the modal
       }
     } catch (error) {
       console.error('Error adding task:', error);
     }
   };
 
-  const updateManuscriptStatus = async (channelId, newStatus) => {
+  const fetchTaskProgress = async (studentId) => {
+    if (!studentId) {
+      console.log("No selectedStudentId found."); // Debug statement
+      return;
+    }
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/advicer/tasks/progress/${studentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+  
+      if (response.ok) {
+        const { progress: studentProgress } = await response.json();
+        setProgress((prevProgress) => ({
+          ...prevProgress,
+          [studentId]: studentProgress >= 0 && studentProgress <= 100 ? studentProgress : 0
+        }));
+      } else {
+        console.error("Error fetching progress.");
+      }
+    } catch (error) {
+      console.error("Error fetching task progress:", error);
+    }
+  };
+    // Debug: Check the progress value in the component
+    useEffect(() => {
+      filteredStudents.forEach((student) => {
+        fetchTaskProgress(student._id);
+      });
+    }, [filteredStudents]);
+
+  const updateManuscriptStatus2 = async (channelId, newStatus, panelistId) => {
     try {
       const response = await axios.patch(
-        'http://localhost:5000/api/advicer/thesis/manuscript-status',
-        { channelId, manuscriptStatus: newStatus }  // Send student ID and new status
+        'http://localhost:5000/api/advicer/thesis/panel/manuscript-status',
+        { channelId, manuscriptStatus: newStatus, panelistId }  // Send panelist ID with the request
       );
-
-      message.success('Manuscript status updated');
+  
+      if (newStatus === 'reviseOnPanelist' && response.data.remainingVotes > 0) {
+        message.info(`Vote recorded. ${response.data.remainingVotes} votes remaining`);
+      } else {
+        message.success('Manuscript status updated');
+      }
+  
     } catch (error) {
       if (error.response) {
         console.error('Error response:', error.response.data);
@@ -106,7 +158,78 @@ export default function NewTables() {
       }
     }
   };
+
+  const updatePanelManuscriptStatus = async (channelId, newStatus, userId) => {
+    try {
+      const response = await axios.patch(
+        'http://localhost:5000/api/advicer/thesis/panel/manuscript-status',
+        { channelId, manuscriptStatus: newStatus, userId }
+      );
   
+      const { remainingVotes, message: successMessage } = response.data;
+  
+      message.success(successMessage);
+  
+    // Display remaining votes if status is `approvedOnPanel` or `reviseOnPanelist` and there are pending votes
+    if ((newStatus === 'reviseOnPanelist' || newStatus === 'approvedOnPanel') && remainingVotes > 0) {
+      message.info(`Only ${remainingVotes} more vote(s) needed to proceed with the manuscript`);
+    }
+  
+    } catch (error) {
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+        message.error(`Error: ${error.response.data.message || 'Failed to update status'}`);
+      } else {
+        console.error('Error:', error.message);
+        message.error('Error updating status');
+      }
+    }
+  };
+
+  const deleteTask = async (studentId, taskId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/advicer/delete-task/${studentId}/${taskId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      if (response.ok) {
+        message.success('Task deleted successfully');
+        setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId)); // Remove task from state
+      } else {
+        const errorData = await response.json();
+        console.error('Error deleting task:', errorData.message);
+        message.error(`Error: ${errorData.message || 'Failed to delete task'}`);
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error.message);
+      message.error('Error deleting task');
+    }
+  };  
+
+  const fetchTasks = async (studentId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/advicer/tasks/${studentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setTasks(data.tasks); // Set fetched tasks
+      } else {
+        const errorData = await response.json();
+        console.error("Error fetching tasks:", errorData.message);
+      }
+    } catch (error) {
+      console.error("Error fetching tasks:", error.message);
+    }
+  };  
   
   
 const openTaskModal = (student) => {
@@ -153,7 +276,42 @@ const openTaskModal = (student) => {
       }
     };
 
-    
+
+    /* Rubrics Grading for Student */
+
+    const handleGradingIconClick = (student) => {
+      setSelectedStudentId(student._id);
+      setIsGradingModalVisible(true);
+    };
+  
+    const handleRubricChange = (criteria, value) => {
+      setGradingRubric((prev) => ({
+        ...prev,
+        [criteria]: value,
+      }));
+    };
+  
+    const submitGrading = async () => {
+      try {
+        const response = await axios.post(`http://localhost:5000/api/advicer/grade-student`, {
+          studentId: selectedStudentId,
+          panelistId: user._id,
+          gradingRubric,
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        if (response.status === 200) {
+          message.success("Grading submitted successfully.");
+          setIsGradingModalVisible(false);
+          setGradingRubric({ criteria1: 0, criteria2: 0, criteria3: 0 });
+        }
+      } catch (error) {
+        console.error("Error submitting grading:", error);
+        message.error("Failed to submit grading.");
+      }
+    };
 
   return (
     <div style={{ flex: 1, overflowX: 'hidden', padding: "20px", width: '1263px' }}>
@@ -218,38 +376,84 @@ const openTaskModal = (student) => {
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className="font-bold">Date Published:</span>{" "}
-                  {student.datePublished || "N/A"}
+                  <span className="font-bold">Manuscript Status:</span>{" "}
+                  {student.manuscriptStatus}
                 </Text>
                 <br /><br />
                 <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
                 <p style={{ color: "#ffffff" }}>USer: {student.name}</p>
                 <br />
 
-                <Text style={{ color: "#ffffff" }}>
-                  <strong>Manuscript Status:</strong> {student.manuscriptStatus}
-                </Text>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginRight: "10px" }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginRight: "10px", gap: "10px", }}>
+
+                <Progress
+                  type="dashboard"
+                  steps={8}
+                  percent={progress[student._id] || 0} // Use 0 if no progress is available for this student
+                  trailColor="rgba(0, 0, 0, 0.06)"
+                  strokeWidth={20}
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    marginLeft: "-350px",
+                    marginTop: "40px",
+                    position: "absolute"
+                  }}
+                />
+
                 <Button
                   icon={<EditOutlined />}
                   onClick={() => handleViewManuscript(student._id, student.channelId)}
-                  style={{ marginBottom: "20px", width: "100px" }}
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#1890ff", // Blue for 'edit'
+                    color: "#fff" // White text
+                  }}
                 />
+
                 <Button
-                  icon={<LoadingOutlined />}  
-                  onClick={() => updateManuscriptStatus(student._id, 'reviseOnPanelist')}
-                  style={{ marginBottom: "20px", width: "100px" }}
+                  icon={<LoadingOutlined />}
+                  onClick={() => updatePanelManuscriptStatus(student._id, 'reviseOnPanelist', user._id)}
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#faad14", // Yellow for 'revise'
+                    color: "#fff" // White text
+                  }}
                 />
+
                 <Button
                   icon={<CheckOutlined />}
-                  onClick={() => updateManuscriptStatus(student._id, 'approvedOnPanel')}
-                  style={{ marginBottom: "20px", width: "100px" }}
+                  onClick={() => updatePanelManuscriptStatus(student._id, 'approvedOnPanel', user._id)}
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#52c41a", // Green for 'approve'
+                    color: "#fff" // White text
+                  }}
                 />
-                <Button type="primary" onClick={() => openTaskModal(student)} style={{ marginBottom: "20px", width: "100px" }}>
-                  View Task
-                </Button>
+
+                <Button
+                  icon={<BookOutlined />}
+                  onClick={() => handleGradingIconClick(student)}
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#722ed1", // Purple for 'grading'
+                    color: "#fff" // White text
+                  }}
+                />
+
+                <Button
+                  icon={<PlusOutlined />}
+                  type="primary"
+                  onClick={() => openTaskModal(student)}
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#f5222d", // Red for 'add task'
+                    color: "#fff" // White text
+                  }}
+                />
+
               </div>
             </div>
           </List.Item>
@@ -264,62 +468,97 @@ const openTaskModal = (student) => {
         />
       )}
 
- <ConfigProvider
-      theme={{
-        components: {
-          Modal: {
-          
-            algorithm: true, // Enable algorithm
-          },
-       
-        },
-      }}
-    >
-<Modal
-  visible={isModalVisible}
-
-  onCancel={() => setIsModalVisible(false)}  // Ensures modal can close
-  footer={[
-    <Button key="close" onClick={() => setIsModalVisible(false)}>
-      Close
-    </Button>,
-    <Button key="add" type="primary" onClick={handleAddTask}>
-      Add Task
-    </Button>,
-  ]}
- 
->
-  <Input
-    placeholder="Enter a task"
-    value={taskInput}
-    onChange={handleTaskInputChange}
-    onKeyDown={(e) => {
-      if (e.key === 'Enter') handleAddTask();
-    }}
-  />
-  <br /><br />
-  <List
-    dataSource={tasks}
-    renderItem={(tasks, index) => (
-      <List.Item
-        key={index}
-        actions={[
-          <Checkbox checked={task.completed} onChange={() => handleCompleteTask(index)}>
-            {tasks.completed ? "Completed" : "Pending"}
-          </Checkbox>,
-          <Button
-            type="link"
-            icon={<DeleteOutlined />}
-            onClick={() => handleDeleteTask(index)}
-          />,
-        ]}
+      <Modal
+        title="Grading Rubric"
+        visible={isGradingModalVisible}
+        onOk={submitGrading}
+        onCancel={() => setIsGradingModalVisible(false)}
+        okText="Submit"
       >
-        <Text delete={tasks.completed}>{student.tasks}</Text>
-      </List.Item>
-    )}
-  />
-</Modal>
-</ConfigProvider>
+        <div>
+          <Text>Criteria 1</Text>
+          <Input
+            type="number"
+            min={0}
+            max={100}
+            value={gradingRubric.criteria1}
+            onChange={(e) => handleRubricChange('criteria1', e.target.value)}
+          />
+        </div>
+        <div>
+          <Text>Criteria 2</Text>
+          <Input
+            type="number"
+            min={0}
+            max={100}
+            value={gradingRubric.criteria2}
+            onChange={(e) => handleRubricChange('criteria2', e.target.value)}
+          />
+        </div>
+        <div>
+          <Text>Criteria 3</Text>
+          <Input
+            type="number"
+            min={0}
+            max={100}
+            value={gradingRubric.criteria3}
+            onChange={(e) => handleRubricChange('criteria3', e.target.value)}
+          />
+        </div>
+      </Modal>
+
+
+      <ConfigProvider theme={{ components: { Modal: { algorithm: true, }, },}}>
+        <Modal
+          visible={isModalVisible}
+
+          onCancel={() => setIsModalVisible(false)}  // Ensures modal can close
+          footer={[
+            <Button key="close" onClick={() => setIsModalVisible(false)}>
+              Close
+            </Button>,
+            <Button key="add" type="primary" onClick={handleAddTask}>
+              Add Task
+            </Button>,
+          ]}
+        
+        >
+          <Input
+            placeholder="Enter a task"
+            value={taskInput}
+            onChange={handleTaskInputChange}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleAddTask();
+            }}
+          />
+          <br /><br />
+          <List
+            dataSource={tasks}
+            locale={{ emptyText: "No tasks found" }}
+            renderItem={(task) => (
+              <List.Item
+                key={task._id}
+                actions={[
+                  <Checkbox 
+                    checked={task.isCompleted} 
+                    onChange={() => handleCompleteTask(task._id)}
+                  >
+                    {task.isCompleted ? "Completed" : "Pending"}
+                  </Checkbox>,
+                    <Button 
+                    type="link" 
+                    icon={<DeleteOutlined />} 
+                    onClick={() => deleteTask(currentTaskStudent._id, task._id)} // Pass studentId and taskId
+                  />,
+                ]}
+              >
+                <Text delete={task.isCompleted}>{task.taskTitle}</Text>
+              </List.Item>
+            )}
+          />
+
+        </Modal>
+      </ConfigProvider>
     </div>
   );
 }

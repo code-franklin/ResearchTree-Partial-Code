@@ -3,16 +3,19 @@ import Tabs from '@mui/joy/Tabs';
 import TabList from '@mui/joy/TabList';
 import Tab, { tabClasses } from '@mui/joy/Tab';
 import TabPanel from '@mui/joy/TabPanel';
-import Typography from '@mui/joy/Typography';
-import { Space, Table, Tag, Avatar } from 'antd';
+/* import Typography from '@mui/joy/Typography'; */
+import { Space, Table, Tag, Avatar, Modal, Button, Divider, Typography } from 'antd';
 
 const { Column, ColumnGroup } = Table;
+const { Title, Paragraph } = Typography;
 
 export default function TabsPricingExample() {
   const [acceptedStudents, setAcceptedStudents] = useState([]);
   const [declinedStudents, setDeclinedStudents] = useState([]);
-  const [studentsToManage, setStudentsToManage] = useState([]);
+  const [pendingStudents, setPendingStudents] = useState([]);
   
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedProposal, setSelectedProposal] = useState(null);
   
   const [panelistStudents, setPanelistStudents] = useState([]);
 
@@ -30,7 +33,7 @@ export default function TabsPricingExample() {
           const data = await response.json();
           setAcceptedStudents(data.acceptedStudents);
           setDeclinedStudents(data.declinedStudents);
-          setStudentsToManage(data.studentsToManage);
+          setPendingStudents(data.pendingStudents);
         } else {
           const errorData = await response.json();
           console.error('Error fetching students:', errorData.message);
@@ -43,6 +46,7 @@ export default function TabsPricingExample() {
     fetchStudents();
     fetchPanelistStudents();
   }, [user._id]);
+
 
   const handleStudentResponse = async (studentId, status) => {
     try {
@@ -63,11 +67,11 @@ export default function TabsPricingExample() {
           // Refresh the tab to update the UI
           window.location.reload();
         } else {
-          // Optionally clear the panelist students list if necessary
-          alert(responseData.message || 'An error occurred. Please try again later.');
+          // Optionally clear the panelist students list if necessary          
           window.location.reload();
         }
   
+        fetchStudents(); // Refresh the list of students
       } else {
         const errorData = await response.json();
         console.error('Error responding to student:', errorData.message);
@@ -97,11 +101,32 @@ export default function TabsPricingExample() {
     }
   };
 
+  const showModal = (student) => {
+    // Store the proposal data in state
+    setSelectedProposal({ title: student.proposalTitle, text: student.proposalText });
+    setIsModalVisible(true); // Show the modal
+  };
+  
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setSelectedProposal(null); // Clear the selected proposal on cancel
+  };
+  
   return (
     <Tabs
-      aria-label="Pricing plan"
+      aria-label="Student Management"
       defaultValue={0}
-      sx={{ backgroundColor: '#222222', position: 'absolute', left: '500px', top: '100px', width: 1243, height: '800px', borderRadius: 'lg', boxShadow: 'sm', overflow: 'auto' }}
+      sx={{
+        backgroundColor: '#222222',
+        position: 'absolute',
+        left: '500px',
+        top: '100px',
+        width: 1243,
+        height: '800px',
+        borderRadius: 'lg',
+        boxShadow: 'sm',
+        overflow: 'auto'
+      }}
     >
       <TabList
         disableUnderline
@@ -125,20 +150,12 @@ export default function TabsPricingExample() {
           },
         }}
       >
-        <Tab disableIndicator variant="soft" sx={{ flexGrow: 1 }}>
-          Accepted
-        </Tab>
-        <Tab disableIndicator variant="soft" sx={{ flexGrow: 1 }}>
-          Declined
-        </Tab>
-        <Tab disableIndicator variant="soft" sx={{ flexGrow: 1 }}>
-          Pending
-        </Tab>
-        <Tab disableIndicator variant="soft" sx={{ flexGrow: 1 }}>
-          Student Panelist
-        </Tab>
+        <Tab disableIndicator variant="soft" sx={{ flexGrow: 1 }}>Accepted</Tab>
+        <Tab disableIndicator variant="soft" sx={{ flexGrow: 1 }}>Declined</Tab>
+        <Tab disableIndicator variant="soft" sx={{ flexGrow: 1 }}>Pending</Tab>
+        <Tab disableIndicator variant="soft" sx={{ flexGrow: 1 }}>Student Panelist</Tab>
       </TabList>
-
+  
       {/* Accepted Students List */}
       <TabPanel value={0}>
         <Table
@@ -151,25 +168,25 @@ export default function TabsPricingExample() {
             key="name"
             render={(text, student) => (
               <Space size="middle">
-              <Avatar src={`http://localhost:5000/public/uploads/${student.profileImage || 'default-avatar.png'}`} >
-                {student.name.charAt(0)}
-              </Avatar>
-              <span>{student.name}</span>
-            </Space>
+                <Avatar src={`http://localhost:5000/public/uploads/${student.profileImage || 'default-avatar.png'}`}>
+                  {student.name.charAt(0)}
+                </Avatar>
+                <span>{student.name}</span>
+              </Space>
             )}
           />
           <Column
             title="Action"
             key="action"
-            render={(_, record) => (
+            render={(_, student) => (
               <Space size="middle">
-                <a>View Proposal</a>
+                <Button onClick={() => showModal(student)}>View Proposal</Button> {/* Pass the student object to showModal */}
               </Space>
             )}
           />
         </Table>
       </TabPanel>
-
+  
       {/* Declined Students List */}
       <TabPanel value={1}>
         <Table
@@ -182,30 +199,29 @@ export default function TabsPricingExample() {
             key="name"
             render={(text, student) => (
               <Space size="middle">
-              <Avatar src={`http://localhost:5000/public/uploads/${student.profileImage || 'default-avatar.png'}`} >
-                {student.name.charAt(0)}
-              </Avatar>
-              <span>{student.name}</span>
-            </Space>
+                <Avatar src={`http://localhost:5000/public/uploads/${student.profileImage || 'default-avatar.png'}`}>
+                  {student.name.charAt(0)}
+                </Avatar>
+                <span>{student.name}</span>
+              </Space>
             )}
           />
           <Column
             title="Action"
             key="action"
-            render={(_, record) => (
+            render={(_, student) => (
               <Space size="middle">
-                <a>Review Title</a>
+                <Button onClick={() => showModal(student)}>Review Proposal</Button> {/* Pass the student object to showModal */}
               </Space>
             )}
           />
         </Table>
       </TabPanel>
-
-
+  
       {/* Pending Students List */}
       <TabPanel value={2}>
         <Table
-          dataSource={studentsToManage}
+          dataSource={pendingStudents}
           rowKey="_id"
           style={{ position: 'absolute', top: '100px', width: '70%', marginLeft: '120px' }}
         >
@@ -214,11 +230,11 @@ export default function TabsPricingExample() {
             key="name"
             render={(text, student) => (
               <Space size="middle">
-              <Avatar src={`http://localhost:5000/public/uploads/${student.profileImage || 'default-avatar.png'}`} >
-                {student.name.charAt(0)}
-              </Avatar>
-              <span>{student.name}</span>
-            </Space>
+                <Avatar src={`http://localhost:5000/public/uploads/${student.profileImage || 'default-avatar.png'}`}>
+                  {student.name.charAt(0)}
+                </Avatar>
+                <span>{student.name}</span>
+              </Space>
             )}
           />
           <Column
@@ -226,16 +242,16 @@ export default function TabsPricingExample() {
             key="action"
             render={(_, student) => (
               <Space size="middle">
-                <a>View Title</a>
-                <a onClick={() => handleStudentResponse(student._id, 'accepted')} >Accept</a>
-                <a onClick={() => handleStudentResponse(student._id, 'declined')} >Decline</a>
+                <Button onClick={() => showModal(student)}>View Proposal</Button> {/* Pass the student object to showModal */}
+                <a onClick={() => handleStudentResponse(student._id, 'accepted')}>Accept</a>
+                <a onClick={() => handleStudentResponse(student._id, 'declined')}>Decline</a>
               </Space>
             )}
           />
         </Table>
       </TabPanel>
 
-      {/* List Panelist */}
+            {/* List Panelist */}
       <TabPanel value={3}>
         <Table
           dataSource={panelistStudents}
@@ -272,7 +288,26 @@ export default function TabsPricingExample() {
           />
         </Table>
       </TabPanel>
-
+        
+      {/* Modal to View Proposal */}
+      <Modal
+        title="View Proposal"
+        visible={isModalVisible}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="close" onClick={handleCancel}>
+            Close
+          </Button>,
+        ]}
+      >
+        {selectedProposal && (
+          <div style={{ padding: '20px' }}>
+            <Title level={3}>{selectedProposal.title}</Title> {/* Display the proposal title */}
+            <Paragraph>{selectedProposal.text}</Paragraph> {/* Display the proposal text */}
+          </div>
+        )}
+      </Modal>
+  
 
 {/*        Pending Students 
       <TabPanel value={2}>

@@ -24,6 +24,7 @@ export default function NewTables() {
   const [tasks, setTasks] = useState([]); // To store tasks
 
   
+  const [isGradeModalVisible, setIsGradeModalVisible] = useState(false); // State for grade modal
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -153,7 +154,14 @@ const openTaskModal = (student) => {
       }
     };
 
-    
+    const openGradeModal = () => {
+      setIsGradeModalVisible(true);
+    };
+  
+    const closeGradeModal = () => {
+      setIsGradeModalVisible(false);
+    };
+
 
   return (
     <div style={{ flex: 1, overflowX: 'hidden', padding: "20px", width: '1263px' }}>
@@ -218,26 +226,22 @@ const openTaskModal = (student) => {
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className="font-bold">Date Published:</span>{" "}
-                  {student.datePublished || "N/A"}
+                  <span className="font-bold">Manuscript Status:</span>{" "}
+                  {student.manuscriptStatus}
                 </Text>
-                <br /><br />
+{/*                 <br /><br />
                 <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
                 <p style={{ color: "#ffffff" }}>USer: {student.name}</p>
-                <br />
+                <br /> */}
 
-                <Text style={{ color: "#ffffff" }}>
-                  <strong>Manuscript Status:</strong> {student.manuscriptStatus}
-                </Text>
               </div>
-
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginRight: "10px" }}>
-                <Button
+{/*                 <Button
                   icon={<EditOutlined />}
                   onClick={() => handleViewManuscript(student._id, student.channelId)}
                   style={{ marginBottom: "20px", width: "100px" }}
-                />
-                <Button
+                /> */}
+{/*                 <Button
                   icon={<LoadingOutlined />}  
                   onClick={() => updateManuscriptStatus(student._id, 'reviseOnPanelist')}
                   style={{ marginBottom: "20px", width: "100px" }}
@@ -246,10 +250,8 @@ const openTaskModal = (student) => {
                   icon={<CheckOutlined />}
                   onClick={() => updateManuscriptStatus(student._id, 'approvedOnPanel')}
                   style={{ marginBottom: "20px", width: "100px" }}
-                />
-                <Button type="primary" onClick={() => openTaskModal(student)} style={{ marginBottom: "20px", width: "100px" }}>
-                  View Task
-                </Button>
+                /> */}
+                    <Button onClick={openGradeModal} style={{ marginBottom: "10px", width: "100px" }}>View Grade</Button>
               </div>
             </div>
           </List.Item>
@@ -263,6 +265,12 @@ const openTaskModal = (student) => {
           onClose={() => setIsEditorOpen(false)}
         />
       )}
+
+      <Modal visible={isGradeModalVisible} onCancel={closeGradeModal} footer={null}>
+        <h2>Grade Rubric</h2>
+        {/* Render rubric details here */}
+        <p>Rubric information goes here...</p>
+      </Modal>
 
  <ConfigProvider
       theme={{

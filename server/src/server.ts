@@ -27,9 +27,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-
 // Routes for Users
-
 app.use('/api/student', studentRoutes);
 app.use('/api/advicer', advicerRoutes);
 app.use('/api/admin', adminRoutes);

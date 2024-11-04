@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { List, Typography, Button, message, Modal, Input, Checkbox, ConfigProvider, Select } from "antd";
+import { List, Typography, Button, message, Modal, Input, Checkbox, ConfigProvider, Select, Progress } from "antd";
 import { EditOutlined, CheckOutlined, LoadingOutlined, DeleteOutlined } from "@ant-design/icons";
 import CkEditorDocuments from './CkEditorDocuments';
 import axios from "axios";
@@ -8,7 +8,7 @@ const { Text } = Typography;
 const { Option } = Select;
 
 export default function NewTables() {
-  const [acceptedStudents, setAcceptedStudents] = useState([]);
+  const [panelistStudents, setPanelistStudents] = useState([]);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
@@ -23,42 +23,43 @@ export default function NewTables() {
   const [taskInput, setTaskInput] = useState("");
   const [tasks, setTasks] = useState([]); // To store tasks
 
+  
+  const [progress, setProgress] = useState(0);
+
   const user = JSON.parse(localStorage.getItem("user"));
 
-
   useEffect(() => {
-  // Fetch students
-  const fetchStudents = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/advicer/advisor-students/${user._id}`,
-        {
+    const fetchPanelistStudents = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/advicer/panelist-students/${user._id}`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setPanelistStudents(data.panelistStudents);
+          setFilteredStudents(data.panelistStudents);
+          // Extract unique courses from the students data
+          const uniqueCourses = [
+            ...new Set(data.panelistStudents.map(student => student.course))
+          ];
+          setCourses(uniqueCourses);
+
+        } else {
+          console.error('Error fetching panelist students');
         }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setAcceptedStudents(data.acceptedStudents);
-        setFilteredStudents(data.acceptedStudents);
-
-        // Extract unique courses from the students data
-        const uniqueCourses = [
-          ...new Set(data.acceptedStudents.map(student => student.course))
-        ];
-        setCourses(uniqueCourses);
-      } else {
-        const errorData = await response.json();
-        console.error("Error fetching students:", errorData.message);
+      } catch (error) {
+        console.error('Error fetching panelist students:', error.message);
       }
-    } catch (error) {
-      console.error("Error fetching students:", error.message);
-    }
-  };
+    };
 
-    fetchStudents();
-  }, [user._id]);
+    
+    fetchPanelistStudents();
+  }, []);
+
+
+
 
   const handleViewManuscript = (studentId, channelId) => {
     setSelectedStudentId(studentId);
@@ -88,14 +89,24 @@ export default function NewTables() {
     }
   };
 
-  const updateManuscriptStatus = async (channelId, newStatus) => {
+  
+
+  const updatePanelManuscriptStatus = async (channelId, newStatus, userId) => {
     try {
       const response = await axios.patch(
-        'http://localhost:5000/api/advicer/thesis/manuscript-status',
-        { channelId, manuscriptStatus: newStatus }  // Send student ID and new status
+        'http://localhost:5000/api/advicer/thesis/panel/manuscript-status',
+        { channelId, manuscriptStatus: newStatus, userId }
       );
-
-      message.success('Manuscript status updated');
+  
+      const { remainingVotes, message: successMessage } = response.data;
+  
+      message.success(successMessage);
+  
+    // Display remaining votes if status is `approvedOnPanel` or `reviseOnPanelist` and there are pending votes
+    if ((newStatus === 'reviseOnPanelist' || newStatus === 'approvedOnPanel') && remainingVotes > 0) {
+      message.info(`Only ${remainingVotes} more vote(s) needed to proceed with the manuscript`);
+    }
+  
     } catch (error) {
       if (error.response) {
         console.error('Error response:', error.response.data);
@@ -107,12 +118,92 @@ export default function NewTables() {
     }
   };
   
+  const deleteTask = async (studentId, taskId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/advicer/delete-task/${studentId}/${taskId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
   
+      if (response.ok) {
+        message.success('Task deleted successfully');
+        setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId)); // Remove task from state
+      } else {
+        const errorData = await response.json();
+        console.error('Error deleting task:', errorData.message);
+        message.error(`Error: ${errorData.message || 'Failed to delete task'}`);
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error.message);
+      message.error('Error deleting task');
+    }
+  };  
+
+  const fetchTaskProgress = async (studentId) => {
+    if (!studentId) {
+      console.log("No selectedStudentId found."); // Debug statement
+      return;
+    }
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/advicer/tasks/progress/${studentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+  
+      if (response.ok) {
+        const { progress: studentProgress } = await response.json();
+        setProgress((prevProgress) => ({
+          ...prevProgress,
+          [studentId]: studentProgress >= 0 && studentProgress <= 100 ? studentProgress : 0
+        }));
+      } else {
+        console.error("Error fetching progress.");
+      }
+    } catch (error) {
+      console.error("Error fetching task progress:", error);
+    }
+  };
+
+  const fetchTasks = async (studentId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/advicer/tasks/${studentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setTasks(data.tasks); // Set fetched tasks
+      } else {
+        const errorData = await response.json();
+        console.error("Error fetching tasks:", errorData.message);
+      }
+    } catch (error) {
+      console.error("Error fetching tasks:", error.message);
+    }
+  }; 
+  
+  useEffect(() => {
+    filteredStudents.forEach((student) => {
+      fetchTaskProgress(student._id);
+    });
+  }, [filteredStudents]);
   
   const openTaskModal = (student) => {
     setCurrentTaskStudent(student);
     setIsModalVisible(true);
+    fetchTasks(student._id); // Fetch tasks when opening modal
   };
+
 
   const handleTaskInputChange = (e) => {
     setTaskInput(e.target.value);
@@ -143,10 +234,10 @@ export default function NewTables() {
     const handleCourseChange = (value) => {
       setSelectedCourse(value);
       if (value === "") {
-        setFilteredStudents(acceptedStudents); // Show all students if no course is selected
+        setFilteredStudents(panelistStudents); // Show all students if no course is selected
       } else {
         setFilteredStudents(
-          acceptedStudents.filter(student => student.course === value)
+            panelistStudents.filter(student => student.course === value)
         );
       }
     };
@@ -156,7 +247,6 @@ export default function NewTables() {
   return (
     <div style={{ flex: 1, overflowX: 'hidden', padding: "20px", width: '1263px' }}>
 
-            {/* Dropdown for course filtering */}
       <Select
         value={selectedCourse}
         onChange={handleCourseChange}
@@ -173,7 +263,7 @@ export default function NewTables() {
 
       <List
         grid={{ gutter: 16, column: 1 }}
-        dataSource={filteredStudents.filter(student => student.manuscriptStatus === "reviseOnPanelist")}
+        dataSource={filteredStudents.filter(student => student.manuscriptStatus === "reviseOnPanelist" )}
         renderItem={(student) => (
           <List.Item key={student._id}>
             <div
@@ -231,21 +321,37 @@ export default function NewTables() {
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginRight: "10px" }}>
+
+              <Progress
+                  type="dashboard"
+                  steps={8}
+                  percent={progress[student._id] || 0} // Use 0 if no progress is available for this student
+                  trailColor="rgba(0, 0, 0, 0.06)"
+                  strokeWidth={20}
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    marginLeft: "-350px",
+                    marginTop: "-5px",
+                    position: "absolute"
+                  }}
+                />
+
                 <Button
                   icon={<EditOutlined />}
                   onClick={() => handleViewManuscript(student._id, student.channelId)}
                   style={{ marginBottom: "20px", width: "100px" }}
                 />
-                <Button
+{/*                 <Button
                   icon={<LoadingOutlined />}  
-                  onClick={() => updateManuscriptStatus(student._id, 'reviseOnPanelist')}
+                  onClick={() => updatePanelManuscriptStatus(student._id, 'reviseOnPanelist')}
                   style={{ marginBottom: "20px", width: "100px" }}
                 />
                 <Button
                   icon={<CheckOutlined />}
-                  onClick={() => updateManuscriptStatus(student._id, 'approvedOnPanel')}
+                  onClick={() => updatePanelManuscriptStatus(student._id, 'approvedOnPanel')}
                   style={{ marginBottom: "20px", width: "100px" }}
-                />
+                /> */}
                 <Button type="primary" onClick={() => openTaskModal(student)} style={{ marginBottom: "20px", width: "100px" }}>
                   View Task
                 </Button>
@@ -299,24 +405,29 @@ export default function NewTables() {
   <br /><br />
   <List
     dataSource={tasks}
-    renderItem={(task, index) => (
+    locale={{ emptyText: "No tasks found" }}
+    renderItem={(task) => (
       <List.Item
-        key={index}
+        key={task._id}
         actions={[
-          <Checkbox checked={task.completed} onChange={() => handleCompleteTask(index)}>
-            {task.completed ? "Completed" : "Pending"}
+          <Checkbox 
+            checked={task.isCompleted} 
+            onChange={() => handleCompleteTask(task._id)}
+          >
+            {task.isCompleted ? "Completed" : "Pending"}
           </Checkbox>,
-          <Button
-            type="link"
-            icon={<DeleteOutlined />}
-            onClick={() => handleDeleteTask(index)}
+            <Button 
+            type="link" 
+            icon={<DeleteOutlined />} 
+            onClick={() => deleteTask(currentTaskStudent._id, task._id)} // Pass studentId and taskId
           />,
         ]}
       >
-        <Text delete={task.completed}>{task.title}</Text>
+        <Text delete={task.isCompleted}>{task.taskTitle}</Text>
       </List.Item>
     )}
   />
+
 </Modal>
 </ConfigProvider>
     </div>

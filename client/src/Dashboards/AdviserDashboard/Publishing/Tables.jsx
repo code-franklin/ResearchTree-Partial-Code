@@ -143,7 +143,7 @@ const ListManuscript = () => {
             backgroundColor: 'green', // Customize active background color
           },
         }}
-        label="Approved on Advicer"
+        label="Defense"
         {...a11yProps(0)}
       />
       <Tab

@@ -7,12 +7,12 @@ interface IProposal {
   submittedAt: Date;
 }
 
-// Define interface for a task (as a subdocument)
+// Define the ITask interface for task structure
 interface ITask extends mongoose.Types.Subdocument {
+  _id: mongoose.Types.ObjectId;
   taskTitle: string;
   isCompleted: boolean;
 }
-
 // Define interface for User document
 export interface IUser extends Document {
   name: string;
@@ -21,7 +21,9 @@ export interface IUser extends Document {
   role: 'student' | 'adviser';
   profileImage: string;
   specializations: string[];
-  manuscriptStatus: 'reviseOnAdvicer' | 'readyToDefense' | 'reviseOnPanelist' | 'approvedOnPanel' | null; // manuscript status
+  manuscriptStatus: 'reviseOnAdvicer' | 'readyToDefense' | 'reviseOnPanelist' | 'approvedOnPanel' | null;
+  panelistVotes: string[]; // Define as an array of strings
+  publishingVotes: string[]; // Define as an array of strings
   course?: string;
   year?: number;
   handleNumber?: number;
@@ -45,8 +47,16 @@ const userSchema: Schema = new Schema<IUser>({
   specializations: { type: [String], required: function() { return this.role === 'adviser'; } },
   manuscriptStatus: {
     type: String,
-    enum: ['reviseOnAdvicer', 'readyToDefense', null], // Add manuscript status
+    enum: ['reviseOnAdvicer', 'readyToDefense', 'reviseOnPanelist', 'approvedOnPanel', null],
     default: null,
+  },
+  panelistVotes: {
+    type: [String], // Explicitly define as an array of strings
+    default: [],
+  },
+  publishingVotes: {
+    type: [String], // Explicitly define as an array of strings
+    default: [],
   },
   course: { type: String },
   year: { type: Number },
@@ -65,6 +75,7 @@ const userSchema: Schema = new Schema<IUser>({
   }],
   tasks: [
     {
+      _id: { type: Schema.Types.ObjectId, auto: true }, // Ensure `_id` is part of the schema
       taskTitle: { type: String, required: true },
       isCompleted: { type: Boolean, default: false },
     },

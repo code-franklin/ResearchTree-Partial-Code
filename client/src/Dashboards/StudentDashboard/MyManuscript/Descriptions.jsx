@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import CkEditorDocuments from '../../../CKeditorDocuments'
+import { Modal, Button, Checkbox, Divider, Typography, List } from 'antd';
+import CkEditorDocuments from '../../../CKeditorDocuments';
 import './Styles/descriptions.css';
-import Progresss from './Progress'
-import Categories from './Categories'
+import Categories from './Categories';
+
+import { DonutChart } from "bizcharts";
 import { SyncOutlined } from '@ant-design/icons';
-import { Tooltip } from '@mui/material';
 
 
 
+const { Title, Text } = Typography;
 
 const ResearchCard = () => {
   const [advisorInfo, setAdvisorInfo] = useState(null);
@@ -18,16 +20,21 @@ const ResearchCard = () => {
   const [channelId, setChannelId] = useState('');
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
+  const [isTaskVisible, setIsTaskVisible] = useState(false);
   // button edit for Title
   const [isEditingProposalTitle, setIsEditingProposalTitle] = useState(false);
   const [newProposalTitle, setNewProposalTitle] = useState('');
 
+  const [progress, setProgress] = useState(0);
 
-  const user = JSON.parse(localStorage.getItem('user'));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
 
   useEffect(() => {
     fetchAdvisorInfo();
+    
   }, [isEditingProposalTitle]);
+
+  
   
   const fetchAdvisorInfo = async () => {
     try {
@@ -39,6 +46,9 @@ const ResearchCard = () => {
         setPanelists(data.panelists || []);
         setChannelId(data.channelId || '');
         setProposal(data.proposal || {}); 
+
+        // Fetch tasks after getting advisor info
+        fetchUpdatedTasks();
         
       } else {
         const errorData = await response.json();
@@ -49,11 +59,106 @@ const ResearchCard = () => {
     }
   };
 
+  const fetchUpdatedTasks = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/student/tasks/${user._id}`, { 
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Failed to fetch updated tasks:', errorData.message || 'Unknown error');
+        return; // Exit if there's an error with the request
+      }
+  
+      const data = await response.json();
+      console.log('Fetched updated tasks:', data.tasks);
+  
+      if (data.tasks && Array.isArray(data.tasks)) {
+        // Update user state and localStorage with the new tasks
+        setUser((prevUser) => ({
+          ...prevUser,
+          tasks: data.tasks,
+        }));
+        localStorage.setItem('user', JSON.stringify({ ...user, tasks: data.tasks }));
+      } else {
+        console.error('Unexpected data format for tasks:', data);
+      }
+    } catch (error) {
+      console.error('Error fetching updated tasks:', error.message);
+    }
+  };
+  
+  
   const handleEditProposalTitle = () => {
     setIsEditingProposalTitle(true);
   };
+
+  const markTaskAsCompleted = async (taskId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/student/mark-task/${taskId}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Task marked as completed!');
+
+        // Update the user state and localStorage in real-time
+        const updatedUser = {
+          ...user,
+          tasks: user.tasks.map(task =>
+            task._id === taskId ? { ...task, isCompleted: true } : task
+          ),
+        };
+  
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+      } else {
+        console.error('Failed to mark task as completed');
+      }
+    } catch (error) {
+      console.error('Error marking task as completed:', error);
+    }
+  };
   
 // edit the Title
+// Modify fetchTaskProgress to set progress state based on API response
+const fetchTaskProgress = async (userId) => {
+  try {
+    const response = await fetch(`http://localhost:5000/api/student/tasks/progress/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Error fetching task progress:', errorData.message);
+      return;
+    }
+
+    const { progress } = await response.json();
+    setProgress(progress >= 0 && progress <= 100 ? progress : 0); // Ensure valid range
+  } catch (error) {
+    console.error('Error fetching task progress:', error);
+  }
+};
+
+useEffect(() => {
+  if (user && user._id) {
+    fetchTaskProgress(user._id);
+  }
+}, [user]);
+
 
   const handleSaveProposalTitle = async () => {
     try {
@@ -116,10 +221,7 @@ const ResearchCard = () => {
         <span className="font-bold text-white ml-[81px]">Panelists: <span className='font-normal'> {panelists.map((panelist) => panelist.name).join(', ')}</span>  </span>
       </span>
     );
-  };
-
-  
-  
+  };  
 
   return (
     <div className="headerCard ">
@@ -129,32 +231,15 @@ const ResearchCard = () => {
           <span className="bg-[#1E1E] text-white px-2 py-0 mr-2">{user.course}</span>
           <div className="absolute ml-[920px]"></div>
           
+          
         </div>
+
+        
 
 {/* details for student */}
         {advisorStatus === 'accepted' && (
           <div>
-            <div className='absolute mt-[-190px] ml-[1030px]'><Progresss/></div>
-        <button 
-                type="button" 
-                cursor-pointer onClick={() => setIsEditorOpen(true)} 
-                className=' absolute mt-[-60px] ml-[1140px]'>
-                <Tooltip title="NoteList"><img src="/src/assets/note-list-icon.png"/></Tooltip>
-        </button>
-        <button 
-                type="button" 
-                cursor-pointer onClick={() => setIsEditorOpen(true)} 
-                className=' absolute mt-[-60px] ml-[1180px]'>
-                <Tooltip title="Open Manuscript"><img src="/src/assets/word-editor.png"/></Tooltip>
-        </button>
-        <button 
-                type="button" 
-                onClick={handleEditProposalTitle} 
-                className='absolute mt-[-59px] ml-[1220px] cursor-pointer '>
-                <Tooltip title="Edit Title"><img src="/src/assets/edit-title-icon.png"/></Tooltip>
-        </button>
-            
-            <h1 className="text-2xl font-bold mb-2">
+            <h1 className="text-2xl font-bold mb-2" style={{ maxWidth: '85%' }}>
               {isEditingProposalTitle ? (
                 <input
                   type="text"
@@ -167,8 +252,7 @@ const ResearchCard = () => {
                 proposal?.proposalTitle
               )}
             </h1>
-    
-
+            <button onClick={handleEditProposalTitle}>Edit</button>
             <p className="text-gray-500 font-bold mb-4">
               {user.groupMembers
                 .map(member => member.replace(/([a-z])([A-Z])/g, '$1 $2')) // Insert space between lowercase and uppercase letters
@@ -189,6 +273,7 @@ const ResearchCard = () => {
             </p>
           </div>
         )}
+
 
         {advisorStatus === 'declined' && (
           <div>
@@ -217,13 +302,51 @@ const ResearchCard = () => {
         )}
 
         
+    <div className='absolute mt-[-350px] ml-[60%]'>
+      <DonutChart
+        data={[
+          { type: "Progress", value: progress || 0 },
+          { type: "Task", value: 100 - (progress || 0) }
+        ]}
+        autoFit
+        key={progress}
+        legend={false}
+        width={200}
+        height={600}
+        radius={0.9}
+        innerRadius={0.7}
+        padding="auto"
+        angleField="value"
+        colorField="type"
+        color={["#0BF677", "#353535"]}
+        pieStyle={{
+          stroke: "", 
+          lineWidth: 1, 
+          lineCap: "round",
+          shadowBlur: 10,
+          shadowColor: "rgba(0, 0, 0, 0.6)",
+          shadowOffsetX: 3,
+          shadowOffsetY: 3,
+        }}
+        statistic={{
+          title: {
+            content: "Progress",
+            style: { color: "white", fontSize: 15 },
+          },
+          content: {
+            style: { color: "#0BF677", fontSize: 20 },
+            formatter: () => `${progress || 0}%`, // Display the progress value or 0 if undefined
+          },
+        }}
+      />
 
+    </div>
 
 {/* <p><strong>Text:</strong> {proposal?.proposalText}</p>  */}
         {/* Advisor */}
         <p className="text-gray-400 mb-2">
-          <span className="font-bold text-white ">Advisor: <span className='font-normal'>{getStatusMessage(advisorStatus, advisorInfo)}</span> </span>
-          <span>{advisorStatus === 'accepted' && <PanelistList panelists={panelists} />}</span>
+          <span className="font-bold text-white">Advisor: {getStatusMessage(advisorStatus, advisorInfo)}</span>
+          {advisorStatus === 'accepted' && <PanelistList panelists={panelists} />}
         </p>
 
 {/* Panelist */}
@@ -234,38 +357,66 @@ const ResearchCard = () => {
         )}
         
         <div className="text-gray-400 mb-4">
-        <span>
-          <span className="font-bold text-white">Date of Uploaded:</span> 
-          <span className="mr-10">{proposal?.submittedAt && new Date(proposal?.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-          </span></span>
+        <span><span className="font-bold text-white">Date of Uploaded:</span> <span className="mr-5">{proposal?.submittedAt && new Date(proposal?.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span></span>
 
-        <span>
-          <span className="font-bold text-white">Date of Published: </span>
-          <span></span> </span>
-
-          <br />
-
-          <span className='hidden'>{user.channelId}</span>
+          {/* <br />
+          {user.channelId} */}
         </div>
         <div className="flex justify-between items-center">
-         
-          <div name="Categories">
-            <Categories/>
+          <div>
+            <h1 className="mb-2 mt-4">Type of Research</h1>
+            <span className="bg-purple-500 text-white px-2 py-1 mr-2">Machine Learning</span>
+            <span className="bg-yellow-500 text-white px-2 py-1">Web and Mobile</span>
           </div>
           
           <div className="flex items-center">
-            {/* <a onClick={() => setIsEditorOpen(true)} className="rounded-full text-center text-white ml-[-600px] cursor-pointer w-[120px] h-[37px] border 1px solid #6A6A6A " > */}
-           
+          <Button type="primary" className="rounded-full text-center text-white mr-4 cursor-pointer w-[120px] h-[37px] border 1px solid #6A6A6A "  onClick={() => setIsEditorOpen(true)}>Open Editor</Button>
+            
 
+          
             {isEditorOpen && (
-            <div 
-                className="w-[50rem] -mt-[100px] ">
-                <CkEditorDocuments 
-                width={800}
-                userId={user._id} channelId={user.channelId}/> 
+            <div className="w-[50rem] -mt-9 ">
+
+             <CkEditorDocuments 
+             width={800}
+             userId={user._id} channelId={user.channelId}/> 
             </div>
 
+            
+
             )}
+            
+            <Button onClick={() => setIsTaskVisible(true)}>
+              Show Tasks
+            </Button>
+
+            <Modal
+              title="Task Checklist"
+              visible={isTaskVisible}
+              onCancel={() => setIsTaskVisible(false)}
+              footer={null}
+            >
+              <Title level={4}>Checklist for Manuscript</Title>
+              <Divider />
+
+              <List
+                dataSource={user?.tasks || []}
+                renderItem={(task) => (
+                  <List.Item>
+                    <Checkbox
+                      checked={task.isCompleted}
+                      onChange={() => markTaskAsCompleted(task._id)}
+                      disabled={task.isCompleted}
+                    >
+                      <Text delete={task.isCompleted} style={{ marginLeft: '10px' }}>
+                        {task.taskTitle}
+                      </Text>
+                    </Checkbox>
+                  </List.Item>
+                )}
+              />
+            </Modal>
+
           </div>
         </div>
       </div>

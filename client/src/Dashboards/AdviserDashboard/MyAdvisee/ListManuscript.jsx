@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { List, Typography, Button, message, Modal, Input, Checkbox, ConfigProvider, Select } from "antd";
+import { List, Typography, Button, message, Modal, Input, Checkbox, ConfigProvider, Select, Progress } from "antd";
 import { EditOutlined, CheckOutlined, LoadingOutlined, DeleteOutlined } from "@ant-design/icons";
 import CkEditorDocuments from './CkEditorDocuments';
 import axios from "axios";
@@ -22,6 +22,8 @@ export default function NewTables() {
   const [currentTaskStudent, setCurrentTaskStudent] = useState(null);
   const [taskInput, setTaskInput] = useState("");
   const [tasks, setTasks] = useState([]); // To store tasks
+
+  const [progress, setProgress] = useState(0);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -65,8 +67,6 @@ export default function NewTables() {
     setIsEditorOpen(true);
   };
 
-  // Task for Student
-
   const addTask = async (studentId, taskTitle) => {
     try {
       const response = await fetch(`http://localhost:5000/api/advicer/add-task/${studentId}`, {
@@ -78,14 +78,51 @@ export default function NewTables() {
         body: JSON.stringify({ taskTitle }),
       });
       if (response.ok) {
-        setTasks([...tasks, { title: taskTitle, completed: false }]); // Add new task
-        setTaskInput(""); // Clear task input
-        fetchStudents(); // Refresh the list after adding a task
+        setTasks((prevTasks) => [...prevTasks, { title: taskTitle, completed: false }]);
+        setTaskInput(""); // Clear the input field
+        fetchTasks(studentId); // Fetch tasks again to immediately update the task list in the modal
       }
     } catch (error) {
       console.error('Error adding task:', error);
     }
   };
+  
+  const fetchTaskProgress = async (studentId) => {
+    if (!studentId) {
+      console.log("No selectedStudentId found."); // Debug statement
+      return;
+    }
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/advicer/tasks/progress/${studentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+  
+      if (response.ok) {
+        const { progress: studentProgress } = await response.json();
+        setProgress((prevProgress) => ({
+          ...prevProgress,
+          [studentId]: studentProgress >= 0 && studentProgress <= 100 ? studentProgress : 0
+        }));
+      } else {
+        console.error("Error fetching progress.");
+      }
+    } catch (error) {
+      console.error("Error fetching task progress:", error);
+    }
+  };
+    // Debug: Check the progress value in the component
+  
+  
+  useEffect(() => {
+    filteredStudents.forEach((student) => {
+      fetchTaskProgress(student._id);
+    });
+  }, [filteredStudents]);
 
   const updateManuscriptStatus = async (channelId, newStatus) => {
     try {
@@ -94,7 +131,7 @@ export default function NewTables() {
         { channelId, manuscriptStatus: newStatus }  // Send student ID and new status
       );
 
-      message.success('Manuscript status updated');
+      message.success('Manuscript status updated for Revision');
     } catch (error) {
       if (error.response) {
         console.error('Error response:', error.response.data);
@@ -105,12 +142,57 @@ export default function NewTables() {
       }
     }
   };
+
+  const deleteTask = async (studentId, taskId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/advicer/delete-task/${studentId}/${taskId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
   
+      if (response.ok) {
+        message.success('Task deleted successfully');
+        setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId)); // Remove task from state
+      } else {
+        const errorData = await response.json();
+        console.error('Error deleting task:', errorData.message);
+        message.error(`Error: ${errorData.message || 'Failed to delete task'}`);
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error.message);
+      message.error('Error deleting task');
+    }
+  };  
+
+  const fetchTasks = async (studentId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/advicer/tasks/${studentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setTasks(data.tasks); // Set fetched tasks
+      } else {
+        const errorData = await response.json();
+        console.error("Error fetching tasks:", errorData.message);
+      }
+    } catch (error) {
+      console.error("Error fetching tasks:", error.message);
+    }
+  };  
   
   
   const openTaskModal = (student) => {
     setCurrentTaskStudent(student);
     setIsModalVisible(true);
+    fetchTasks(student._id); // Fetch tasks when opening modal
   };
 
   const handleTaskInputChange = (e) => {
@@ -216,22 +298,35 @@ export default function NewTables() {
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className="font-bold">Date Published:</span>{" "}
-                  {student.datePublished || "N/A"}
+                  <span className="font-bold">Manuscript Status:</span>{" "}
+                  {student.manuscriptStatus}
                 </Text>
                 <br /><br />
                 <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
                 <p style={{ color: "#ffffff" }}>USer: {student.name}</p>
-                <br />
 
-                <Text style={{ color: "#ffffff" }}>
-                  <strong>Manuscript Status:</strong> {student.manuscriptStatus}
-                </Text>
+
 
 
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginRight: "10px" }}>
+
+                <Progress
+                  type="dashboard"
+                  steps={8}
+                  percent={progress[student._id] || 0} // Use 0 if no progress is available for this student
+                  trailColor="rgba(0, 0, 0, 0.06)"
+                  strokeWidth={20}
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    marginLeft: "-350px",
+                    marginTop: "40px",
+                    position: "absolute"
+                  }}
+                />
+
                 <Button
                   icon={<EditOutlined />}
                   onClick={() => handleViewManuscript(student._id, student.channelId)}
@@ -300,24 +395,29 @@ export default function NewTables() {
   <br /><br />
   <List
     dataSource={tasks}
-    renderItem={(task, index) => (
+    locale={{ emptyText: "No tasks found" }}
+    renderItem={(task) => (
       <List.Item
-        key={index}
+        key={task._id}
         actions={[
-          <Checkbox checked={task.completed} onChange={() => handleCompleteTask(index)}>
-            {task.completed ? "Completed" : "Pending"}
+          <Checkbox 
+            checked={task.isCompleted} 
+            onChange={() => handleCompleteTask(task._id)}
+          >
+            {task.isCompleted ? "Completed" : "Pending"}
           </Checkbox>,
-          <Button
-            type="link"
-            icon={<DeleteOutlined />}
-            onClick={() => handleDeleteTask(index)}
+            <Button 
+            type="link" 
+            icon={<DeleteOutlined />} 
+            onClick={() => deleteTask(currentTaskStudent._id, task._id)} // Pass studentId and taskId
           />,
         ]}
       >
-        <Text delete={task.completed}>{task.title}</Text>
+        <Text delete={task.isCompleted}>{task.taskTitle}</Text>
       </List.Item>
     )}
   />
+
 </Modal>
 </ConfigProvider>
     </div>

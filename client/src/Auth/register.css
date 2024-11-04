@@ -83,6 +83,16 @@
 
 }
 
+.Email {
+    width: 364px;
+    height: 52px;
+    background: #F0EDFFCC;
+    border-radius: 20px;
+    margin-top: -10px;
+    position: absolute;
+}
+
+
 .GroupMembers {
     position: absolute;
     margin-top: -156px;
@@ -101,7 +111,7 @@
     height: 52px;
     background: #F0EDFFCC;
     border-radius: 20px;
-  
+    margin-top: 55px;
 
 }
 

@@ -197,16 +197,16 @@ export const markTaskAsCompleted = async (req: Request, res: Response) => {
 
 
 export const getTasks = async (req: Request, res: Response) => {
-  const { studentId } = req.params; // Use studentId instead of taskId
+  const { userId } = req.params; // Use studentId instead of taskId
 
-  console.log('Received studentId:', studentId); // Log the received studentId
+  console.log('Received studentId:', userId); // Log the received studentId
 
   try {
     // Find the student and populate tasks
-    const student = await User.findById(studentId).select('tasks');
+    const student = await User.findById(userId).select('tasks');
     
     if (!student) {
-      console.log('No student found with studentId:', studentId);
+      console.log('No student found with studentId:', userId);
       return res.status(404).json({ message: 'Student not found' });
     }
 
@@ -218,6 +218,27 @@ export const getTasks = async (req: Request, res: Response) => {
   }
 };
 
+// Endpoint to get task progress
+export const getTaskProgress = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+
+  try {
+    const student = await User.findById(userId).select('tasks');
+    if (!student || student.tasks.length === 0) {
+      return res.status(404).json({ message: 'No tasks found for this student' });
+    }
+
+    // Calculate completed task percentage
+    const completedTasks = student.tasks.filter((task) => task.isCompleted).length;
+    const totalTasks = student.tasks.length;
+    const progress = Math.round((completedTasks / totalTasks) * 100); 
+
+    res.status(200).json({ progress });
+  } catch (error) {
+    console.error('Error fetching task progress:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
 
 export const updateProposalTitle = async (req: Request, res: Response) => {
   try {

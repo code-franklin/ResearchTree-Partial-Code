@@ -9,8 +9,13 @@ import {
     getPanelistStudents,
     respondToStudent,
     getToken,
-    addTaskMyAdvicee,
-    updateManuscriptStatus 
+    postAddTaskMyAdvicee,
+    getTasksMyAdvicee,
+    deleteTaskFromStudent,
+    updateManuscriptStatus,
+    getTasksProgressStudent,
+    updatePanelManuscriptStatus,
+    gradePanelToStudent
 } from '../controllers/advicerControllers';
 
 import upload from '../middleware/upload';
@@ -25,14 +30,26 @@ router.get('/get-ckeditor-token/:userId', getToken);
 
 router.get('/specializations', getSpecializations);
 
-// Adviser routes
+/* Adviser routes */
 router.get('/advisor-students/:advisorId', getAdviserStudents);
-router.post('/add-task/:studentId', addTaskMyAdvicee)
 
+// Task for My Advicee
+router.post('/add-task/:studentId', postAddTaskMyAdvicee);
+router.get('/tasks/:studentId', getTasksMyAdvicee);
+router.delete('/delete-task/:studentId/:taskId', deleteTaskFromStudent);
+router.get('/tasks/progress/:studentId', getTasksProgressStudent);
+
+
+
+// Update Status for Manuscript
 router.patch('/thesis/manuscript-status', updateManuscriptStatus);
+router.patch('/thesis/panel/manuscript-status', updatePanelManuscriptStatus);
 
+// Get Panelist Students
 router.get('/panelist-students/:advisorId', getPanelistStudents);
 router.post('/respond-student', respondToStudent);
+router.post('/grade-student', gradePanelToStudent);
+
 
 // admin
 router.get('/students-manage/:advisorId', listStudentsManage);

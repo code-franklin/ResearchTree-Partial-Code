@@ -10,77 +10,53 @@ import { Button, Form, Input, Alert, Select } from 'antd';
 const { Option } = Select;
 
 const LoginFunction = () => {
-  const [form] = Form.useForm();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: 'student',
-    profileImage: null,
-    specializations: [],
-    course: '',
-    year: '',
-    handleNumber: '',
-    groupMembers: [],
-  });
-  const [specializationsOptions, setSpecializationsOptions] = useState([]);
-  const [message, setMessage] = useState('');
+    const [form] = Form.useForm();
+    const [formData, setFormData] = useState({
+      username: '',
+      password: '',
+      confirmPassword: '',
+      role: 'student',
+      groupMembers: '',
+      course: '',
+      year: '',
+      handleNumber: '',
+      specializations: [],
+    });
+    const [specializationsOptions, setSpecializationsOptions] = useState([]);
+    const [message, setMessage] = useState('');
   
-  useEffect(() => {
-    const fetchSpecializations = async () => {
+    const handleChange = (e) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+  
+    const handleRoleChange = (value) => {
+      setFormData({ ...formData, role: value });
+    };
+  
+    const handleSpecializationChange = (selected) => {
+      setFormData({ ...formData, specializations: selected });
+    };
+  
+    const handleSubmit = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/advicer/specializations');
-        setSpecializationsOptions(response.data.map(spec => ({ value: spec.name, label: spec.name })));
+        const response = await axios.post('http://localhost:5000/api/advicer/register', formData);
+        setMessage(response.data.message);
       } catch (error) {
-        console.error('Error fetching specializations:', error);
+        setMessage(error.response?.data?.message || 'Something went wrong');
       }
     };
-    
-    fetchSpecializations();
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
-
-  const handleRoleChange = (value) => {
-    setFormData({ ...formData, role: value });
-  };
-
-  const handleSpecializationChange = (value) => {
-    setFormData({ ...formData, specializations: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const data = new FormData();
-    data.append('name', formData.name);
-    data.append('email', formData.email);
-    data.append('password', formData.password);
-    data.append('role', formData.role);
-    data.append('profileImage', formData.profileImage);
-    data.append('specializations', JSON.stringify(formData.specializations));
-    
-    if (formData.role === 'student') {
-      data.append('course', formData.course);
-      data.append('year', formData.year);
-      data.append('groupMembers', JSON.stringify(formData.groupMembers));
-    } else {
-      data.append('handleNumber', formData.handleNumber);
-    }
-
-    try {
-      const response = await axios.post('http://localhost:5000/api/advicer/register', data);
-      setMessage(response.data.message);
-    } catch (error) {
-      console.error(error.response.data);
-      setMessage('Registration failed. Please try again.');
-    }
-  };
+  
+    // Fetch specializations on mount
+    useEffect(() => {
+      axios.get('http://localhost:5000/api/advicer/specializations')
+        .then((response) => {
+          setSpecializationsOptions(response.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching specializations:', error);
+        });
+    }, []);
+  
 
   return (
     <div className="rectangle">
@@ -104,12 +80,14 @@ const LoginFunction = () => {
           rules={[{ required: true, message: 'Please input your username!' }]}
         >
           <Input className="Username" prefix={<UserOutlined />} placeholder="Username" onChange={handleChange} />
+        
         </Form.Item>
 
         <Form.Item
           name="password"
           rules={[{ required: true, message: 'Please input your password!' }]}
         >
+            <Input className="Email" prefix={<UserOutlined />} placeholder="Email" onChange={handleChange} />
           <Input className="Password" prefix={<LockOutlined />} placeholder="Password" onChange={handleChange} />
         </Form.Item>
 
@@ -128,7 +106,7 @@ const LoginFunction = () => {
             }),
           ]}
         >
-          <Input className="Password" prefix={<LockOutlined />} placeholder="Re-type your password" onChange={handleChange} />
+          <Input className="Retype-Password " prefix={<LockOutlined />} placeholder="Re-type your password" onChange={handleChange} />
         </Form.Item>
 
         {/* Role Selection */}
@@ -190,23 +168,20 @@ const LoginFunction = () => {
           </>
         )}
 
-        <Button 
-        style= {{
+      <Button 
+        style={{
           width: '124px', 
           height: '52px', 
           marginLeft: '110px',
-          marginTop: '70px', 
+          marginTop: '50px', 
           background: '#0BF677',
           borderRadius: '15px',
-          
-          }} 
-          
-         
-        
-       >
+        }} 
+        onClick={handleSubmit}
+      >
         <span className='text-white font-bold'>Register</span>
-          
-        </Button>
+      </Button>
+
       </Form>
       {message && <Alert message={message} type="info" />}
     </div>

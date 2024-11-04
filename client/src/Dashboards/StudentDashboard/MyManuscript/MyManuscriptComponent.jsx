@@ -1,7 +1,6 @@
 import React from 'react'
 import Description from './Descriptions'
 import PdfViewers from './PdfViewer'
-import Progresss from './Progress'
 import Grading from './Grading'
 function MyManuscriptComponent() {
   
@@ -15,10 +14,9 @@ function MyManuscriptComponent() {
       <Grading  />
     </div>
 
-   
-    <Description  />
-
-
+    <div className=" absolute mt-[-1440px] ml-[1420px]">
+    </div>
+      <Description  />
     </div>
   
   )
