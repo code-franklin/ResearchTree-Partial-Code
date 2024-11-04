@@ -19,7 +19,7 @@ export const PieChart = () => {
             spacingTop: 0, // Top padding
             spacingLeft: 0, // Left padding
             spacingRight: 0, // Right padding
-            height: 385, // Set height
+            height: 685, // Set height
             width: 420, // Set width
             borderColor: '#4B4B4B', // Set border color
             borderWidth: 1, // Set border width

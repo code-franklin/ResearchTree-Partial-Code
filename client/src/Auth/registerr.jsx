@@ -7,7 +7,7 @@ import Year from './Year'
 import Role from './Role'
 
 
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined, } from '@ant-design/icons';
 import { Button, ConfigProvider, Form, Input, Alert, Typography } from 'antd';
 
 

@@ -18,7 +18,7 @@ export const PieChart = () => {
             spacingTop: 20, // Top padding
             spacingLeft: 10, // Left padding
             spacingRight: 10, // Right padding
-            height: 510, // Set height
+            height: 670, // Set height
             width: 420, // Set width
         },
         title: {
@@ -48,27 +48,27 @@ export const PieChart = () => {
                 className: 'highcharts-custom-data-label',
             },
             data: [{
-                name: 'Spain',
+                name: 'Ai',
                 y: 300,
                 z: 92.9,
                 color: '#FF4444' // Customize color for Spain
             }, {
-                name: 'France',
+                name: 'Mobile App',
                 y: 50   ,
                 z: 118.7,
                 color: '#0BF677' // Customize color for France
             }, {
-                name: 'Poland',
+                name: 'Business',
                 y: 20,
                 z: 124.6,
                 color: '#C70039' // Customize color for Poland
             }, {
-                name: 'Czech Republic',
+                name: 'Goverment',
                 y: 372,
                 z: 137.5,
                 color: '#272827' // Customize color for Czech Republic
             }, {
-                name: 'Italy',
+                name: 'IOT',
                 y: 200,
                 z: 201.8,
                 color: '#0BF677' // Customize color for Italy

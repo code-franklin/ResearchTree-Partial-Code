@@ -134,7 +134,7 @@ const ResearchCard = () => {
 {/* details for student */}
         {advisorStatus === 'accepted' && (
           <div>
-            <div className='fixed mt-[200px] ml-[1050px]'><Progresss/></div>
+            <div className='absolute mt-[-190px] ml-[1030px]'><Progresss/></div>
         <button 
                 type="button" 
                 cursor-pointer onClick={() => setIsEditorOpen(true)} 

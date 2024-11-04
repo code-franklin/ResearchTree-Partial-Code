@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-
+import { Button } from "antd";
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -153,6 +153,55 @@ export default function BasicModal() {
               variant="h6"
               component="h2"
             >
+              
+              <Textarea
+                      sx={{
+                      color: 'white',
+                      position: 'absolute',
+                      top: '100px',
+                      left: '-157px',
+                      borderRadius: '20px',
+                      backgroundColor: '#1E1E1E', 
+                      borderColor: '#585050',
+                      width: '495px',
+                      height: '92px',
+                      paddingLeft: '20px',
+                      paddingTop:'10px',
+                    }}
+                      color='success'
+                      minRows={2}
+                      placeholder="Write your research title..."
+                      size="sm"
+                      variant="outlined"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                />
+                
+                <Textarea
+                      sx={{
+                      color: 'white',
+                      position: 'absolute',
+                      top: '210px',
+                      left: '-157px',
+                      borderRadius: '20px',
+                      backgroundColor: '#1E1E1E', 
+                      borderColor: '#585050',
+                      width: '495px',
+                      height: '92px',
+                      paddingLeft: '20px',
+                      paddingTop:'10px',
+                    }}
+                      color='success'
+                      minRows={2}
+                      placeholder="Write your research proposal..."
+                      size="sm"
+                      variant="outlined"
+                      value={proposal}
+                      onChange={(e) => setProposal(e.target.value)}
+                />
+
+                   {/* Add a submit button or trigger elsewhere */}
+                   <Button type="submit" className='mt-[300px]'>Submit Proposal Button</Button>
               {advisorStatus === 'declined' && 'Title Proposals'}
               {advisorStatus === 'pending' && 'Title Proposals'}
               {advisorStatus === 'accepted' && 'Your Adviser'}
@@ -217,7 +266,7 @@ export default function BasicModal() {
                 />
                 
                 {/* Add a submit button or trigger elsewhere */}
-                <button type="submit" style={{ display: 'block' }}>Submit Proposal</button>
+                <button type="submit" style={{ display: 'block', }}>Submit Proposal</button>
                 </form>
             </div>
           )}

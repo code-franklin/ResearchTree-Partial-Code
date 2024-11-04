@@ -40,20 +40,14 @@ export const Cards = () => {
                    
                 <div className="year-container"> 
                     
-                <div className="absolute mt-[-8px]">
+                <div className="absolute mt-[-80px]">
 
                     
                 <Dropdown />
 
                 </div>
-                    <span className="absolute left-[-1174px] mt-[20px] text-[40px] font-bold">View Analytics</span>
-                   <div className="Tooltop">
-                     <div className="mt-[12px]">
-                            <Tooltip title="Notification" arrow>
-                           <img className="tooltip cursor-pointer w-[auto] inline-block mr-2" src="/src/assets/notification.png" />
-                            </Tooltip>
-                        </div>
-                    </div>
+                    <span className="absolute left-[-1174px] mt-[-50px] text-[40px] font-bold">View Analytics</span>
+                 
                 </div>
 
                 <div className="card">

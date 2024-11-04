@@ -20,7 +20,7 @@ const columns = [
     render: (_, { tags }) => (
       <>
         {tags.map((tag) => {
-          let color = tag.length > 5 ? 'green' : 'green';
+          let color = tag.length > 5 ? 'orange' : 'orange';
           if (tag === 'loser') {
             color = 'volcano';
           }
@@ -50,13 +50,13 @@ const data = [
     name: 'Crisanto Gulay',
     email: 'crisanto@gmail.com',
     address: 'New York No. 1 Lake Park',
-    tags: ['Registered'],
+    tags: ['Pending'],
   },
   {
     key: '2',
     name: 'Sherwin Sapin',
     email: 'sherwin@gmail.com',
-    tags: ['Registered'],
+    tags: ['Pending'],
   },
 
   {
@@ -64,21 +64,21 @@ const data = [
     name: 'Crisanto Gulay',
     email: 'crisanto@gmail.com',
     address: 'New York No. 1 Lake Park',
-    tags: ['Registered'],
+    tags: ['Pending'],
   },
  
   {
     key: '3',
     name: 'Aj Matute',
     email: 'aj@gmail.com',
-    tags: ['Registered'],
+    tags: ['Pending'],
   },
 
   {
     key: '2',
     name: 'Sherwin Sapin',
     email: 'sherwin@gmail.com',
-    tags: ['Registered'],
+    tags: ['Pending'],
   },
 
   {
@@ -86,7 +86,7 @@ const data = [
     name: 'Crisanto Gulay',
     email: 'crisanto@gmail.com',
     address: 'New York No. 1 Lake Park',
-    tags: ['Registered'],
+    tags: ['Pending'],
   },
 ];
 const App = () => <Table style={{width: '50%', marginLeft: '600px', marginTop: '200px', position: 'absolute'}} columns={columns} dataSource={data} />;

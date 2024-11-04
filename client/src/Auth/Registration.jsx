@@ -4,7 +4,7 @@ import axios from 'axios';
 import Course from './Course';
 import Year from './Year';
 import Role from './Role';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined, UsergroupAddOutlined, UserAddOutlined, ProductOutlined} from '@ant-design/icons';
 import { Button, Form, Input, Alert, Select } from 'antd';
 
 const { Option } = Select;
@@ -143,7 +143,7 @@ const LoginFunction = () => {
         {formData.role === 'student' ? (
           <>
            <Input 
-            prefix={<LockOutlined />} 
+            prefix={<UsergroupAddOutlined />} 
             name="Group Members" 
             className="GroupMembers absolute mt-[-60px]" 
             placeholder="Group Members (comma separated)" 
@@ -157,13 +157,13 @@ const LoginFunction = () => {
         ) : (
           <>
             <Input 
-            prefix={<LockOutlined />}
+            prefix={<UserAddOutlined />}
             name="Handle"
             style={{
               position: 'absolute', 
               marginLeft:'110px', 
               marginTop: '7px', 
-              width: '80px'
+              width: '90px'
                   
              }} 
             placeholder="Handle"  
@@ -171,7 +171,7 @@ const LoginFunction = () => {
             />
            
             <Input
-            prefix={<LockOutlined />}
+            prefix={<ProductOutlined />}
             name="Specializations"
             style={{
               position: 'absolute', 

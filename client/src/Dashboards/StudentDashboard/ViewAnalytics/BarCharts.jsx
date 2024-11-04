@@ -4,7 +4,7 @@ import './Styles/barChart.css'; // Ensure this file contains the necessary style
 
 const data = [
   { category: 'AI', value: 150 },
-  { category: 'Internet of Things (IoT)', value: 150 },
+  { category: 'Internet of Things ', value: 150 },
   { category: 'Mobile App', value: 50 },
   { category: 'Web Application', value: 250 },
   { category: 'Machine Learning', value: 120 },
@@ -30,21 +30,22 @@ export const BarChart = () => {
   }
 
   return (
-    <div className="p-5 mr-5 rounded-lg shadow-custom-shadow bg-[#1E1E1E] border border-[#4B4B4B]">
-      <h2 className="text-[#0BF677] text-xl mb-4">Top 10 Trending Manuscript</h2>
-      <Chart height={300} width={900} autoFit data={sortedData} interactions={['active-region']} >
+    <div className="p-10 mr-5 rounded-lg shadow-custom-shadow bg-[#1E1E1E] border border-[#4B4B4B] w-[1000px]">
+      <h2 className="text-[#0BF677] text-xl mb-4">Top 10 Searches Manuscript</h2>
+      <Chart height={300} width={950} autoFit data={sortedData} interactions={['active-region']} >
         <Axis name="value" visible={true} />
         <Axis name="category" label={null} visible={true} />
         <Legend 
           position="right" 
           offsetY={-20} 
+          offsetX={10} 
           marker={{
            
             symbol: 'circle',
             style: { fill: '#0BF677', r: 5}, // Radius set to 8
           }}
           itemName={{
-            style: { fill: '#FFFFFF', fontSize: 14 } // Set legend text color to white
+            style: { fill: '#FFFFFF', fontSize: 14,  } // Set legend text color to white
           }}
         />
         <Tooltip shared />

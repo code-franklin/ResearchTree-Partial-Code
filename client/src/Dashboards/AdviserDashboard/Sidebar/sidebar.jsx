@@ -93,7 +93,7 @@ const Sidebar = ({ onSelect }) => {
         </Link>
 
         {/* Grading */}
-        <Link
+        {/* <Link
           to="AdviserDashboard/Grading"
           className={`revision mx-10 px-2 ${
             activeLink === '/AdviserDashboard/Grading'
@@ -104,13 +104,13 @@ const Sidebar = ({ onSelect }) => {
         >
           <img className="inline-block mr-2 mb-1" src="/src/assets/revision-icon.png" alt="Grading" />
           Grading
-        </Link>
+        </Link> */}
 
          
           
       </div>
        {/* Panelist Mode */}
-       <div className='mt-[125px]  ml-[12px]'>
+       <div className='mt-[155px]  ml-[12px]'>
           <Link
           to="AdviserDashboard/Publishing"
           className={`exploreManuscript mx-10 px-2 ${
@@ -124,18 +124,6 @@ const Sidebar = ({ onSelect }) => {
           My Defendee
         </Link>
 
-        <Link
-          to="AdviserDashboard/PanelistAnalytics"
-          className={`exploreManuscript mx-10 px-2 ${
-            activeLink === '/AdviserDashboard/PanelistAnalytics'
-              ? 'font-semibold ml-[4rem] bg-gradient-to-r from-[#0BF677] to-[#079774]'
-              : 'hover:font-medium hover:ml-[4rem] text-white'
-          }`}
-          onClick={() => handleLinkClick('/AdviserDashboard/PanelistAnalytics')}
-        >
-         <img className="inline-block mr-3 mb-1" src="/src/assets/User.png" alt="View Analytics" />
-          View Analytics
-        </Link>
           </div>
     </div>
   );

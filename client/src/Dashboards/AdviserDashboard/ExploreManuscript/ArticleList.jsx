@@ -120,8 +120,6 @@ const ArticleList = () => {
     
 <div className="topcomponent fixed">
   
-<Tooltip title="Notification" arrow><img className="inline-block cursor-pointer  mr-2 mb-0" src="./src/assets/notification.png" alt="Notification" /></Tooltip>
-
 </div>
   
       <header className="header justify-between items-center fixed">

@@ -19,7 +19,7 @@ export const PieChart = () => {
             spacingTop: 0, // Top padding
             spacingLeft: 0, // Left padding
             spacingRight: 0, // Right padding
-            height: 385, // Set height
+            height: 685, // Set height
             width: 450, // Set width
             borderColor: '#4B4B4B', // Set border color
             borderWidth: 1, // Set border width
@@ -53,27 +53,27 @@ export const PieChart = () => {
                 className: 'highcharts-custom-data-label',
             },
             data: [{
-                name: 'Spain',
+                name: 'AI',
                 y: 300,
                 z: 92.9,
                 color: '#FF4444' // Customize color for Spain
             }, {
-                name: 'France',
+                name: 'Web App',
                 y: 50   ,
                 z: 118.7,
                 color: '#0BF677' // Customize color for France
             }, {
-                name: 'Poland',
+                name: 'Business',
                 y: 20,
                 z: 124.6,
                 color: '#C70039' // Customize color for Poland
             }, {
-                name: 'Czech Republic',
+                name: 'Cybersecurity',
                 y: 372,
                 z: 137.5,
                 color: '#272827' // Customize color for Czech Republic
             }, {
-                name: 'Italy',
+                name: 'Application',
                 y: 200,
                 z: 201.8,
                 color: '#0BF677' // Customize color for Italy

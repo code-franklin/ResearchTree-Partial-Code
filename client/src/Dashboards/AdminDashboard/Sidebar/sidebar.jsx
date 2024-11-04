@@ -40,13 +40,13 @@ const Sidebar = ({ onSelect }) => {
 
         {/* View Analytics */}
         <Link
-          to="AdviserDashboard/ViewAnalytics"
+          to="AdminDashboard/ViewAnalytics"
           className={`viewAnalytics mx-10 px-2 ${
-            activeLink === '/AdviserDashboard/ViewAnalytics'
+            activeLink === '/AdminDashboard/ViewAnalytics'
               ? 'font-semibold ml-[4rem] bg-gradient-to-r from-[#0BF677] to-[#079774]'
               : 'hover:font-medium hover:ml-[4rem] text-white'
           }`}
-          onClick={() => handleLinkClick('/AdviserDashboard/ViewAnalytics')}
+          onClick={() => handleLinkClick('/AdminDashboard/ViewAnalytics')}
         >
           <img className="inline-block mr-2 mb-1" src="/src/assets/User.png" alt="View Analytics" />
           View Analytics
@@ -102,26 +102,26 @@ const Sidebar = ({ onSelect }) => {
        {/* Panelist Mode */}
        <div className='mt-[175px]  ml-[70px] '>
           <Link
-          to="AdviserDashboard/Publishing"
+          to="AdminDashboard/AdviserPending"
           className={`exploreManuscript mx-10 px-2  ${
-            activeLink === '/AdviserDashboard/Publishing'
+            activeLink === '/AdminDashboard/AdviserPending'
               ? 'font-semibold ml-[4rem]  '
               : 'hover:font-medium hover:ml-[4rem] '
           }`}
-          onClick={() => handleLinkClick('/AdviserDashboard/Publishing')}
+          onClick={() => handleLinkClick('/AdminDashboard/AdviserPending')}
         >
           <br></br>
           Pending Adviser
         </Link>
 
         <Link
-          to="AdviserDashboard/PanelistAnalytics"
+          to="AdminDashboard/AdviserRegistered"
           className={`exploreManuscript mx-10 px-2 ${
-            activeLink === '/AdviserDashboard/PanelistAnalytics'
+            activeLink === '/AdminDashboard/AdviserRegistered'
               ? 'font-semibold ml-[4rem]'
               : 'hover:font-medium hover:ml-[4rem] text=[#0BF677]'
           }`}
-          onClick={() => handleLinkClick('/AdviserDashboard/PanelistAnalytics')}
+          onClick={() => handleLinkClick('/AdminDashboard/AdviserRegistered')}
         >
         <br></br>
           Registered Adviser

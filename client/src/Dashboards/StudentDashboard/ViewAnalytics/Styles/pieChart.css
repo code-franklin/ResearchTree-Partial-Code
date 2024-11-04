@@ -6,6 +6,8 @@
   border-radius: 5px;
   width: 23%;
 
-  
+  position: absolute;
+  left: 1370px;
+  margin-top: -125px;
 }
 

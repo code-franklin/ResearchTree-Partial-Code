@@ -10,7 +10,7 @@ export const Cards = () => {
                 
 
                 <div className="box">
-                    <div className="card-icon-1 absolute top-0 left-[234px]">
+                    <div className="card-icon-1 absolute top-0 left-[254px]">
                         <img className="" src="/src/assets/star.png" />
                     </div>
                     <div className="card-content">
@@ -19,7 +19,7 @@ export const Cards = () => {
                     </div>
                 </div>
                 <div className="box">
-                    <div className="card-icon-2 left-[570px]">
+                    <div className="card-icon-2 left-[600px]">
                         <img className="" src="/src/assets/Check.png" />
                     </div>
                     <div className="card-content">
@@ -28,7 +28,7 @@ export const Cards = () => {
                     </div>
                 </div>
                 <div className="box">
-                    <div className="card-icon-3 left-[885px]">
+                    <div className="card-icon-3 left-[938px]">
                         <img className="" src="/src/assets/Trophy.png" />
                     </div>
                     <div className="card-content">
