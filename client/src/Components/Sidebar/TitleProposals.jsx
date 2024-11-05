@@ -159,70 +159,7 @@ export default function BasicModal() {
           </Typography>
 
 
-          
-          {/* Render based on advisor status */}
-          {(advisorInfo === null || !advisorStatus) && (
-            <div>
-              <Tag 
-              style={{position: 'absolute', marginLeft: '100px', marginTop: '50px'}}
-              icon={<CloseCircleOutlined />} 
-              color="#00ff00">
-               Submit your Proposal Title 
-              </Tag>
-              
-              <form onSubmit={(e) => { e.preventDefault(); submitProposal(); }}>
-                <Textarea
-                      sx={{
-                      color: 'white',
-                      position: 'absolute',
-                      top: '200px',
-                      left: '117px',
-                      borderRadius: '20px',
-                      backgroundColor: '#1E1E1E', 
-                      borderColor: '#585050',
-                      width: '495px',
-                      height: '92px',
-                      paddingLeft: '20px',
-                      paddingTop:'10px',
-                    }}
-                      color='success'
-                      minRows={2}
-                      placeholder="Write your research title..."
-                      size="sm"
-                      variant="outlined"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                />
-                
-                <Textarea
-                      sx={{
-                      color: 'white',
-                      position: 'absolute',
-                      top: '310px',
-                      left: '117px',
-                      borderRadius: '20px',
-                      backgroundColor: '#1E1E1E', 
-                      borderColor: '#585050',
-                      width: '495px',
-                      height: '92px',
-                      paddingLeft: '20px',
-                      paddingTop:'10px',
-                    }}
-                      color='success'
-                      minRows={2}
-                      placeholder="Write your research proposal..."
-                      size="sm"
-                      variant="outlined"
-                      value={proposal}
-                      onChange={(e) => setProposal(e.target.value)}
-                />
-                
-                {/* Add a submit button or trigger elsewhere */}
-                <button type="submit" style={{ display: 'block' }}>Submit Proposal</button>
-                </form>
-            </div>
-          )}
-
+        
 
           {/* Render based on advisor status */}
           {(!advisorInfo || advisorStatus === 'declined') && (

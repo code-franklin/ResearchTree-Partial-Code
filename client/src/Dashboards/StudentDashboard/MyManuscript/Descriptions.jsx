@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Checkbox, Divider, Typography, List } from 'antd';
+import { Dialog, DialogContent, DialogActions, Button } from '@mui/material';
+import { Modal, Checkbox, Divider, Typography, List } from 'antd';
+
 import CkEditorDocuments from './CkEditorDocuments';
 import './Styles/descriptions.css';
 import Categories from './Categories';
@@ -34,11 +36,19 @@ const ResearchCard = () => {
     
   }, [isEditingProposalTitle]);
 
-  
+  const openEditorModal = () => {
+    setIsEditorOpen(true);
+  };
+
+  const closeEditorModal = () => {
+    setIsEditorOpen(false);
+  };
+
+  const localhostKey = import.meta.env.VITE_APP_LOCALHOSTKEY
   
   const fetchAdvisorInfo = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/student/advisor-info-StudProposal/${user._id}`);
+      const response = await fetch(`${localhostKey}/api/student/advisor-info-StudProposal/${user._id}`);
       if (response.ok) {
         const data = await response.json();
         setAdvisorInfo(data.chosenAdvisor);
@@ -61,7 +71,7 @@ const ResearchCard = () => {
 
   const fetchUpdatedTasks = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/student/tasks/${user._id}`, { 
+      const response = await fetch(`${localhostKey}/api/student/tasks/${user._id}`, { 
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +110,7 @@ const ResearchCard = () => {
 
   const markTaskAsCompleted = async (taskId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/student/mark-task/${taskId}`, {
+      const response = await fetch(`${localhostKey}/api/student/mark-task/${taskId}`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -134,7 +144,7 @@ const ResearchCard = () => {
 // Modify fetchTaskProgress to set progress state based on API response
 const fetchTaskProgress = async (userId) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/student/tasks/progress/${userId}`, {
+    const response = await fetch(`${localhostKey}/api/student/tasks/progress/${userId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
@@ -162,7 +172,7 @@ useEffect(() => {
 
   const handleSaveProposalTitle = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/student/update-proposal-title/${user._id}`, {
+      const response = await fetch(`${localhostKey}/api/student/update-proposal-title/${user._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -373,20 +383,22 @@ useEffect(() => {
           <Button 
             type="primary" 
             className="rounded-full text-center text-white mr-4 cursor-pointer w-[120px] h-[37px] border 1px solid #6A6A6A "  
-            onClick={() => setIsEditorOpen(true)}>
+            onClick={openEditorModal}>
               Open Editor
-          </Button>
             
+          </Button>
 
-          
-            {isEditorOpen && (
-              <div className="w-[50rem] -mt-9 ">
-
-              <CkEditorDocuments 
-              width={800}
-              userId={user._id} channelId={user.channelId}/> 
-              </div>
-            )}
+      {/* Material UI Modal for CKEditor */}
+      <Dialog open={isEditorOpen} onClose={closeEditorModal} fullWidth maxWidth="xxl">
+        <DialogContent sx={{ height: '1000px' }}>
+          {user && (
+            <CkEditorDocuments userId={user._id} channelId={user.channelId} />
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeEditorModal} color="primary">Close</Button>
+        </DialogActions>
+      </Dialog>
             
             <Button onClick={() => setIsTaskVisible(true)}>
               Show Tasks

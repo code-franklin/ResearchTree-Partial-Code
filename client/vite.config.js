@@ -11,5 +11,6 @@ export default defineConfig({
     'process.env.VITE_APP_UNIQUE_CHANNEL_PER_DOCUMENT': JSON.stringify(process.env.VITE_APP_UNIQUE_CHANNEL_PER_DOCUMENT),
     'process.env.VITE_APP_CLOUD_SERVICES_TOKEN_URL': JSON.stringify(process.env.VITE_APP_CLOUD_SERVICES_TOKEN_URL),
     'process.env.VITE_APP_CLOUD_SERVICES_WEBSOCKET_URL': JSON.stringify(process.env.VITE_APP_CLOUD_SERVICES_WEBSOCKET_URL),
+    'process.env.VITE_APP_LOCALHOSTKEY': JSON.stringify(process.env.VITE_APP_LOCALHOSTKEY)
   },
 });
