@@ -1,20 +1,20 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import PersonAdd from '@mui/icons-material/PersonAdd';
-import Settings from '@mui/icons-material/Settings';
-import Logout from '@mui/icons-material/Logout';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import Settings from "@mui/icons-material/Settings";
+import Logout from "@mui/icons-material/Logout";
 
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-import './Sidebar.css';
+import "./Sidebar.css";
 
 export default function AccountMenu() {
   const navigate = useNavigate();
@@ -22,12 +22,11 @@ export default function AccountMenu() {
 
   useEffect(() => {
     // Fetch stored user data from localStorage and set it to the admin state
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setAdmin(JSON.parse(storedUser));
     }
   }, []);
-
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -41,91 +40,98 @@ export default function AccountMenu() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = '/adminSignIn'; // Update the path based on your routing setup
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/adminSignIn"; // Update the path based on your routing setup
   };
-
 
   return (
     <React.Fragment>
-      <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Tooltip title="Account settings">
+      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
+        <Tooltip title='Account settings'>
           <IconButton
             onClick={handleClick}
-            size="small"
+            size='small'
             sx={{ ml: 5 }}
-            aria-controls={open ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
+            aria-controls={open ? "account-menu" : undefined}
+            aria-haspopup='true'
+            aria-expanded={open ? "true" : undefined}
           >
             {admin && admin.profileImage ? (
-              <Avatar src={`http://localhost:5000${admin.profileImage}`} sx={{ width: 79, height: 79 }} />
+              <Avatar
+                src={`http://localhost:7000${admin.profileImage}`}
+                sx={{ width: 79, height: 79 }}
+              />
             ) : (
               <Avatar sx={{ width: 79, height: 79 }} /> // Fallback Avatar if no user or no profile image
             )}
-
-
-
           </IconButton>
         </Tooltip>
       </Box>
       <Menu
         anchorEl={anchorEl}
-        id="account-menu"
+        id='account-menu'
         open={open}
         onClose={handleClose}
         onClick={handleClose}
         PaperProps={{
           elevation: 0,
           sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
             mt: 1.5,
             ml: 4,
             bgcolor: "#1E1E1E",
             color: "white", // Set text color to white
-            '& .MuiAvatar-root': {
+            "& .MuiAvatar-root": {
               width: 32,
               height: 32,
               ml: -0.5,
               mr: 1,
             },
-            '& .MuiMenuItem-root': {
-              color: 'white', // Ensure all MenuItem text is white
+            "& .MuiMenuItem-root": {
+              color: "white", // Ensure all MenuItem text is white
             },
-            '& .MuiListItemIcon-root': {
-              color: 'white', // Ensure all icons are white
+            "& .MuiListItemIcon-root": {
+              color: "white", // Ensure all icons are white
             },
           },
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem >
-          <Avatar sx={{ bgcolor: '#444' }} /> Profile
+        <MenuItem>
+          <Avatar sx={{ bgcolor: "#444" }} /> Profile
         </MenuItem>
         <MenuItem onClick={handleClose}>
-          <Avatar sx={{ bgcolor: '#444' }} /> My account
+          <Avatar sx={{ bgcolor: "#444" }} /> My account
         </MenuItem>
-        <Divider sx={{ bgcolor: 'white' }} />
+        <Divider sx={{ bgcolor: "white" }} />
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
-            <PersonAdd fontSize="small" />
+            <PersonAdd fontSize='small' />
           </ListItemIcon>
           Add another account
         </MenuItem>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
-            <Settings fontSize="small" />
+            <Settings fontSize='small' />
           </ListItemIcon>
           Settings
         </MenuItem>
         <MenuItem onClick={handleClose}>
           <ListItemIcon onClick={handleLogout}>
-            <Logout onClick={handleLogout} fontSize="small" sx={{ color: 'red' }} /> {/* Set icon color to red */}
+            <Logout
+              onClick={handleLogout}
+              fontSize='small'
+              sx={{ color: "red" }}
+            />{" "}
+            {/* Set icon color to red */}
           </ListItemIcon>
-          <span onClick={handleLogout} style={{ color: 'red' }}>Logout</span> {/* Set text color to red */}
+          <span onClick={handleLogout} style={{ color: "red" }}>
+            Logout
+          </span>{" "}
+          {/* Set text color to red */}
         </MenuItem>
       </Menu>
     </React.Fragment>

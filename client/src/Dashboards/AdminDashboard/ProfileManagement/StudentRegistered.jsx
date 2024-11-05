@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Space, Table, Tag, Button } from 'antd';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { Space, Table, Tag, Button } from "antd";
+import axios from "axios";
 
 const App = () => {
   const [admin, setAdmin] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
 
-
   // Fetch admin data from localStorage on initial load
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setAdmin(JSON.parse(storedUser));
     }
@@ -19,10 +18,12 @@ const App = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/admin/student-users');
+        const response = await axios.get(
+          "http://localhost:7000/api/admin/student-users"
+        );
         setAllUsers(response.data);
       } catch (error) {
-        console.error('Error fetching all users:', error);
+        console.error("Error fetching all users:", error);
       }
     };
 
@@ -33,40 +34,40 @@ const App = () => {
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
-      title: 'Role',
-      dataIndex: 'role',
-      key: 'role',
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
     },
     {
-      title: 'Status',
-      key: 'status',
-      render: () => (
-        <Tag color="orange">
-          Registered
-        </Tag>
-      ),
+      title: "Status",
+      key: "status",
+      render: () => <Tag color='orange'>Registered</Tag>,
     },
-
   ];
 
   return (
     <div>
       {admin ? (
-        <Table 
-          style={{width: '50%', marginLeft: '600px', marginTop: '200px', position: 'absolute'}}
-          columns={columns} 
-          dataSource={allUsers} 
-          rowKey="_id"
+        <Table
+          style={{
+            width: "50%",
+            marginLeft: "600px",
+            marginTop: "200px",
+            position: "absolute",
+          }}
+          columns={columns}
+          dataSource={allUsers}
+          rowKey='_id'
           pagination={{ pageSize: 8 }}
         />
       ) : (

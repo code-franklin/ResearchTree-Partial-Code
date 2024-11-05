@@ -1,7 +1,22 @@
 import { useEffect, useState } from "react";
-import { List, Typography, Button, message, Modal, Input, Checkbox, ConfigProvider, Select } from "antd";
-import { EditOutlined, CheckOutlined, LoadingOutlined, DeleteOutlined } from "@ant-design/icons";
-import CkEditorDocuments from './CkEditorDocuments';
+import {
+  List,
+  Typography,
+  Button,
+  message,
+  Modal,
+  Input,
+  Checkbox,
+  ConfigProvider,
+  Select,
+} from "antd";
+import {
+  EditOutlined,
+  CheckOutlined,
+  LoadingOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import CkEditorDocuments from "./CkEditorDocuments";
 import axios from "axios";
 
 const { Text } = Typography;
@@ -58,7 +73,9 @@ export default function NewTables() {
     setFilteredStudents(dummyData);
 
     // Extract unique courses
-    const uniqueCourses = [...new Set(dummyData.map(student => student.course))];
+    const uniqueCourses = [
+      ...new Set(dummyData.map((student) => student.course)),
+    ];
     setCourses(uniqueCourses);
   }, []);
 
@@ -75,10 +92,13 @@ export default function NewTables() {
 
   const updateManuscriptStatus = async (channelId, newStatus) => {
     try {
-      await axios.patch("http://localhost:5000/api/advicer/thesis/manuscript-status", {
-        channelId,
-        manuscriptStatus: newStatus,
-      });
+      await axios.patch(
+        "http://localhost:7000/api/advicer/thesis/manuscript-status",
+        {
+          channelId,
+          manuscriptStatus: newStatus,
+        }
+      );
       message.success("Manuscript status updated");
     } catch (error) {
       console.error("Error updating status:", error);
@@ -115,16 +135,21 @@ export default function NewTables() {
   const handleCourseChange = (value) => {
     setSelectedCourse(value);
     if (value === "") setFilteredStudents(acceptedStudents);
-    else setFilteredStudents(acceptedStudents.filter(student => student.course === value));
+    else
+      setFilteredStudents(
+        acceptedStudents.filter((student) => student.course === value)
+      );
   };
 
   return (
-    <div style={{ flex: 1, overflowX: "hidden", padding: "20px", width: "1263px" }}>
-     
-
+    <div
+      style={{ flex: 1, overflowX: "hidden", padding: "20px", width: "1263px" }}
+    >
       <List
         grid={{ gutter: 16, column: 1 }}
-        dataSource={filteredStudents.filter(student => student.manuscriptStatus === "reviseOnAdvicer")}
+        dataSource={filteredStudents.filter(
+          (student) => student.manuscriptStatus === "reviseOnAdvicer"
+        )}
         renderItem={(student) => (
           <List.Item key={student._id}>
             <div
@@ -140,20 +165,28 @@ export default function NewTables() {
               }}
             >
               <div style={{ flex: 1 }}>
-                <Text style={{ color: "#ffffff", fontSize: "18px", fontWeight: "bold" }}>{student.proposalTitle}</Text>
+                <Text
+                  style={{
+                    color: "#ffffff",
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {student.proposalTitle}
+                </Text>
                 <br />
                 <Text style={{ color: "#ffffff" }}>
-                  <span className="font-bold">Authors: </span>
+                  <span className='font-bold'>Authors: </span>
                   {student.groupMembers.join(", ")}
                 </Text>
                 <br />
                 <Text style={{ color: "#ffffff" }}>
-                  <span className="font-bold">Panelists: </span>
+                  <span className='font-bold'>Panelists: </span>
                   {student.panelists.join(", ")}
                 </Text>
                 <br />
                 <Text style={{ color: "#ffffff", marginRight: "10px" }}>
-                  <span className="font-bold">Date Uploaded:</span>{" "}
+                  <span className='font-bold'>Date Uploaded:</span>{" "}
                   {new Date(student.submittedAt).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
@@ -162,31 +195,45 @@ export default function NewTables() {
                 </Text>
                 <br />
                 <Text style={{ color: "#ffffff" }}>
-                  <span className="font-bold">Date Published:</span> {student.datePublished || "N/A"}
+                  <span className='font-bold'>Date Published:</span>{" "}
+                  {student.datePublished || "N/A"}
                 </Text>
                 <br />
                 <Text style={{ color: "#ffffff" }}>
                   <strong>Manuscript Status:</strong> {student.manuscriptStatus}
                 </Text>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginRight: "10px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginRight: "10px",
+                }}
+              >
                 <Button
                   icon={<EditOutlined />}
-                  onClick={() => handleViewManuscript(student._id, student.channelId)}
+                  onClick={() =>
+                    handleViewManuscript(student._id, student.channelId)
+                  }
                   style={{ marginBottom: "20px", width: "100px" }}
                 />
                 <Button
                   icon={<LoadingOutlined />}
-                  onClick={() => updateManuscriptStatus(student.channelId, "reviseOnAdvicer")}
+                  onClick={() =>
+                    updateManuscriptStatus(student.channelId, "reviseOnAdvicer")
+                  }
                   style={{ marginBottom: "20px", width: "100px" }}
                 />
                 <Button
                   icon={<CheckOutlined />}
-                  onClick={() => updateManuscriptStatus(student.channelId, "readyToDefense")}
+                  onClick={() =>
+                    updateManuscriptStatus(student.channelId, "readyToDefense")
+                  }
                   style={{ marginBottom: "20px", width: "100px" }}
                 />
                 <Button
-                  type="primary"
+                  type='primary'
                   onClick={() => openTaskModal(student)}
                   style={{ marginBottom: "20px", width: "100px" }}
                 >
@@ -199,7 +246,11 @@ export default function NewTables() {
       />
 
       {isEditorOpen && selectedStudentId && (
-        <CkEditorDocuments userId={user._id} channelId={selectedChannelId} onClose={() => setIsEditorOpen(false)} />
+        <CkEditorDocuments
+          userId={user._id}
+          channelId={selectedChannelId}
+          onClose={() => setIsEditorOpen(false)}
+        />
       )}
 
       <ConfigProvider>
@@ -207,16 +258,16 @@ export default function NewTables() {
           visible={isModalVisible}
           onCancel={() => setIsModalVisible(false)}
           footer={[
-            <Button key="close" onClick={() => setIsModalVisible(false)}>
+            <Button key='close' onClick={() => setIsModalVisible(false)}>
               Close
             </Button>,
-            <Button key="add" type="primary" onClick={handleAddTask}>
+            <Button key='add' type='primary' onClick={handleAddTask}>
               Add Task
             </Button>,
           ]}
         >
           <Input
-            placeholder="Enter a task"
+            placeholder='Enter a task'
             value={taskInput}
             onChange={handleTaskInputChange}
             onKeyDown={(e) => {
@@ -230,10 +281,16 @@ export default function NewTables() {
               <List.Item
                 key={index}
                 actions={[
-                  <Checkbox checked={task.completed} onChange={() => handleCompleteTask(index)}>
+                  <Checkbox
+                    checked={task.completed}
+                    onChange={() => handleCompleteTask(index)}
+                  >
                     Completed
                   </Checkbox>,
-                  <Button icon={<DeleteOutlined />} onClick={() => handleDeleteTask(index)} />,
+                  <Button
+                    icon={<DeleteOutlined />}
+                    onClick={() => handleDeleteTask(index)}
+                  />,
                 ]}
               >
                 {task.title}
