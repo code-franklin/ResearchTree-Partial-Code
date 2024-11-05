@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import React from 'react';
 import { List, Typography, Button, message, Modal, Input, Checkbox, ConfigProvider, Select, Progress, Space  } from "antd";
 import { EditOutlined, CheckOutlined, LoadingOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import CkEditorDocuments from './CkEditorDocuments';
 import axios from "axios";
 
@@ -69,6 +70,13 @@ export default function NewTables() {
     setSelectedChannelId(channelId);
     setIsEditorOpen(true);
   };
+
+  const closeEditorModal = () => {
+    setIsEditorOpen(false); // Close modal
+    setSelectedStudentId(null);
+    setSelectedChannelId(null);
+  };
+
 
   const addTask = async (studentId, taskTitle) => {
     try {
@@ -352,13 +360,13 @@ const openTaskModal = (student) => {
         )}
       />
 
-      {isEditorOpen && selectedStudentId && (
+{/*       {isEditorOpen && selectedStudentId && (
         <CkEditorDocuments
           userId={user._id}
           channelId={selectedChannelId}
           onClose={() => setIsEditorOpen(false)}
         />
-      )}
+      )} */}
 
  <ConfigProvider
       theme={{
@@ -371,6 +379,23 @@ const openTaskModal = (student) => {
         },
       }}
     >
+
+    {/* Material UI Modal for CKEditor */}
+    <Dialog open={isEditorOpen} onClose={closeEditorModal} fullWidth maxWidth="xxl">
+      
+      <DialogContent  sx={{height: '1200px',}}>
+        
+        {selectedStudentId && selectedChannelId && (
+          <CkEditorDocuments userId={user._id} channelId={selectedChannelId} />
+        )}
+        
+        
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={closeEditorModal} color="primary">Close</Button>
+      </DialogActions>
+    </Dialog>
+
     <Modal
       visible={isModalVisible}
       onCancel={() => setIsModalVisible(false)}

@@ -67,6 +67,12 @@ export default function NewTables() {
     setIsEditorOpen(true);
   };
 
+  const closeEditorModal = () => {
+    setIsEditorOpen(false); // Close modal
+    setSelectedStudentId(null);
+    setSelectedChannelId(null);
+  };
+
   // Task for Student
 
   const addTask = async (studentId, taskTitle) => {
@@ -258,13 +264,16 @@ const openTaskModal = (student) => {
         )}
       />
 
-      {isEditorOpen && selectedStudentId && (
+{/*       {isEditorOpen && selectedStudentId && (
         <CkEditorDocuments
           userId={user._id}
           channelId={selectedChannelId}
           onClose={() => setIsEditorOpen(false)}
         />
-      )}
+      )} */}
+
+
+        
 
       <Modal visible={isGradeModalVisible} onCancel={closeGradeModal} footer={null}>
         <h2>Grade Rubric</h2>

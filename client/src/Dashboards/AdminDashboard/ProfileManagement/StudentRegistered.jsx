@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/admin/advicer-users');
+        const response = await axios.get('http://localhost:5000/api/admin/student-users');
         setAllUsers(response.data);
       } catch (error) {
         console.error('Error fetching all users:', error);

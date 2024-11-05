@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { List, Typography, Button, message, Modal, Input, Checkbox, ConfigProvider, Select, Progress } from "antd";
 import { EditOutlined, CheckOutlined, LoadingOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import CkEditorDocuments from './CkEditorDocuments';
 import axios from "axios";
 
@@ -66,6 +67,13 @@ export default function NewTables() {
     setSelectedChannelId(channelId);
     setIsEditorOpen(true);
   };
+
+  const closeEditorModal = () => {
+    setIsEditorOpen(false); // Close modal
+    setSelectedStudentId(null);
+    setSelectedChannelId(null);
+  };
+
 
   const addTask = async (studentId, taskTitle) => {
     try {
@@ -301,10 +309,10 @@ export default function NewTables() {
                   <span className="font-bold">Manuscript Status:</span>{" "}
                   {student.manuscriptStatus}
                 </Text>
-                <br /><br />
+{/*                 <br /><br />
                 <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
                 <p style={{ color: "#ffffff" }}>USer: {student.name}</p>
-                <br />
+                <br /> */}
 
 
               </div>
@@ -350,13 +358,13 @@ export default function NewTables() {
         )}
       />
 
-      {isEditorOpen && selectedStudentId && (
+{/*       {isEditorOpen && selectedStudentId && (
         <CkEditorDocuments
           userId={user._id}
           channelId={selectedChannelId}
           onClose={() => setIsEditorOpen(false)}
         />
-      )}
+      )} */}
 
  <ConfigProvider
       theme={{
@@ -369,6 +377,24 @@ export default function NewTables() {
         },
       }}
     >
+
+      {/* Material UI Modal for CKEditor */}
+      <Dialog open={isEditorOpen} onClose={closeEditorModal} fullWidth maxWidth="xxl">
+  
+        <DialogContent  sx={{height: '1200px',}}>
+          
+          {selectedStudentId && selectedChannelId && (
+            <CkEditorDocuments userId={user._id} channelId={selectedChannelId} />
+          )}
+          
+          
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeEditorModal} color="primary">Close</Button>
+        </DialogActions>
+      </Dialog>
+
+
 <Modal
   visible={isModalVisible}
 

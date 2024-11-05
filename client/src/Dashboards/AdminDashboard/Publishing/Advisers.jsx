@@ -1,58 +1,84 @@
-import React, { useState } from 'react';
-import { Space, Table, Tag, ConfigProvider } from 'antd';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Space, Table, Tag, ConfigProvider, Modal } from 'antd';
 import ListManuscript from './AdviserManuscript';
-
-const adviserData = {
-  'Sherwin Sapin': [{ title: 'Manuscript A', status: 'Ongoing' }, { title: 'Manuscript B', status: 'Completed' }],
-  'Crisanto Gulay': [{ title: 'Manuscript C', status: 'Pending' }, { title: 'Manuscript D', status: 'In Review' }],
-  'Aj Matute': [{ title: 'Manuscript E', status: 'Ready for Defense' }],
-};
-
-const columns = (onClickAdviser) => [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text, record) => (
-      <Space onClick={() => onClickAdviser(record.name)} style={{ cursor: 'pointer' }}>
-        <img className="h-[37px] inline-block mr-2 mb-1" src="/src/assets/cris.png" />
-        <a>{text}</a>
-      </Space>
-    ),
-  },
-  {
-    title: 'Role',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-];
-
-const data = [
-  { key: '1', name: 'Sherwin Sapin', tags: ['Adviser'] },
-  { key: '2', name: 'Crisanto Gulay', tags: ['Adviser'] },
-  { key: '3', name: 'Aj Matute', tags: ['Adviser'] },
-];
 
 const App = () => {
   const [selectedAdviser, setSelectedAdviser] = useState(null);
+  const [advisers, setAdvisers] = useState([]);
 
-  const handleAdviserClick = (name) => {
-    setSelectedAdviser(name);
+  useEffect(() => {
+    const fetchAdvisers = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/admin/advicer/handle/manuscript');
+        console.log(response.data); // Check the structure of the data returned
+        const adviserData = response.data.advisers.map(adviser => ({
+          key: adviser._id,
+          name: adviser.name,
+          profileImage: adviser.profileImage,
+          specializations: adviser.specializations.join(', '),
+          tags: ['Adviser'],
+        }));
+        setAdvisers(adviserData);
+      } catch (error) {
+        console.error('Error fetching advisers:', error);
+      }
+    };
+    
+
+    fetchAdvisers();
+  }, []);
+
+  const handleAdviserClick = (adviser) => {
+    setSelectedAdviser(adviser);
+  };
+
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text, record) => (
+        <Space onClick={() => handleAdviserClick(record)} style={{ cursor: 'pointer' }}>
+          <img className="h-[37px] inline-block mr-2 mb-1" src={record.profileImage} alt={text} />
+          <a>{text}</a>
+        </Space>
+      ),
+    },
+    {
+      title: 'Role',
+      key: 'tags',
+      dataIndex: 'tags',
+      render: (_, { tags }) => (
+        <>
+          {tags.map((tag) => {
+            let color = tag.length > 5 ? 'geekblue' : 'green';
+            return (
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
+    },
+  ];
+
+  const showProfile = () => {
+    Modal.info({
+      title: selectedAdviser.name,
+      content: (
+        <div>
+          <img src={`http://localhost:5000/public/uploads/${selectedAdviser.profileImage || 'default-avatar.png'}`} alt={selectedAdviser.name} />
+
+
+          <p>Specializations: {selectedAdviser.specializations}</p>
+        </div>
+      ),
+      onOk() {
+        setSelectedAdviser(null);
+      },
+    });
   };
 
   return (
@@ -71,8 +97,8 @@ const App = () => {
     >
       {!selectedAdviser ? (
         <Table
-          columns={columns(handleAdviserClick)}
-          dataSource={data}
+          columns={columns}
+          dataSource={advisers}
           pagination={false}
           style={{
             position: 'absolute',
@@ -84,7 +110,7 @@ const App = () => {
           }}
         />
       ) : (
-        <ListManuscript adviserName={selectedAdviser} manuscripts={adviserData[selectedAdviser]} />
+        <ListManuscript adviserName={selectedAdviser.name} manuscripts={adviserData[selectedAdviser.name]} />
       )}
     </ConfigProvider>
   );

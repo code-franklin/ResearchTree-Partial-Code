@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Checkbox, Divider, Typography, List } from 'antd';
-import CkEditorDocuments from '../../../CKeditorDocuments';
+import CkEditorDocuments from './CkEditorDocuments';
 import './Styles/descriptions.css';
 import Categories from './Categories';
 
@@ -370,20 +370,22 @@ useEffect(() => {
           </div>
           
           <div className="flex items-center">
-          <Button type="primary" className="rounded-full text-center text-white mr-4 cursor-pointer w-[120px] h-[37px] border 1px solid #6A6A6A "  onClick={() => setIsEditorOpen(true)}>Open Editor</Button>
+          <Button 
+            type="primary" 
+            className="rounded-full text-center text-white mr-4 cursor-pointer w-[120px] h-[37px] border 1px solid #6A6A6A "  
+            onClick={() => setIsEditorOpen(true)}>
+              Open Editor
+          </Button>
             
 
           
             {isEditorOpen && (
-            <div className="w-[50rem] -mt-9 ">
+              <div className="w-[50rem] -mt-9 ">
 
-             <CkEditorDocuments 
-             width={800}
-             userId={user._id} channelId={user.channelId}/> 
-            </div>
-
-            
-
+              <CkEditorDocuments 
+              width={800}
+              userId={user._id} channelId={user.channelId}/> 
+              </div>
             )}
             
             <Button onClick={() => setIsTaskVisible(true)}>

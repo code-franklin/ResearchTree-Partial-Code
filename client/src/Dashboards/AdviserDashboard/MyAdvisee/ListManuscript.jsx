@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { List, Typography, Button, message, Modal, Input, Checkbox, ConfigProvider, Select, Progress } from "antd";
 import { EditOutlined, CheckOutlined, LoadingOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import CkEditorDocuments from './CkEditorDocuments';
 import axios from "axios";
 
@@ -66,6 +67,13 @@ export default function NewTables() {
     setSelectedChannelId(channelId);
     setIsEditorOpen(true);
   };
+
+  const closeEditorModal = () => {
+    setIsEditorOpen(false); // Close modal
+    setSelectedStudentId(null);
+    setSelectedChannelId(null);
+  };
+
 
   const addTask = async (studentId, taskTitle) => {
     try {
@@ -351,14 +359,14 @@ export default function NewTables() {
         )}
       />
 
-      {isEditorOpen && selectedStudentId && (
+{/*       {isEditorOpen && selectedStudentId && (
         <CkEditorDocuments
           userId={user._id}
           channelId={selectedChannelId}
           onClose={() => setIsEditorOpen(false)}
         />
       )}
-
+ */}
  <ConfigProvider
       theme={{
         components: {
@@ -370,55 +378,73 @@ export default function NewTables() {
         },
       }}
     >
-<Modal
-  visible={isModalVisible}
 
-  onCancel={() => setIsModalVisible(false)}  // Ensures modal can close
-  footer={[
-    <Button key="close" onClick={() => setIsModalVisible(false)}>
-      Close
-    </Button>,
-    <Button key="add" type="primary" onClick={handleAddTask}>
-      Add Task
-    </Button>,
-  ]}
- 
->
-  <Input
-    placeholder="Enter a task"
-    value={taskInput}
-    onChange={handleTaskInputChange}
-    onKeyDown={(e) => {
-      if (e.key === 'Enter') handleAddTask();
-    }}
-  />
-  <br /><br />
-  <List
-    dataSource={tasks}
-    locale={{ emptyText: "No tasks found" }}
-    renderItem={(task) => (
-      <List.Item
-        key={task._id}
-        actions={[
-          <Checkbox 
-            checked={task.isCompleted} 
-            onChange={() => handleCompleteTask(task._id)}
+          {/* Material UI Modal for CKEditor */}
+    <Dialog open={isEditorOpen} onClose={closeEditorModal} fullWidth maxWidth="xxl">
+      
+      <DialogContent  sx={{height: '1200px',}}>
+        
+        {selectedStudentId && selectedChannelId && (
+          <CkEditorDocuments userId={user._id} channelId={selectedChannelId} />
+        )}
+        
+        
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={closeEditorModal} color="primary">Close</Button>
+      </DialogActions>
+    </Dialog>
+
+
+    <Modal
+      visible={isModalVisible}
+
+      onCancel={() => setIsModalVisible(false)}  // Ensures modal can close
+      footer={[
+        <Button key="close" onClick={() => setIsModalVisible(false)}>
+          Close
+        </Button>,
+        <Button key="add" type="primary" onClick={handleAddTask}>
+          Add Task
+        </Button>,
+      ]}
+    
+    >
+      <Input
+        placeholder="Enter a task"
+        value={taskInput}
+        onChange={handleTaskInputChange}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') handleAddTask();
+        }}
+      />
+      <br /><br />
+      <List
+        dataSource={tasks}
+        locale={{ emptyText: "No tasks found" }}
+        renderItem={(task) => (
+          <List.Item
+            key={task._id}
+            actions={[
+              <Checkbox 
+                checked={task.isCompleted} 
+                onChange={() => handleCompleteTask(task._id)}
+              >
+                {task.isCompleted ? "Completed" : "Pending"}
+              </Checkbox>,
+                <Button 
+                type="link" 
+                icon={<DeleteOutlined />} 
+                onClick={() => deleteTask(currentTaskStudent._id, task._id)} // Pass studentId and taskId
+              />,
+            ]}
           >
-            {task.isCompleted ? "Completed" : "Pending"}
-          </Checkbox>,
-            <Button 
-            type="link" 
-            icon={<DeleteOutlined />} 
-            onClick={() => deleteTask(currentTaskStudent._id, task._id)} // Pass studentId and taskId
-          />,
-        ]}
-      >
-        <Text delete={task.isCompleted}>{task.taskTitle}</Text>
-      </List.Item>
-    )}
-  />
+            <Text delete={task.isCompleted}>{task.taskTitle}</Text>
+          </List.Item>
+        )}
+      />
 
-</Modal>
+    </Modal>
 </ConfigProvider>
     </div>
   );

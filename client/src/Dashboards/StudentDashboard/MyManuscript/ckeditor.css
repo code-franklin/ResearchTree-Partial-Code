@@ -19,14 +19,19 @@
 	}
 }
 
+.main-container {
+	--ckeditor5-preview-sidebar-width: 300px;
+	--ckeditor5-preview-height: 1000px;
+	font-family: 'Lato';
+	width: fit-content;
+	position: absolute;
 
+	top: 700px;
+	left: 330px;
+}
 
 .main-container .presence {
 	margin-bottom: 8px;
-	background-color: white;
-	padding: 10px;
-	border-radius: 10px;
-	
 }
 
 .ck-content {
@@ -48,7 +53,6 @@
 	display: flex;
 	position: relative;
 	box-shadow: 0 2px 3px hsla(0, 0%, 0%, 0.078);
-	
 }
 
 .editor-container_document-editor .editor-container__toolbar > .ck.ck-toolbar {
@@ -70,8 +74,9 @@
 }
 
 .editor-container_document-editor .editor-container__editor-wrapper {
-	
-	
+	max-height: var(--ckeditor5-preview-height);
+	min-height: var(--ckeditor5-preview-height);
+	overflow-y: scroll;
 	background: var(--ck-color-base-foreground);
 }
 

@@ -93,7 +93,18 @@ export const declineUser = async (req: Request, res: Response) => {
   }
 };
 
-export const getPendingUsers = async (req: Request, res: Response) => {
+
+export const getPendingUsersAdvicer = async (req: Request, res: Response) => {
+  try {
+    // Fetch users who are advisers and not approved
+    const users = await User.find({ isApproved: false, role: 'adviser' });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+export const getPendingUsersStudent = async (req: Request, res: Response) => {
   try {
     const users = await User.find({ isApproved: false });
     res.json(users);
@@ -102,9 +113,18 @@ export const getPendingUsers = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsersStudent = async (req: Request, res: Response) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({role: 'student'});
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+export const getAllUsersAdvicer = async (req: Request, res: Response) => {
+  try {
+    const users = await User.find({role: 'adviser'});
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
@@ -165,5 +185,100 @@ export const deleteSpecialization = async (req: Request, res: Response) => {
     res.status(200).json({ message: 'Specialization deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong', error });
+  }
+};
+
+
+// View Analytics
+
+export const countReadyToDefenseManuscripts = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Query to count documents with manuscriptStatus set to 'readyToDefense'
+    const count = await User.countDocuments({ manuscriptStatus: 'readyToDefense' });
+    res.status(200).json({ totalReadyToDefense: count });
+  } catch (error) {
+    console.error('Error counting readyToDefense manuscripts:', error);
+    res.status(500).json({ message: 'Server error while counting manuscripts' });
+  }
+};
+export const countReviseOnAdvicerManuscripts = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Query to count documents with manuscriptStatus set to 'readyToDefense'
+    const count = await User.countDocuments({ manuscriptStatus: 'reviseOnAdvicer' });
+    res.status(200).json({ totalReviseOnAdvicer: count });
+  } catch (error) {
+    console.error('Error counting readyToDefense manuscripts:', error);
+    res.status(500).json({ message: 'Server error while counting manuscripts' });
+  }
+};
+
+export const countReviseOnAPanelManuscripts = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Query to count documents with manuscriptStatus set to 'readyToDefense'
+    const count = await User.countDocuments({ manuscriptStatus: 'reviseOnPanelist' });
+    res.status(200).json({ totalReviseOnPanel: count });
+  } catch (error) {
+    console.error('Error counting readyToDefense manuscripts:', error);
+    res.status(500).json({ message: 'Server error while counting manuscripts' });
+  }
+};
+
+export const countApprovedOnPanelManuscripts = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Query to count documents with manuscriptStatus set to 'readyToDefense'
+    const count = await User.countDocuments({ manuscriptStatus: 'approvedOnPanel' });
+    res.status(200).json({ totalApprovedOnPanel: count });
+  } catch (error) {
+    console.error('Error counting readyToDefense manuscripts:', error);
+    res.status(500).json({ message: 'Server error while counting manuscripts' });
+  }
+};
+
+// Advicer
+
+export const fetchAdviserInfoWithStudents = async (req: Request, res: Response) => {
+  try {
+    // Find users with role 'adviser'
+    const advisers = await User.find({ role: 'adviser' }, 'name profileImage specializations');
+
+    // Attach students for each adviser
+    const advisersWithStudents = await Promise.all(advisers.map(async adviser => {
+      const students = await User.find(
+        { chosenAdvisor: adviser._id, role: 'student' },
+        'name groupMembers channelId panelists course profileImage manuscriptStatus proposals'
+      ).lean();
+
+      // Process student data to include panelist names and proposals
+      const studentData = await Promise.all(students.map(async (student) => {
+        const panelistNames = await User.find({ _id: { $in: student.panelists } }, 'name').lean();
+        const panelistNameList = panelistNames.map((panelist) => panelist.name);
+        const latestProposal = student.proposals.length > 0 ? student.proposals[student.proposals.length - 1] : null;
+
+        return {
+          _id: student._id,
+          name: student.name,
+          groupMembers: student.groupMembers,
+          channelId: student.channelId,
+          panelists: panelistNameList,
+          course: student.course,
+          profileImage: student.profileImage,
+          manuscriptStatus: student.manuscriptStatus,
+          chosenAdvisor: student.chosenAdvisor,
+          proposalTitle: latestProposal ? latestProposal.proposalTitle : 'No proposal submitted',
+          proposalText: latestProposal ? latestProposal.proposalText : 'No proposal submitted',
+          submittedAt: latestProposal ? latestProposal.submittedAt : null,
+        };
+      }));
+
+      return {
+        ...adviser.toObject(),
+        students: studentData, // Attach the students to the adviser
+      };
+    }));
+
+    res.status(200).json({ success: true, advisers: advisersWithStudents });
+  } catch (error) {
+    console.error("Error fetching advisers with students:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch advisers" });
   }
 };

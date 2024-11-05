@@ -1,0 +1,25 @@
+.header {
+    
+    background-color: #1E1E1E;
+    margin-top: -25px;
+    right: 330px;
+    padding: 20px;
+    z-index: 0;
+    
+    
+}
+
+.articlesScroll  {
+    padding: 50px;
+    
+}
+
+.topcomponent {
+    margin-top: 15px;
+    margin-left: 1200px;
+    z-index: 3
+}
+
+
+
+

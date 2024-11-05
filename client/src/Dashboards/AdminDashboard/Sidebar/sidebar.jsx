@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import UserAvatar from './Avatar';
 import './Sidebar.css';
 
 const Sidebar = ({ onSelect }) => {
-  const location = useLocation(); // Get current location
-  const user = JSON.parse(localStorage.getItem('user'));
+  const location = useLocation();
+  const [admin, setAdmin] = useState(null);
 
-  // Determine the current path to set the active link
+  useEffect(() => {
+    // Fetch stored user data from localStorage and set it to the admin state
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setAdmin(JSON.parse(storedUser));
+    }
+  }, []);
+
   const [activeLink, setActiveLink] = useState(location.pathname);
 
-  // Function to handle the active link
   const handleLinkClick = (path) => {
-    setActiveLink(path); // Set the active link when clicked
+    setActiveLink(path);
   };
 
   return (
@@ -20,6 +26,7 @@ const Sidebar = ({ onSelect }) => {
       <div>
         <img src="/src/assets/rstreelogo.png" alt="Logo" />
   
+        <img className="absolute mt-[630px] ml-[20px]" src="/src/assets/ListStudent.png" alt="Logo" />
         <img className="absolute mt-[480px] ml-[20px]" src="/src/assets/profile-management.png" alt="Logo" />
       </div>
 
@@ -29,8 +36,15 @@ const Sidebar = ({ onSelect }) => {
           {/* <span className="text-[21px] font-semibold">{user.name}</span>   I Comment muna pansamantala
           <p className="font-light text-[#4B4B4B]">{user.role}</p> */}  
 
-        <span className="text-[21px] font-semibold">Jonardo Asor</span>
-        <p className="font-light text-[#4B4B4B]">Admin</p>
+          {admin && (
+            <>
+              <span className="text-[21px] ml-6 font-semibold">{admin.name}</span>
+              <p className="font-light ml-5 text-[#4B4B4B]">Admin</p>
+            </>
+          )}
+{/*               <p className="text-xl mb-2">Welcome, {admin.name}</p>
+      {admin.profileImage && <p><img className="w-32 h-32 rounded-full" src={`http://localhost:5000${admin.profileImage}`} alt="Profile" /></p>}
+      <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onClick={handleLogout}>Logout</button> */}
         </div>
       </div>
 
@@ -101,6 +115,8 @@ const Sidebar = ({ onSelect }) => {
       </div>
        {/* Panelist Mode */}
        <div className='mt-[175px]  ml-[70px] '>
+     
+
           <Link
           to="AdminDashboard/AdviserPending"
           className={`exploreManuscript mx-10 px-2  ${
@@ -127,6 +143,36 @@ const Sidebar = ({ onSelect }) => {
           Registered Adviser
         </Link>
           </div>
+
+          <div className='mt-[45px]  ml-[70px] '>
+          <Link
+          to="AdminDashboard/StudentPending"
+          className={`exploreManuscript mx-10 px-2  ${
+            activeLink === '/AdminDashboard/StudentPending'
+              ? 'font-semibold ml-[4rem]  '
+              : 'hover:font-medium hover:ml-[4rem] '
+          }`}
+          onClick={() => handleLinkClick('/AdminDashboard/StudentPending')}
+        >
+          <br></br>
+          Pending Student
+        </Link> 
+
+        <Link
+          to="AdminDashboard/StudentRegistered"
+          className={`exploreManuscript mx-10 px-2  ${
+            activeLink === '/AdminDashboard/StudentRegistered'
+              ? 'font-semibold ml-[4rem]  '
+              : 'hover:font-medium hover:ml-[4rem] '
+          }`}
+          onClick={() => handleLinkClick('/AdminDashboard/StudentRegistered')}
+        >
+          <br></br>
+          Register Student
+        </Link> 
+          </div>
+
+          
     </div>
   );
 };

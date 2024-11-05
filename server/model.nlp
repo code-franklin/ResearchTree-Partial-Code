@@ -1,1 +1,2734 @@
-{"settings":{"languages":["en"],"forceNER":true,"tag":"nlp","threshold":0.5,"autoLoad":true,"autoSave":true,"modelFileName":"model.nlp","executeActionsBeforeAnswers":false,"calculateSentiment":true},"nluManager":{"settings":{"tag":"nlu-manager"},"locales":["en"],"languageNames":{},"domainManagers":{"en":{"settings":{"locale":"en","trainByDomain":false,"tag":"domain-manager-en","nluByDomain":{"default":{"className":"NeuralNlu","settings":{}}},"useStemDict":true},"stemDict":{"am,i,predict,research":{"intent":"66e7c314f8937259618b8366","domain":"default"},"focus,my,on,predict,research":{"intent":"66e7c314f8937259618b8366","domain":"default"},"help,i,need,predict,with":{"intent":"66e7c314f8937259618b8366","domain":"default"},"area,is,my,predict,primari,research":{"intent":"66e7c314f8937259618b8366","domain":"default"},"is,my,propos,test,titl":{"intent":"66e7c3bcf8937259618b8371","domain":"default"},"am,disast,i,mitig,research":{"intent":"66e7c2dcf8937259618b8355","domain":"default"},"disast,focus,mitig,my,on,research":{"intent":"66e7c2dcf8937259618b8355","domain":"default"},"disast,help,i,mitig,need,with":{"intent":"66e7c2dcf8937259618b8355","domain":"default"},"area,disast,is,mitig,my,primari,research":{"intent":"66e7c2dcf8937259618b8355","domain":"default"},"am,i,learn,machin,research":{"intent":"66e7c3bcf8937259618b8371","domain":"default"},"focus,learn,machin,my,on,research":{"intent":"66e7c3bcf8937259618b8371","domain":"default"},"help,i,learn,machin,need,with":{"intent":"66e7c3bcf8937259618b8371","domain":"default"},"area,is,learn,machin,my,primari,research":{"intent":"66e7c3bcf8937259618b8371","domain":"default"},"am,i,math,research":{"intent":"66e7c277f8937259618b8348","domain":"default"},"focus,math,my,on,research":{"intent":"66e7c277f8937259618b8348","domain":"default"},"help,i,math,need,with":{"intent":"66e7c277f8937259618b8348","domain":"default"},"area,is,math,my,primari,research":{"intent":"66e7c277f8937259618b8348","domain":"default"},"am,edtech,i,research":{"intent":"66e7c277f8937259618b8348","domain":"default"},"edtech,focus,my,on,research":{"intent":"66e7c277f8937259618b8348","domain":"default"},"edtech,help,i,need,with":{"intent":"66e7c277f8937259618b8348","domain":"default"},"area,edtech,is,my,primari,research":{"intent":"66e7c277f8937259618b8348","domain":"default"},"am,i,ite,research":{"intent":"66e7c277f8937259618b8348","domain":"default"},"focus,ite,my,on,research":{"intent":"66e7c277f8937259618b8348","domain":"default"},"help,i,ite,need,with":{"intent":"66e7c277f8937259618b8348","domain":"default"},"area,is,ite,my,primari,research":{"intent":"66e7c277f8937259618b8348","domain":"default"},"am,edmgt,i,research":{"intent":"66e7c277f8937259618b8348","domain":"default"},"edmgt,focus,my,on,research":{"intent":"66e7c277f8937259618b8348","domain":"default"},"edmgt,help,i,need,with":{"intent":"66e7c277f8937259618b8348","domain":"default"},"area,edmgt,is,my,primari,research":{"intent":"66e7c277f8937259618b8348","domain":"default"},"am,cyber,i,research,secur":{"intent":"66e7c3bcf8937259618b8371","domain":"default"},"cyber,focus,my,on,research,secur":{"intent":"66e7c3bcf8937259618b8371","domain":"default"},"cyber,help,i,need,secur,with":{"intent":"66e7c3bcf8937259618b8371","domain":"default"},"area,cyber,is,my,primari,research,secur":{"intent":"66e7c3bcf8937259618b8371","domain":"default"}},"intentDict":{"66e7c204f8937259618b8331":"default","66e7c277f8937259618b8348":"default","66e7c2dcf8937259618b8355":"default","66e7c314f8937259618b8366":"default","66e7c3bcf8937259618b8371":"default"},"sentences":[{"domain":"default","utterance":"I am researching Prediction","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"My research focuses on Prediction","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"I need help with Prediction","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"Prediction is my primary research area","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"I am researching Disaster Mitigation","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"My research focuses on Disaster Mitigation","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"I need help with Disaster Mitigation","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"Disaster Mitigation is my primary research area","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"I am researching Machine Learning","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"My research focuses on Machine Learning","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"I need help with Machine Learning","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"Machine Learning is my primary research area","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c204f8937259618b8331"},{"domain":"default","utterance":"I am researching MathEd","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"My research focuses on MathEd","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"I need help with MathEd","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"MathEd is my primary research area","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"I am researching EdTech","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"My research focuses on EdTech","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"I need help with EdTech","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"EdTech is my primary research area","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"I am researching ITEd","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"My research focuses on ITEd","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"I need help with ITEd","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"ITEd is my primary research area","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"I am researching EdMgt","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"My research focuses on EdMgt","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"I need help with EdMgt","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"EdMgt is my primary research area","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"I am researching Machine Learning","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"My research focuses on Machine Learning","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"I need help with Machine Learning","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"Machine Learning is my primary research area","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"I am researching Cyber Security","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"My research focuses on Cyber Security","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"I need help with Cyber Security","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"Cyber Security is my primary research area","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c277f8937259618b8348"},{"domain":"default","utterance":"I am researching Prediction","intent":"66e7c2dcf8937259618b8355"},{"domain":"default","utterance":"My research focuses on Prediction","intent":"66e7c2dcf8937259618b8355"},{"domain":"default","utterance":"I need help with Prediction","intent":"66e7c2dcf8937259618b8355"},{"domain":"default","utterance":"Prediction is my primary research area","intent":"66e7c2dcf8937259618b8355"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c2dcf8937259618b8355"},{"domain":"default","utterance":"I am researching Disaster Mitigation","intent":"66e7c2dcf8937259618b8355"},{"domain":"default","utterance":"My research focuses on Disaster Mitigation","intent":"66e7c2dcf8937259618b8355"},{"domain":"default","utterance":"I need help with Disaster Mitigation","intent":"66e7c2dcf8937259618b8355"},{"domain":"default","utterance":"Disaster Mitigation is my primary research area","intent":"66e7c2dcf8937259618b8355"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c2dcf8937259618b8355"},{"domain":"default","utterance":"I am researching Cyber Security","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"My research focuses on Cyber Security","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"I need help with Cyber Security","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"Cyber Security is my primary research area","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"I am researching Prediction","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"My research focuses on Prediction","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"I need help with Prediction","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"Prediction is my primary research area","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"I am researching Machine Learning","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"My research focuses on Machine Learning","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"I need help with Machine Learning","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"Machine Learning is my primary research area","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c314f8937259618b8366"},{"domain":"default","utterance":"I am researching Cyber Security","intent":"66e7c3bcf8937259618b8371"},{"domain":"default","utterance":"My research focuses on Cyber Security","intent":"66e7c3bcf8937259618b8371"},{"domain":"default","utterance":"I need help with Cyber Security","intent":"66e7c3bcf8937259618b8371"},{"domain":"default","utterance":"Cyber Security is my primary research area","intent":"66e7c3bcf8937259618b8371"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c3bcf8937259618b8371"},{"domain":"default","utterance":"I am researching Machine Learning","intent":"66e7c3bcf8937259618b8371"},{"domain":"default","utterance":"My research focuses on Machine Learning","intent":"66e7c3bcf8937259618b8371"},{"domain":"default","utterance":"I need help with Machine Learning","intent":"66e7c3bcf8937259618b8371"},{"domain":"default","utterance":"Machine Learning is my primary research area","intent":"66e7c3bcf8937259618b8371"},{"domain":"default","utterance":"My proposal title is TESTING","intent":"66e7c3bcf8937259618b8371"}],"domains":{"master_domain":{"settings":{"locale":"en","tag":"nlu-en","keepStopwords":true,"nonefeatureValue":1,"nonedeltaMultiplier":1.2,"spellCheck":false,"spellCheckDistance":1,"filterZeros":true,"log":true},"features":{"i":1,"am":1,"research":1,"predict":1,"my":1,"focus":1,"on":1,"need":1,"help":1,"with":1,"is":1,"primari":1,"area":1,"propos":1,"titl":1,"test":1,"disast":1,"mitig":1,"machin":1,"learn":1,"math":1,"edtech":1,"ite":1,"edmgt":1,"cyber":1,"secur":1},"intents":{"66e7c204f8937259618b8331":1,"66e7c277f8937259618b8348":1,"66e7c2dcf8937259618b8355":1,"66e7c314f8937259618b8366":1,"66e7c3bcf8937259618b8371":1},"intentFeatures":{"66e7c204f8937259618b8331":{"i":1,"am":1,"research":1,"predict":1,"my":1,"focus":1,"on":1,"need":1,"help":1,"with":1,"is":1,"primari":1,"area":1,"propos":1,"titl":1,"test":1,"disast":1,"mitig":1,"machin":1,"learn":1},"66e7c277f8937259618b8348":{"i":1,"am":1,"research":1,"math":1,"my":1,"focus":1,"on":1,"need":1,"help":1,"with":1,"is":1,"primari":1,"area":1,"propos":1,"titl":1,"test":1,"edtech":1,"ite":1,"edmgt":1,"machin":1,"learn":1,"cyber":1,"secur":1},"66e7c2dcf8937259618b8355":{"i":1,"am":1,"research":1,"predict":1,"my":1,"focus":1,"on":1,"need":1,"help":1,"with":1,"is":1,"primari":1,"area":1,"propos":1,"titl":1,"test":1,"disast":1,"mitig":1},"66e7c314f8937259618b8366":{"i":1,"am":1,"research":1,"cyber":1,"secur":1,"my":1,"focus":1,"on":1,"need":1,"help":1,"with":1,"is":1,"primari":1,"area":1,"propos":1,"titl":1,"test":1,"predict":1,"machin":1,"learn":1},"66e7c3bcf8937259618b8371":{"i":1,"am":1,"research":1,"cyber":1,"secur":1,"my":1,"focus":1,"on":1,"need":1,"help":1,"with":1,"is":1,"primari":1,"area":1,"propos":1,"titl":1,"test":1,"machin":1,"learn":1}},"featuresToIntent":{"i":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"am":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"research":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"predict":["66e7c204f8937259618b8331","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366"],"my":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"focus":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"on":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"need":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"help":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"with":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"is":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"primari":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"area":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"propos":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"titl":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"test":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"disast":["66e7c204f8937259618b8331","66e7c2dcf8937259618b8355"],"mitig":["66e7c204f8937259618b8331","66e7c2dcf8937259618b8355"],"machin":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"learn":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"math":["66e7c277f8937259618b8348"],"edtech":["66e7c277f8937259618b8348"],"ite":["66e7c277f8937259618b8348"],"edmgt":["66e7c277f8937259618b8348"],"cyber":["66e7c277f8937259618b8348","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"secur":["66e7c277f8937259618b8348","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"]},"neuralNetwork":{"settings":{"locale":"en","tag":"nlu-en","keepStopwords":true,"nonefeatureValue":1,"nonedeltaMultiplier":1.2,"spellCheck":false,"spellCheckDistance":1,"filterZeros":true,"log":true},"features":["i","am","research","predict","my","focus","on","need","help","with","is","primari","area","propos","titl","test","disast","mitig","machin","learn","math","edtech","ite","edmgt","cyber","secur"],"intents":["66e7c204f8937259618b8331","66e7c277f8937259618b8348","66e7c2dcf8937259618b8355","66e7c314f8937259618b8366","66e7c3bcf8937259618b8371"],"perceptrons":[[-2.1134345531463623,-0.9272461533546448,-2.811786651611328,4.160994529724121,-1.413640022277832,-0.8519699573516846,-0.8519699573516846,-1.0562635660171509,-1.0562635660171509,-1.0562635660171509,-0.3992614150047302,-0.7247932553291321,-0.7247932553291321,0.36646968126296997,0.36646968126296997,0.36646968126296997,5.8665385246276855,5.8665385246276855,3.677351236343384,3.677351236343384,-6.075009346008301,-4.443320274353027,-3.366995096206665,-2.9534482955932617,-0.006539326161146164,-0.006539326161146164,-1.837864673357516],[1.525048017501831,0.6113495230674744,1.973976731300354,-18.92373275756836,0.646217942237854,0.5804399251937866,0.5804399251937866,0.9890381693840027,0.9890381693840027,0.9890381693840027,0.16969811916351318,0.9819386005401611,0.9819386005401611,-0.7120819091796875,-0.7120819091796875,-0.7120819091796875,-9.48861312866211,-9.48861312866211,-2.642174005508423,-2.642174005508423,9.11927604675293,9.174145698547363,9.1548433303833,9.11536693572998,-2.446669340133667,-2.446669340133667,1.0314320952605236],[0.2289721965789795,0.0871562510728836,0.25244852900505066,-0.4141566753387451,0.286438524723053,0.018853310495615005,0.018853310495615005,0.05124283209443092,0.05124283209443092,0.05124283209443092,0.1983615607023239,-0.04819663614034653,-0.04819663614034653,0.20502105355262756,0.20502105355262756,0.20502105355262756,4.377556324005127,4.377556324005127,-0.9652736186981201,-0.9652736186981201,0,0,0,0,-2.698748826980591,-2.698748826980591,0.23697727514385672],[0.030702298507094383,-1.1329258680343628,-1.0751656293869019,4.0720648765563965,0.7284153699874878,-1.1203820705413818,-1.1203820705413818,1.106519103050232,1.106519103050232,1.106519103050232,1.8661283254623413,1.127326488494873,1.127326488494873,0.7436842918395996,0.7436842918395996,0.7436842918395996,-1.119725227355957,-1.119725227355957,0.8729147911071777,0.8729147911071777,-0.9605304002761841,-0.8050188422203064,-0.5240553617477417,-0.31586095690727234,-1.5394129753112793,-1.5394129753112793,0.18157078197893117],[-1.5507941246032715,-1.8695296049118042,-2.6322765350341797,-4.358931064605713,-0.02224244736135006,-1.7058707475662231,-1.7058707475662231,0.2600463330745697,0.2600463330745697,0.2600463330745697,1.647157073020935,0.826766848564148,0.826766848564148,0.6085432767868042,0.6085432767868042,0.6085432767868042,-2.857168436050415,-2.857168436050415,3.389411687850952,3.389411687850952,-1.4914761781692505,-0.8143661618232727,-0.46024954319000244,-0.33432579040527344,4.550800800323486,4.550800800323486,-0.36012316339102163]]}}}}},"intentDomains":{},"extraSentences":[["en","I am researching Prediction"],["en","My research focuses on Prediction"],["en","I need help with Prediction"],["en","Prediction is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching Disaster Mitigation"],["en","My research focuses on Disaster Mitigation"],["en","I need help with Disaster Mitigation"],["en","Disaster Mitigation is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching Machine Learning"],["en","My research focuses on Machine Learning"],["en","I need help with Machine Learning"],["en","Machine Learning is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching MathEd"],["en","My research focuses on MathEd"],["en","I need help with MathEd"],["en","MathEd is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching EdTech"],["en","My research focuses on EdTech"],["en","I need help with EdTech"],["en","EdTech is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching ITEd"],["en","My research focuses on ITEd"],["en","I need help with ITEd"],["en","ITEd is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching EdMgt"],["en","My research focuses on EdMgt"],["en","I need help with EdMgt"],["en","EdMgt is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching Machine Learning"],["en","My research focuses on Machine Learning"],["en","I need help with Machine Learning"],["en","Machine Learning is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching Cyber Security"],["en","My research focuses on Cyber Security"],["en","I need help with Cyber Security"],["en","Cyber Security is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching Prediction"],["en","My research focuses on Prediction"],["en","I need help with Prediction"],["en","Prediction is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching Disaster Mitigation"],["en","My research focuses on Disaster Mitigation"],["en","I need help with Disaster Mitigation"],["en","Disaster Mitigation is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching Cyber Security"],["en","My research focuses on Cyber Security"],["en","I need help with Cyber Security"],["en","Cyber Security is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching Prediction"],["en","My research focuses on Prediction"],["en","I need help with Prediction"],["en","Prediction is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching Machine Learning"],["en","My research focuses on Machine Learning"],["en","I need help with Machine Learning"],["en","Machine Learning is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching Cyber Security"],["en","My research focuses on Cyber Security"],["en","I need help with Cyber Security"],["en","Cyber Security is my primary research area"],["en","My proposal title is TESTING"],["en","I am researching Machine Learning"],["en","My research focuses on Machine Learning"],["en","I need help with Machine Learning"],["en","Machine Learning is my primary research area"],["en","My proposal title is TESTING"]]},"ner":{"settings":{"tag":"ner","entityPreffix":"%","entitySuffix":"%"},"rules":{}},"nlgManager":{"settings":{"tag":"nlg-manager"},"responses":{}},"actionManager":{"settings":{"tag":"action-manager"},"actions":{}},"slotManager":{}}
+{
+  "settings": {
+    "languages": [
+      "en"
+    ],
+    "forceNER": true,
+    "tag": "nlp",
+    "threshold": 0.5,
+    "autoLoad": true,
+    "autoSave": true,
+    "modelFileName": "model.nlp",
+    "executeActionsBeforeAnswers": false,
+    "calculateSentiment": true
+  },
+  "nluManager": {
+    "settings": {
+      "tag": "nlu-manager"
+    },
+    "locales": [
+      "en"
+    ],
+    "languageNames": {},
+    "domainManagers": {
+      "en": {
+        "settings": {
+          "locale": "en",
+          "trainByDomain": false,
+          "tag": "domain-manager-en",
+          "nluByDomain": {
+            "default": {
+              "className": "NeuralNlu",
+              "settings": {}
+            }
+          },
+          "useStemDict": true
+        },
+        "stemDict": {
+          "accuraci,action,advanc,aim,algorithm,also,analysi,analyst,and,approach,build,by,can,creat,data,decision-mak,deep,develop,divers,enhanc,field,financi,focus,for,forecast,histor,improv,includ,innov,input,integr,interpret,investig,involv,learn,leverag,machin,make,market,media,method,model,more,multipl,news,of,on,our,plan,predict,propos,reliabl,research,result,robust,sentiment,social,sourc,specif,studi,system,techniqu,that,the,them,these,this,to,transpar,trend,we,will": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "and,data,deep,financi,forecast,integr,involv,is,learn,machin,model,predict,propos,relat,this,to": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "analyt,and,data,deep,financi,forecast,integr,involv,is,learn,machin,model,predict,propos,relat,this,to": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "and,data,deep,financ,financi,forecast,integr,involv,is,learn,machin,model,predict,propos,relat,this,to": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "aim,algorithm,also,analysi,analyt,analyz,and,anomali,be,can,citi,collect,data,decision-mak,deploy,detect,develop,devic,effici,enhanc,explor,focus,from,how,implement,improv,in,infrastructur,integr,internet,iot,learn,machin,mainten,of,on,optim,our,overal,predict,process,project,propos,real,real-tim,reliabl,research,respond,sensor,smart,strategi,that,the,these,thing,thus,time,to,use,various,we,will,with": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "analyt,and,citi,involv,iot,is,learn,machin,mainten,predict,propos,real-tim,relat,smart,this,to": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "analyt,and,citi,internet,involv,iot,is,learn,machin,mainten,of,predict,propos,real-tim,relat,smart,thing,this,to": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "analyt,and,citi,data,involv,iot,is,learn,machin,mainten,predict,process,propos,real-tim,relat,smart,this,to": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "across,adapt,address,advanc,aim,ambigu,analysi,and,appli,applic,architectur,as,autom,be,by,can,capabl,challeng,classif,content,contextu,creat,custom,dataset,deep,develop,divers,domain,enhanc,entiti,feedback,focus,for,handl,improv,includ,integr,languag,learn,machin,model,moder,more,name,natur,nlp,on,our,perform,process,real-world,recognit,research,robust,seek,sentiment,state-of-the-art,strategi,studi,such,system,techniqu,text,that,the,through,to,transfer,use,variat,various,we,will": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "analysi,and,classif,deep,involv,is,languag,learn,machin,natur,process,propos,relat,sentiment,text,this,to": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "a,aim,algorithm,also,analyt,analyz,and,associ,at,can,care,clinic,concern,cost,creat,data,decision-mak,develop,diseas,effect,enhanc,ethic,explor,focus,goal,healthcar,identifi,implic,improv,in,includ,investig,is,learn,machin,model,on,our,outcom,outlin,patient,pattern,person,plan,predict,privaci,progress,project,propos,record,reduc,research,supervis,techniqu,that,the,therebi,this,through,to,treatment,trend,ultim,unsupervis,use,various,we,will,with": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "analyt,and,care,healthcar,involv,is,learn,machin,medicin,patient,person,predict,propos,relat,this,to": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "action,address,advanc,aim,algorithm,also,and,anomali,appli,approach,as,by,challeng,cluster,custom,data,dataset,detect,develop,dimension,domain,effect,ensur,evalu,featur,focus,for,fraud,hidden,improv,in,insight,investig,involv,is,larg,learn,machin,meaning,method,metric,model,novel,of,on,our,pattern,provid,qualiti,reduct,relat,research,scalabl,segment,select,studi,such,techniqu,that,the,these,this,to,uncov,unsupervis,various,we,will": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "and,anomali,cluster,detect,dimension,involv,is,learn,machin,propos,reduct,relat,this,to,unsupervis": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "and,anomali,cluster,data,detect,dimension,involv,is,learn,machin,mine,propos,reduct,relat,this,to,unsupervis": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "and,anomali,cluster,detect,dimension,involv,is,learn,machin,pattern,propos,recognit,reduct,relat,this,to,unsupervis": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "access,accuraci,addit,address,advanc,aim,algorithm,and,annot,applic,area,as,autonom,challeng,cnns,comput,convolut,dataset,detect,develop,effici,enhanc,evalu,explor,facial,focus,for,general,imag,improv,in,integr,interpret,involv,larg,learn,machin,make,model,more,network,neural,object,of,on,perform,practic,propos,real-world,recognit,relat,research,scenario,secur,segment,studi,such,system,technolog,the,their,this,to,train,transfer,use,various,vehicl,vision,we,will": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "and,cnns,comput,detect,imag,involv,is,learn,machin,object,propos,relat,segment,this,to,vision": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "and,cnns,comput,detect,imag,involv,is,learn,machin,object,propos,recognit,relat,segment,this,to,vision": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "and,cnns,comput,deep,detect,imag,involv,is,learn,machin,object,propos,relat,segment,this,to,vision": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "accuraci,advanc,aim,algorithm,also,analyt,analyz,and,applic,benefit,by,chain,challeng,cost,data,decision-mak,demand,develop,effici,enhanc,examin,exist,explor,for,forecast,histor,implement,improv,in,incorpor,integr,into,inventori,involv,learn,logist,machin,manag,model,of,oper,optim,plan,potenti,predict,process,project,real-tim,reduc,research,seek,studi,suppli,system,techniqu,the,this,to,we,will": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "and,chain,inventori,involv,is,learn,logist,machin,manag,model,predict,propos,relat,suppli,this,to": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "accuraci,adapt,advanc,aim,algorithm,also,and,anomal,appli,behavior,by,can,capabl,creat,cybersecur,data,detect,develop,enhanc,ensur,evolv,explor,fals,focus,for,handl,identifi,improv,in,inform,intrus,larg,learn,machin,measur,model,more,network,of,on,our,posit,project,protect,provid,real-tim,reduc,research,respond,respons,robust,scalabl,secur,sensit,solut,studi,system,techniqu,that,the,threat,to,traffic,volum,we,will": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "and,anomali,cybersecur,detect,intrus,involv,is,learn,machin,network,propos,relat,secur,this,to": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "and,anomali,cybersecur,detect,intrus,involv,is,learn,machin,network,propos,relat,secur,system,this,to": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "acceler,accuraci,addit,address,advanc,analyz,and,appli,applic,are,biolog,candid,challeng,chemic,compound,data,develop,discoveri,drug,efficaci,ensur,focus,goal,identifi,improv,in,includ,integr,involv,is,learn,leverag,machin,model,new,of,on,pharmaceut,pipelin,potenti,predict,process,real-world,reinforc,relat,reliabl,research,scenario,studi,supervis,techniqu,that,the,this,to,valid,various,we,will": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "and,biolog,comput,discoveri,drug,involv,is,learn,machin,model,pharmaceut,predict,propos,relat,research,this,to": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "accuraci,addit,address,aim,algorithm,analyz,and,approach,as,base,behavior,by,can,collabor,comput,content,content-bas,develop,divers,domain,e-commerc,effici,engag,enhanc,ensur,experi,explor,filter,focus,for,handl,hybrid,improv,in,issu,larg,learn,machin,media,model,more,on,person,prefer,propos,provid,recommend,relat,relev,research,scalabl,studi,such,system,techniqu,that,the,this,through,to,user,we,will": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "and,behavior,e-commerc,involv,is,learn,machin,person,propos,recommend,relat,system,this,to,user": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "accent,accur,accuraci,acoust,across,adapt,addit,address,advanc,aim,and,as,can,challeng,condit,dataset,develop,dialect,differ,divers,enhanc,environ,evalu,explor,extract,featur,focus,improv,in,integr,involv,is,languag,learn,machin,model,more,noisi,of,on,perform,process,provid,real-tim,recognit,relat,reliabl,research,solut,speech,spoken,studi,such,system,techniqu,that,the,their,this,through,to,train,transcrib,transfer,user-friend,various,we,will": {
+            "intent": "positive",
+            "domain": "default"
+          },
+          "acoust,and,involv,is,languag,learn,machin,model,natur,process,propos,real-tim,recognit,relat,speech,this,to": {
+            "intent": "positive",
+            "domain": "default"
+          }
+        },
+        "intentDict": {
+          "positive": "default"
+        },
+        "sentences": [
+          {
+            "domain": "default",
+            "utterance": "This research proposal aims to advance the field of machine learning by developing innovative algorithms and techniques to enhance predictive modeling. Specifically, we plan to focus on deep learning approaches that can improve the accuracy of financial forecasts. Our study will involve creating models that integrate multiple sources of data, including historical market data, news sentiment analysis, and social media trends. By leveraging these diverse data inputs, we aim to build more robust and reliable predictive systems. We will also investigate methods to interpret the results of these models, making them more transparent and actionable for financial analysts and decision-makers.",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Machine Learning and involves Machine Learning, predictive modeling, deep learning, financial forecasts, data integration",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Predictive Analytics and involves Machine Learning, predictive modeling, deep learning, financial forecasts, data integration",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Finance and involves Machine Learning, predictive modeling, deep learning, financial forecasts, data integration",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Deep Learning and involves Machine Learning, predictive modeling, deep learning, financial forecasts, data integration",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "The proposed research explores the integration of machine learning with Internet of Things (IoT) devices to enhance real-time data analysis and decision-making processes. Our project aims to develop machine learning algorithms that can process and analyze data from various IoT sensors deployed in smart cities. The focus will be on optimizing data collection, improving real-time analytics, and implementing predictive maintenance strategies. We will also explore how these algorithms can be used to detect and respond to anomalies in real time, thus improving the overall efficiency and reliability of smart city infrastructure.",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Machine Learning and involves Machine Learning, IoT, real-time analytics, smart cities, predictive maintenance",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Internet of Things (IoT) and involves Machine Learning, IoT, real-time analytics, smart cities, predictive maintenance",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Real-time Data Processing and involves Machine Learning, IoT, real-time analytics, smart cities, predictive maintenance",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Smart Cities and involves Machine Learning, IoT, real-time analytics, smart cities, predictive maintenance",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "Our research aims to enhance natural language processing (NLP) capabilities through advanced machine learning techniques. We will develop models for sentiment analysis, text classification, and named entity recognition using state-of-the-art deep learning architectures. The study will focus on improving model performance across diverse datasets and languages, addressing challenges such as handling ambiguous language and contextual variations. By integrating transfer learning and domain adaptation strategies, we seek to create more robust NLP systems that can be applied to various real-world applications, including customer feedback analysis and automated content moderation.",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Machine Learning and involves Machine Learning, natural language processing, sentiment analysis, text classification, deep learning",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Natural Language Processing and involves Machine Learning, natural language processing, sentiment analysis, text classification, deep learning",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Sentiment Analysis and involves Machine Learning, natural language processing, sentiment analysis, text classification, deep learning",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Text Classification and involves Machine Learning, natural language processing, sentiment analysis, text classification, deep learning",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal outlines a project to develop machine learning models aimed at improving healthcare outcomes through predictive analytics. Our research will focus on creating algorithms that can analyze patient data to predict disease progression and treatment effectiveness. We will explore various machine learning techniques, including supervised and unsupervised learning, to identify patterns and trends in patient records. The ultimate goal is to enhance clinical decision-making and personalize treatment plans, thereby improving patient care and reducing healthcare costs. We will also investigate the ethical implications and data privacy concerns associated with using machine learning in healthcare.",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Machine Learning and involves Machine Learning, healthcare, predictive analytics, personalized medicine, patient care",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Healthcare and involves Machine Learning, healthcare, predictive analytics, personalized medicine, patient care",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Predictive Analytics and involves Machine Learning, healthcare, predictive analytics, personalized medicine, patient care",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Personalized Medicine and involves Machine Learning, healthcare, predictive analytics, personalized medicine, patient care",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "The focus of this research is on advancing unsupervised learning techniques in machine learning. We will investigate methods for clustering, anomaly detection, and dimensionality reduction to uncover hidden patterns in large datasets. Our study will involve applying these techniques to various domains, such as customer segmentation and fraud detection. By developing novel algorithms and evaluation metrics, we aim to improve the effectiveness and scalability of unsupervised learning approaches. The research will also address challenges related to data quality and feature selection, ensuring that the models provide meaningful and actionable insights.",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Machine Learning and involves Machine Learning, unsupervised learning, clustering, anomaly detection, dimensionality reduction",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Unsupervised Learning and involves Machine Learning, unsupervised learning, clustering, anomaly detection, dimensionality reduction",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Data Mining and involves Machine Learning, unsupervised learning, clustering, anomaly detection, dimensionality reduction",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Pattern Recognition and involves Machine Learning, unsupervised learning, clustering, anomaly detection, dimensionality reduction",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal aims to enhance computer vision systems using advanced machine learning algorithms. We will focus on developing models for object detection, image segmentation, and facial recognition. The research will involve training models on large annotated image datasets and evaluating their performance in various real-world scenarios. We will explore the integration of convolutional neural networks (CNNs) and transfer learning to improve model accuracy and generalization. Additionally, the study will address challenges related to computational efficiency and model interpretability, making the technology more accessible for practical applications in areas such as security and autonomous vehicles.",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Machine Learning and involves Machine Learning, computer vision, object detection, image segmentation, CNNs",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Computer Vision and involves Machine Learning, computer vision, object detection, image segmentation, CNNs",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Image Recognition and involves Machine Learning, computer vision, object detection, image segmentation, CNNs",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Deep Learning and involves Machine Learning, computer vision, object detection, image segmentation, CNNs",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This research project explores the application of machine learning techniques to optimize supply chain management processes. We aim to develop predictive models for inventory management, demand forecasting, and logistics planning. The study will involve analyzing historical data and implementing machine learning algorithms to improve accuracy and efficiency in supply chain operations. By incorporating advanced analytics and real-time data processing, we seek to enhance decision-making and reduce operational costs. The research will also examine the potential benefits and challenges of integrating machine learning into existing supply chain systems.",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Machine Learning and involves Machine Learning, supply chain management, predictive modeling, inventory management, logistics",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Supply Chain Management and involves Machine Learning, supply chain management, predictive modeling, inventory management, logistics",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Predictive Modeling and involves Machine Learning, supply chain management, predictive modeling, inventory management, logistics",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Logistics and involves Machine Learning, supply chain management, predictive modeling, inventory management, logistics",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "Our study aims to advance cybersecurity measures by applying machine learning algorithms to detect and respond to network intrusions. We will develop models that can identify anomalous behavior in network traffic and improve the accuracy of intrusion detection systems. The research will focus on creating algorithms that can handle large volumes of data and adapt to evolving threats. We will also explore techniques for reducing false positives and enhancing real-time response capabilities. The project aims to provide more robust and scalable solutions for protecting sensitive information and ensuring network security.",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Machine Learning and involves Machine Learning, cybersecurity, intrusion detection, anomaly detection, network security",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Cybersecurity and involves Machine Learning, cybersecurity, intrusion detection, anomaly detection, network security",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Anomaly Detection and involves Machine Learning, cybersecurity, intrusion detection, anomaly detection, network security",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Intrusion Detection Systems and involves Machine Learning, cybersecurity, intrusion detection, anomaly detection, network security",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This research focuses on leveraging machine learning to advance drug discovery processes. The study will involve developing models to predict the efficacy of new pharmaceutical compounds and identify potential drug candidates. We will apply various machine learning techniques, including supervised learning and reinforcement learning, to analyze biological and chemical data. The goal is to accelerate the drug discovery pipeline and improve the accuracy of predictions. Additionally, the research will address challenges related to data integration and model validation, ensuring that the developed models are reliable and applicable in real-world scenarios.",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Machine Learning and involves Machine Learning, drug discovery, computational biology, pharmaceutical research, predictive models",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Drug Discovery and involves Machine Learning, drug discovery, computational biology, pharmaceutical research, predictive models",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Computational Biology and involves Machine Learning, drug discovery, computational biology, pharmaceutical research, predictive models",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Pharmaceutical Research and involves Machine Learning, drug discovery, computational biology, pharmaceutical research, predictive models",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal aims to enhance user experience in recommendation systems through machine learning techniques. We will develop algorithms for personalized recommendations in domains such as e-commerce and media. The research will focus on improving recommendation accuracy by analyzing user behavior and preferences. We will explore collaborative filtering, content-based approaches, and hybrid models to provide more relevant and engaging recommendations. Additionally, the study will address issues related to scalability and computational efficiency, ensuring that the recommendation systems can handle large user bases and diverse content.",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Machine Learning and involves Machine Learning, recommendation systems, personalization, e-commerce, user behavior",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Recommendation Systems and involves Machine Learning, recommendation systems, personalization, e-commerce, user behavior",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Personalization and involves Machine Learning, recommendation systems, personalization, e-commerce, user behavior",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to E-commerce and involves Machine Learning, recommendation systems, personalization, e-commerce, user behavior",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "The focus of this research is on improving speech recognition systems through advanced machine learning techniques. We will develop models that can accurately transcribe spoken language in noisy environments and adapt to different accents and dialects. The study will involve training models on diverse speech datasets and evaluating their performance across various conditions. We will explore techniques such as acoustic modeling, feature extraction, and transfer learning to enhance recognition accuracy. Additionally, the research will address challenges related to real-time processing and system integration, aiming to provide more reliable and user-friendly speech recognition solutions.",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Machine Learning and involves Machine Learning, speech recognition, natural language processing, acoustic modeling, real-time processing",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Speech Recognition and involves Machine Learning, speech recognition, natural language processing, acoustic modeling, real-time processing",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Natural Language Processing and involves Machine Learning, speech recognition, natural language processing, acoustic modeling, real-time processing",
+            "intent": "positive"
+          },
+          {
+            "domain": "default",
+            "utterance": "This proposal is related to Acoustic Modeling and involves Machine Learning, speech recognition, natural language processing, acoustic modeling, real-time processing",
+            "intent": "positive"
+          }
+        ],
+        "domains": {
+          "master_domain": {
+            "settings": {
+              "locale": "en",
+              "tag": "nlu-en",
+              "keepStopwords": true,
+              "nonefeatureValue": 1,
+              "nonedeltaMultiplier": 1.2,
+              "spellCheck": false,
+              "spellCheckDistance": 1,
+              "filterZeros": true,
+              "log": true
+            },
+            "features": {
+              "this": 1,
+              "research": 1,
+              "propos": 1,
+              "aim": 1,
+              "to": 1,
+              "advanc": 1,
+              "the": 1,
+              "field": 1,
+              "of": 1,
+              "machin": 1,
+              "learn": 1,
+              "by": 1,
+              "develop": 1,
+              "innov": 1,
+              "algorithm": 1,
+              "and": 1,
+              "techniqu": 1,
+              "enhanc": 1,
+              "predict": 1,
+              "model": 1,
+              "specif": 1,
+              "we": 1,
+              "plan": 1,
+              "focus": 1,
+              "on": 1,
+              "deep": 1,
+              "approach": 1,
+              "that": 1,
+              "can": 1,
+              "improv": 1,
+              "accuraci": 1,
+              "financi": 1,
+              "forecast": 1,
+              "our": 1,
+              "studi": 1,
+              "will": 1,
+              "involv": 1,
+              "creat": 1,
+              "integr": 1,
+              "multipl": 1,
+              "sourc": 1,
+              "data": 1,
+              "includ": 1,
+              "histor": 1,
+              "market": 1,
+              "news": 1,
+              "sentiment": 1,
+              "analysi": 1,
+              "social": 1,
+              "media": 1,
+              "trend": 1,
+              "leverag": 1,
+              "these": 1,
+              "divers": 1,
+              "input": 1,
+              "build": 1,
+              "more": 1,
+              "robust": 1,
+              "reliabl": 1,
+              "system": 1,
+              "also": 1,
+              "investig": 1,
+              "method": 1,
+              "interpret": 1,
+              "result": 1,
+              "make": 1,
+              "them": 1,
+              "transpar": 1,
+              "action": 1,
+              "for": 1,
+              "analyst": 1,
+              "decision-mak": 1,
+              "is": 1,
+              "relat": 1,
+              "analyt": 1,
+              "financ": 1,
+              "explor": 1,
+              "with": 1,
+              "internet": 1,
+              "thing": 1,
+              "iot": 1,
+              "devic": 1,
+              "real-tim": 1,
+              "process": 1,
+              "project": 1,
+              "analyz": 1,
+              "from": 1,
+              "various": 1,
+              "sensor": 1,
+              "deploy": 1,
+              "in": 1,
+              "smart": 1,
+              "citi": 1,
+              "be": 1,
+              "optim": 1,
+              "collect": 1,
+              "implement": 1,
+              "mainten": 1,
+              "strategi": 1,
+              "how": 1,
+              "use": 1,
+              "detect": 1,
+              "respond": 1,
+              "anomali": 1,
+              "real": 1,
+              "time": 1,
+              "thus": 1,
+              "overal": 1,
+              "effici": 1,
+              "infrastructur": 1,
+              "natur": 1,
+              "languag": 1,
+              "nlp": 1,
+              "capabl": 1,
+              "through": 1,
+              "text": 1,
+              "classif": 1,
+              "name": 1,
+              "entiti": 1,
+              "recognit": 1,
+              "state-of-the-art": 1,
+              "architectur": 1,
+              "perform": 1,
+              "across": 1,
+              "dataset": 1,
+              "address": 1,
+              "challeng": 1,
+              "such": 1,
+              "as": 1,
+              "handl": 1,
+              "ambigu": 1,
+              "contextu": 1,
+              "variat": 1,
+              "transfer": 1,
+              "domain": 1,
+              "adapt": 1,
+              "seek": 1,
+              "appli": 1,
+              "real-world": 1,
+              "applic": 1,
+              "custom": 1,
+              "feedback": 1,
+              "autom": 1,
+              "content": 1,
+              "moder": 1,
+              "outlin": 1,
+              "a": 1,
+              "at": 1,
+              "healthcar": 1,
+              "outcom": 1,
+              "patient": 1,
+              "diseas": 1,
+              "progress": 1,
+              "treatment": 1,
+              "effect": 1,
+              "supervis": 1,
+              "unsupervis": 1,
+              "identifi": 1,
+              "pattern": 1,
+              "record": 1,
+              "ultim": 1,
+              "goal": 1,
+              "clinic": 1,
+              "person": 1,
+              "therebi": 1,
+              "care": 1,
+              "reduc": 1,
+              "cost": 1,
+              "ethic": 1,
+              "implic": 1,
+              "privaci": 1,
+              "concern": 1,
+              "associ": 1,
+              "medicin": 1,
+              "cluster": 1,
+              "dimension": 1,
+              "reduct": 1,
+              "uncov": 1,
+              "hidden": 1,
+              "larg": 1,
+              "segment": 1,
+              "fraud": 1,
+              "novel": 1,
+              "evalu": 1,
+              "metric": 1,
+              "scalabl": 1,
+              "qualiti": 1,
+              "featur": 1,
+              "select": 1,
+              "ensur": 1,
+              "provid": 1,
+              "meaning": 1,
+              "insight": 1,
+              "mine": 1,
+              "comput": 1,
+              "vision": 1,
+              "object": 1,
+              "imag": 1,
+              "facial": 1,
+              "train": 1,
+              "annot": 1,
+              "their": 1,
+              "scenario": 1,
+              "convolut": 1,
+              "neural": 1,
+              "network": 1,
+              "cnns": 1,
+              "general": 1,
+              "addit": 1,
+              "technolog": 1,
+              "access": 1,
+              "practic": 1,
+              "area": 1,
+              "secur": 1,
+              "autonom": 1,
+              "vehicl": 1,
+              "suppli": 1,
+              "chain": 1,
+              "manag": 1,
+              "inventori": 1,
+              "demand": 1,
+              "logist": 1,
+              "oper": 1,
+              "incorpor": 1,
+              "examin": 1,
+              "potenti": 1,
+              "benefit": 1,
+              "into": 1,
+              "exist": 1,
+              "cybersecur": 1,
+              "measur": 1,
+              "intrus": 1,
+              "anomal": 1,
+              "behavior": 1,
+              "traffic": 1,
+              "volum": 1,
+              "evolv": 1,
+              "threat": 1,
+              "fals": 1,
+              "posit": 1,
+              "respons": 1,
+              "solut": 1,
+              "protect": 1,
+              "sensit": 1,
+              "inform": 1,
+              "drug": 1,
+              "discoveri": 1,
+              "efficaci": 1,
+              "new": 1,
+              "pharmaceut": 1,
+              "compound": 1,
+              "candid": 1,
+              "reinforc": 1,
+              "biolog": 1,
+              "chemic": 1,
+              "acceler": 1,
+              "pipelin": 1,
+              "valid": 1,
+              "are": 1,
+              "user": 1,
+              "experi": 1,
+              "recommend": 1,
+              "e-commerc": 1,
+              "prefer": 1,
+              "collabor": 1,
+              "filter": 1,
+              "content-bas": 1,
+              "hybrid": 1,
+              "relev": 1,
+              "engag": 1,
+              "issu": 1,
+              "base": 1,
+              "speech": 1,
+              "accur": 1,
+              "transcrib": 1,
+              "spoken": 1,
+              "noisi": 1,
+              "environ": 1,
+              "differ": 1,
+              "accent": 1,
+              "dialect": 1,
+              "condit": 1,
+              "acoust": 1,
+              "extract": 1,
+              "user-friend": 1
+            },
+            "intents": {
+              "positive": 1
+            },
+            "intentFeatures": {
+              "positive": {
+                "this": 1,
+                "research": 1,
+                "propos": 1,
+                "aim": 1,
+                "to": 1,
+                "advanc": 1,
+                "the": 1,
+                "field": 1,
+                "of": 1,
+                "machin": 1,
+                "learn": 1,
+                "by": 1,
+                "develop": 1,
+                "innov": 1,
+                "algorithm": 1,
+                "and": 1,
+                "techniqu": 1,
+                "enhanc": 1,
+                "predict": 1,
+                "model": 1,
+                "specif": 1,
+                "we": 1,
+                "plan": 1,
+                "focus": 1,
+                "on": 1,
+                "deep": 1,
+                "approach": 1,
+                "that": 1,
+                "can": 1,
+                "improv": 1,
+                "accuraci": 1,
+                "financi": 1,
+                "forecast": 1,
+                "our": 1,
+                "studi": 1,
+                "will": 1,
+                "involv": 1,
+                "creat": 1,
+                "integr": 1,
+                "multipl": 1,
+                "sourc": 1,
+                "data": 1,
+                "includ": 1,
+                "histor": 1,
+                "market": 1,
+                "news": 1,
+                "sentiment": 1,
+                "analysi": 1,
+                "social": 1,
+                "media": 1,
+                "trend": 1,
+                "leverag": 1,
+                "these": 1,
+                "divers": 1,
+                "input": 1,
+                "build": 1,
+                "more": 1,
+                "robust": 1,
+                "reliabl": 1,
+                "system": 1,
+                "also": 1,
+                "investig": 1,
+                "method": 1,
+                "interpret": 1,
+                "result": 1,
+                "make": 1,
+                "them": 1,
+                "transpar": 1,
+                "action": 1,
+                "for": 1,
+                "analyst": 1,
+                "decision-mak": 1,
+                "is": 1,
+                "relat": 1,
+                "analyt": 1,
+                "financ": 1,
+                "explor": 1,
+                "with": 1,
+                "internet": 1,
+                "thing": 1,
+                "iot": 1,
+                "devic": 1,
+                "real-tim": 1,
+                "process": 1,
+                "project": 1,
+                "analyz": 1,
+                "from": 1,
+                "various": 1,
+                "sensor": 1,
+                "deploy": 1,
+                "in": 1,
+                "smart": 1,
+                "citi": 1,
+                "be": 1,
+                "optim": 1,
+                "collect": 1,
+                "implement": 1,
+                "mainten": 1,
+                "strategi": 1,
+                "how": 1,
+                "use": 1,
+                "detect": 1,
+                "respond": 1,
+                "anomali": 1,
+                "real": 1,
+                "time": 1,
+                "thus": 1,
+                "overal": 1,
+                "effici": 1,
+                "infrastructur": 1,
+                "natur": 1,
+                "languag": 1,
+                "nlp": 1,
+                "capabl": 1,
+                "through": 1,
+                "text": 1,
+                "classif": 1,
+                "name": 1,
+                "entiti": 1,
+                "recognit": 1,
+                "state-of-the-art": 1,
+                "architectur": 1,
+                "perform": 1,
+                "across": 1,
+                "dataset": 1,
+                "address": 1,
+                "challeng": 1,
+                "such": 1,
+                "as": 1,
+                "handl": 1,
+                "ambigu": 1,
+                "contextu": 1,
+                "variat": 1,
+                "transfer": 1,
+                "domain": 1,
+                "adapt": 1,
+                "seek": 1,
+                "appli": 1,
+                "real-world": 1,
+                "applic": 1,
+                "custom": 1,
+                "feedback": 1,
+                "autom": 1,
+                "content": 1,
+                "moder": 1,
+                "outlin": 1,
+                "a": 1,
+                "at": 1,
+                "healthcar": 1,
+                "outcom": 1,
+                "patient": 1,
+                "diseas": 1,
+                "progress": 1,
+                "treatment": 1,
+                "effect": 1,
+                "supervis": 1,
+                "unsupervis": 1,
+                "identifi": 1,
+                "pattern": 1,
+                "record": 1,
+                "ultim": 1,
+                "goal": 1,
+                "clinic": 1,
+                "person": 1,
+                "therebi": 1,
+                "care": 1,
+                "reduc": 1,
+                "cost": 1,
+                "ethic": 1,
+                "implic": 1,
+                "privaci": 1,
+                "concern": 1,
+                "associ": 1,
+                "medicin": 1,
+                "cluster": 1,
+                "dimension": 1,
+                "reduct": 1,
+                "uncov": 1,
+                "hidden": 1,
+                "larg": 1,
+                "segment": 1,
+                "fraud": 1,
+                "novel": 1,
+                "evalu": 1,
+                "metric": 1,
+                "scalabl": 1,
+                "qualiti": 1,
+                "featur": 1,
+                "select": 1,
+                "ensur": 1,
+                "provid": 1,
+                "meaning": 1,
+                "insight": 1,
+                "mine": 1,
+                "comput": 1,
+                "vision": 1,
+                "object": 1,
+                "imag": 1,
+                "facial": 1,
+                "train": 1,
+                "annot": 1,
+                "their": 1,
+                "scenario": 1,
+                "convolut": 1,
+                "neural": 1,
+                "network": 1,
+                "cnns": 1,
+                "general": 1,
+                "addit": 1,
+                "technolog": 1,
+                "access": 1,
+                "practic": 1,
+                "area": 1,
+                "secur": 1,
+                "autonom": 1,
+                "vehicl": 1,
+                "suppli": 1,
+                "chain": 1,
+                "manag": 1,
+                "inventori": 1,
+                "demand": 1,
+                "logist": 1,
+                "oper": 1,
+                "incorpor": 1,
+                "examin": 1,
+                "potenti": 1,
+                "benefit": 1,
+                "into": 1,
+                "exist": 1,
+                "cybersecur": 1,
+                "measur": 1,
+                "intrus": 1,
+                "anomal": 1,
+                "behavior": 1,
+                "traffic": 1,
+                "volum": 1,
+                "evolv": 1,
+                "threat": 1,
+                "fals": 1,
+                "posit": 1,
+                "respons": 1,
+                "solut": 1,
+                "protect": 1,
+                "sensit": 1,
+                "inform": 1,
+                "drug": 1,
+                "discoveri": 1,
+                "efficaci": 1,
+                "new": 1,
+                "pharmaceut": 1,
+                "compound": 1,
+                "candid": 1,
+                "reinforc": 1,
+                "biolog": 1,
+                "chemic": 1,
+                "acceler": 1,
+                "pipelin": 1,
+                "valid": 1,
+                "are": 1,
+                "user": 1,
+                "experi": 1,
+                "recommend": 1,
+                "e-commerc": 1,
+                "prefer": 1,
+                "collabor": 1,
+                "filter": 1,
+                "content-bas": 1,
+                "hybrid": 1,
+                "relev": 1,
+                "engag": 1,
+                "issu": 1,
+                "base": 1,
+                "speech": 1,
+                "accur": 1,
+                "transcrib": 1,
+                "spoken": 1,
+                "noisi": 1,
+                "environ": 1,
+                "differ": 1,
+                "accent": 1,
+                "dialect": 1,
+                "condit": 1,
+                "acoust": 1,
+                "extract": 1,
+                "user-friend": 1
+              }
+            },
+            "featuresToIntent": {
+              "this": [
+                "positive"
+              ],
+              "research": [
+                "positive"
+              ],
+              "propos": [
+                "positive"
+              ],
+              "aim": [
+                "positive"
+              ],
+              "to": [
+                "positive"
+              ],
+              "advanc": [
+                "positive"
+              ],
+              "the": [
+                "positive"
+              ],
+              "field": [
+                "positive"
+              ],
+              "of": [
+                "positive"
+              ],
+              "machin": [
+                "positive"
+              ],
+              "learn": [
+                "positive"
+              ],
+              "by": [
+                "positive"
+              ],
+              "develop": [
+                "positive"
+              ],
+              "innov": [
+                "positive"
+              ],
+              "algorithm": [
+                "positive"
+              ],
+              "and": [
+                "positive"
+              ],
+              "techniqu": [
+                "positive"
+              ],
+              "enhanc": [
+                "positive"
+              ],
+              "predict": [
+                "positive"
+              ],
+              "model": [
+                "positive"
+              ],
+              "specif": [
+                "positive"
+              ],
+              "we": [
+                "positive"
+              ],
+              "plan": [
+                "positive"
+              ],
+              "focus": [
+                "positive"
+              ],
+              "on": [
+                "positive"
+              ],
+              "deep": [
+                "positive"
+              ],
+              "approach": [
+                "positive"
+              ],
+              "that": [
+                "positive"
+              ],
+              "can": [
+                "positive"
+              ],
+              "improv": [
+                "positive"
+              ],
+              "accuraci": [
+                "positive"
+              ],
+              "financi": [
+                "positive"
+              ],
+              "forecast": [
+                "positive"
+              ],
+              "our": [
+                "positive"
+              ],
+              "studi": [
+                "positive"
+              ],
+              "will": [
+                "positive"
+              ],
+              "involv": [
+                "positive"
+              ],
+              "creat": [
+                "positive"
+              ],
+              "integr": [
+                "positive"
+              ],
+              "multipl": [
+                "positive"
+              ],
+              "sourc": [
+                "positive"
+              ],
+              "data": [
+                "positive"
+              ],
+              "includ": [
+                "positive"
+              ],
+              "histor": [
+                "positive"
+              ],
+              "market": [
+                "positive"
+              ],
+              "news": [
+                "positive"
+              ],
+              "sentiment": [
+                "positive"
+              ],
+              "analysi": [
+                "positive"
+              ],
+              "social": [
+                "positive"
+              ],
+              "media": [
+                "positive"
+              ],
+              "trend": [
+                "positive"
+              ],
+              "leverag": [
+                "positive"
+              ],
+              "these": [
+                "positive"
+              ],
+              "divers": [
+                "positive"
+              ],
+              "input": [
+                "positive"
+              ],
+              "build": [
+                "positive"
+              ],
+              "more": [
+                "positive"
+              ],
+              "robust": [
+                "positive"
+              ],
+              "reliabl": [
+                "positive"
+              ],
+              "system": [
+                "positive"
+              ],
+              "also": [
+                "positive"
+              ],
+              "investig": [
+                "positive"
+              ],
+              "method": [
+                "positive"
+              ],
+              "interpret": [
+                "positive"
+              ],
+              "result": [
+                "positive"
+              ],
+              "make": [
+                "positive"
+              ],
+              "them": [
+                "positive"
+              ],
+              "transpar": [
+                "positive"
+              ],
+              "action": [
+                "positive"
+              ],
+              "for": [
+                "positive"
+              ],
+              "analyst": [
+                "positive"
+              ],
+              "decision-mak": [
+                "positive"
+              ],
+              "is": [
+                "positive"
+              ],
+              "relat": [
+                "positive"
+              ],
+              "analyt": [
+                "positive"
+              ],
+              "financ": [
+                "positive"
+              ],
+              "explor": [
+                "positive"
+              ],
+              "with": [
+                "positive"
+              ],
+              "internet": [
+                "positive"
+              ],
+              "thing": [
+                "positive"
+              ],
+              "iot": [
+                "positive"
+              ],
+              "devic": [
+                "positive"
+              ],
+              "real-tim": [
+                "positive"
+              ],
+              "process": [
+                "positive"
+              ],
+              "project": [
+                "positive"
+              ],
+              "analyz": [
+                "positive"
+              ],
+              "from": [
+                "positive"
+              ],
+              "various": [
+                "positive"
+              ],
+              "sensor": [
+                "positive"
+              ],
+              "deploy": [
+                "positive"
+              ],
+              "in": [
+                "positive"
+              ],
+              "smart": [
+                "positive"
+              ],
+              "citi": [
+                "positive"
+              ],
+              "be": [
+                "positive"
+              ],
+              "optim": [
+                "positive"
+              ],
+              "collect": [
+                "positive"
+              ],
+              "implement": [
+                "positive"
+              ],
+              "mainten": [
+                "positive"
+              ],
+              "strategi": [
+                "positive"
+              ],
+              "how": [
+                "positive"
+              ],
+              "use": [
+                "positive"
+              ],
+              "detect": [
+                "positive"
+              ],
+              "respond": [
+                "positive"
+              ],
+              "anomali": [
+                "positive"
+              ],
+              "real": [
+                "positive"
+              ],
+              "time": [
+                "positive"
+              ],
+              "thus": [
+                "positive"
+              ],
+              "overal": [
+                "positive"
+              ],
+              "effici": [
+                "positive"
+              ],
+              "infrastructur": [
+                "positive"
+              ],
+              "natur": [
+                "positive"
+              ],
+              "languag": [
+                "positive"
+              ],
+              "nlp": [
+                "positive"
+              ],
+              "capabl": [
+                "positive"
+              ],
+              "through": [
+                "positive"
+              ],
+              "text": [
+                "positive"
+              ],
+              "classif": [
+                "positive"
+              ],
+              "name": [
+                "positive"
+              ],
+              "entiti": [
+                "positive"
+              ],
+              "recognit": [
+                "positive"
+              ],
+              "state-of-the-art": [
+                "positive"
+              ],
+              "architectur": [
+                "positive"
+              ],
+              "perform": [
+                "positive"
+              ],
+              "across": [
+                "positive"
+              ],
+              "dataset": [
+                "positive"
+              ],
+              "address": [
+                "positive"
+              ],
+              "challeng": [
+                "positive"
+              ],
+              "such": [
+                "positive"
+              ],
+              "as": [
+                "positive"
+              ],
+              "handl": [
+                "positive"
+              ],
+              "ambigu": [
+                "positive"
+              ],
+              "contextu": [
+                "positive"
+              ],
+              "variat": [
+                "positive"
+              ],
+              "transfer": [
+                "positive"
+              ],
+              "domain": [
+                "positive"
+              ],
+              "adapt": [
+                "positive"
+              ],
+              "seek": [
+                "positive"
+              ],
+              "appli": [
+                "positive"
+              ],
+              "real-world": [
+                "positive"
+              ],
+              "applic": [
+                "positive"
+              ],
+              "custom": [
+                "positive"
+              ],
+              "feedback": [
+                "positive"
+              ],
+              "autom": [
+                "positive"
+              ],
+              "content": [
+                "positive"
+              ],
+              "moder": [
+                "positive"
+              ],
+              "outlin": [
+                "positive"
+              ],
+              "a": [
+                "positive"
+              ],
+              "at": [
+                "positive"
+              ],
+              "healthcar": [
+                "positive"
+              ],
+              "outcom": [
+                "positive"
+              ],
+              "patient": [
+                "positive"
+              ],
+              "diseas": [
+                "positive"
+              ],
+              "progress": [
+                "positive"
+              ],
+              "treatment": [
+                "positive"
+              ],
+              "effect": [
+                "positive"
+              ],
+              "supervis": [
+                "positive"
+              ],
+              "unsupervis": [
+                "positive"
+              ],
+              "identifi": [
+                "positive"
+              ],
+              "pattern": [
+                "positive"
+              ],
+              "record": [
+                "positive"
+              ],
+              "ultim": [
+                "positive"
+              ],
+              "goal": [
+                "positive"
+              ],
+              "clinic": [
+                "positive"
+              ],
+              "person": [
+                "positive"
+              ],
+              "therebi": [
+                "positive"
+              ],
+              "care": [
+                "positive"
+              ],
+              "reduc": [
+                "positive"
+              ],
+              "cost": [
+                "positive"
+              ],
+              "ethic": [
+                "positive"
+              ],
+              "implic": [
+                "positive"
+              ],
+              "privaci": [
+                "positive"
+              ],
+              "concern": [
+                "positive"
+              ],
+              "associ": [
+                "positive"
+              ],
+              "medicin": [
+                "positive"
+              ],
+              "cluster": [
+                "positive"
+              ],
+              "dimension": [
+                "positive"
+              ],
+              "reduct": [
+                "positive"
+              ],
+              "uncov": [
+                "positive"
+              ],
+              "hidden": [
+                "positive"
+              ],
+              "larg": [
+                "positive"
+              ],
+              "segment": [
+                "positive"
+              ],
+              "fraud": [
+                "positive"
+              ],
+              "novel": [
+                "positive"
+              ],
+              "evalu": [
+                "positive"
+              ],
+              "metric": [
+                "positive"
+              ],
+              "scalabl": [
+                "positive"
+              ],
+              "qualiti": [
+                "positive"
+              ],
+              "featur": [
+                "positive"
+              ],
+              "select": [
+                "positive"
+              ],
+              "ensur": [
+                "positive"
+              ],
+              "provid": [
+                "positive"
+              ],
+              "meaning": [
+                "positive"
+              ],
+              "insight": [
+                "positive"
+              ],
+              "mine": [
+                "positive"
+              ],
+              "comput": [
+                "positive"
+              ],
+              "vision": [
+                "positive"
+              ],
+              "object": [
+                "positive"
+              ],
+              "imag": [
+                "positive"
+              ],
+              "facial": [
+                "positive"
+              ],
+              "train": [
+                "positive"
+              ],
+              "annot": [
+                "positive"
+              ],
+              "their": [
+                "positive"
+              ],
+              "scenario": [
+                "positive"
+              ],
+              "convolut": [
+                "positive"
+              ],
+              "neural": [
+                "positive"
+              ],
+              "network": [
+                "positive"
+              ],
+              "cnns": [
+                "positive"
+              ],
+              "general": [
+                "positive"
+              ],
+              "addit": [
+                "positive"
+              ],
+              "technolog": [
+                "positive"
+              ],
+              "access": [
+                "positive"
+              ],
+              "practic": [
+                "positive"
+              ],
+              "area": [
+                "positive"
+              ],
+              "secur": [
+                "positive"
+              ],
+              "autonom": [
+                "positive"
+              ],
+              "vehicl": [
+                "positive"
+              ],
+              "suppli": [
+                "positive"
+              ],
+              "chain": [
+                "positive"
+              ],
+              "manag": [
+                "positive"
+              ],
+              "inventori": [
+                "positive"
+              ],
+              "demand": [
+                "positive"
+              ],
+              "logist": [
+                "positive"
+              ],
+              "oper": [
+                "positive"
+              ],
+              "incorpor": [
+                "positive"
+              ],
+              "examin": [
+                "positive"
+              ],
+              "potenti": [
+                "positive"
+              ],
+              "benefit": [
+                "positive"
+              ],
+              "into": [
+                "positive"
+              ],
+              "exist": [
+                "positive"
+              ],
+              "cybersecur": [
+                "positive"
+              ],
+              "measur": [
+                "positive"
+              ],
+              "intrus": [
+                "positive"
+              ],
+              "anomal": [
+                "positive"
+              ],
+              "behavior": [
+                "positive"
+              ],
+              "traffic": [
+                "positive"
+              ],
+              "volum": [
+                "positive"
+              ],
+              "evolv": [
+                "positive"
+              ],
+              "threat": [
+                "positive"
+              ],
+              "fals": [
+                "positive"
+              ],
+              "posit": [
+                "positive"
+              ],
+              "respons": [
+                "positive"
+              ],
+              "solut": [
+                "positive"
+              ],
+              "protect": [
+                "positive"
+              ],
+              "sensit": [
+                "positive"
+              ],
+              "inform": [
+                "positive"
+              ],
+              "drug": [
+                "positive"
+              ],
+              "discoveri": [
+                "positive"
+              ],
+              "efficaci": [
+                "positive"
+              ],
+              "new": [
+                "positive"
+              ],
+              "pharmaceut": [
+                "positive"
+              ],
+              "compound": [
+                "positive"
+              ],
+              "candid": [
+                "positive"
+              ],
+              "reinforc": [
+                "positive"
+              ],
+              "biolog": [
+                "positive"
+              ],
+              "chemic": [
+                "positive"
+              ],
+              "acceler": [
+                "positive"
+              ],
+              "pipelin": [
+                "positive"
+              ],
+              "valid": [
+                "positive"
+              ],
+              "are": [
+                "positive"
+              ],
+              "user": [
+                "positive"
+              ],
+              "experi": [
+                "positive"
+              ],
+              "recommend": [
+                "positive"
+              ],
+              "e-commerc": [
+                "positive"
+              ],
+              "prefer": [
+                "positive"
+              ],
+              "collabor": [
+                "positive"
+              ],
+              "filter": [
+                "positive"
+              ],
+              "content-bas": [
+                "positive"
+              ],
+              "hybrid": [
+                "positive"
+              ],
+              "relev": [
+                "positive"
+              ],
+              "engag": [
+                "positive"
+              ],
+              "issu": [
+                "positive"
+              ],
+              "base": [
+                "positive"
+              ],
+              "speech": [
+                "positive"
+              ],
+              "accur": [
+                "positive"
+              ],
+              "transcrib": [
+                "positive"
+              ],
+              "spoken": [
+                "positive"
+              ],
+              "noisi": [
+                "positive"
+              ],
+              "environ": [
+                "positive"
+              ],
+              "differ": [
+                "positive"
+              ],
+              "accent": [
+                "positive"
+              ],
+              "dialect": [
+                "positive"
+              ],
+              "condit": [
+                "positive"
+              ],
+              "acoust": [
+                "positive"
+              ],
+              "extract": [
+                "positive"
+              ],
+              "user-friend": [
+                "positive"
+              ]
+            },
+            "neuralNetwork": {
+              "settings": {
+                "locale": "en",
+                "tag": "nlu-en",
+                "keepStopwords": true,
+                "nonefeatureValue": 1,
+                "nonedeltaMultiplier": 1.2,
+                "spellCheck": false,
+                "spellCheckDistance": 1,
+                "filterZeros": true,
+                "log": true
+              },
+              "features": [
+                "this",
+                "research",
+                "propos",
+                "aim",
+                "to",
+                "advanc",
+                "the",
+                "field",
+                "of",
+                "machin",
+                "learn",
+                "by",
+                "develop",
+                "innov",
+                "algorithm",
+                "and",
+                "techniqu",
+                "enhanc",
+                "predict",
+                "model",
+                "specif",
+                "we",
+                "plan",
+                "focus",
+                "on",
+                "deep",
+                "approach",
+                "that",
+                "can",
+                "improv",
+                "accuraci",
+                "financi",
+                "forecast",
+                "our",
+                "studi",
+                "will",
+                "involv",
+                "creat",
+                "integr",
+                "multipl",
+                "sourc",
+                "data",
+                "includ",
+                "histor",
+                "market",
+                "news",
+                "sentiment",
+                "analysi",
+                "social",
+                "media",
+                "trend",
+                "leverag",
+                "these",
+                "divers",
+                "input",
+                "build",
+                "more",
+                "robust",
+                "reliabl",
+                "system",
+                "also",
+                "investig",
+                "method",
+                "interpret",
+                "result",
+                "make",
+                "them",
+                "transpar",
+                "action",
+                "for",
+                "analyst",
+                "decision-mak",
+                "is",
+                "relat",
+                "analyt",
+                "financ",
+                "explor",
+                "with",
+                "internet",
+                "thing",
+                "iot",
+                "devic",
+                "real-tim",
+                "process",
+                "project",
+                "analyz",
+                "from",
+                "various",
+                "sensor",
+                "deploy",
+                "in",
+                "smart",
+                "citi",
+                "be",
+                "optim",
+                "collect",
+                "implement",
+                "mainten",
+                "strategi",
+                "how",
+                "use",
+                "detect",
+                "respond",
+                "anomali",
+                "real",
+                "time",
+                "thus",
+                "overal",
+                "effici",
+                "infrastructur",
+                "natur",
+                "languag",
+                "nlp",
+                "capabl",
+                "through",
+                "text",
+                "classif",
+                "name",
+                "entiti",
+                "recognit",
+                "state-of-the-art",
+                "architectur",
+                "perform",
+                "across",
+                "dataset",
+                "address",
+                "challeng",
+                "such",
+                "as",
+                "handl",
+                "ambigu",
+                "contextu",
+                "variat",
+                "transfer",
+                "domain",
+                "adapt",
+                "seek",
+                "appli",
+                "real-world",
+                "applic",
+                "custom",
+                "feedback",
+                "autom",
+                "content",
+                "moder",
+                "outlin",
+                "a",
+                "at",
+                "healthcar",
+                "outcom",
+                "patient",
+                "diseas",
+                "progress",
+                "treatment",
+                "effect",
+                "supervis",
+                "unsupervis",
+                "identifi",
+                "pattern",
+                "record",
+                "ultim",
+                "goal",
+                "clinic",
+                "person",
+                "therebi",
+                "care",
+                "reduc",
+                "cost",
+                "ethic",
+                "implic",
+                "privaci",
+                "concern",
+                "associ",
+                "medicin",
+                "cluster",
+                "dimension",
+                "reduct",
+                "uncov",
+                "hidden",
+                "larg",
+                "segment",
+                "fraud",
+                "novel",
+                "evalu",
+                "metric",
+                "scalabl",
+                "qualiti",
+                "featur",
+                "select",
+                "ensur",
+                "provid",
+                "meaning",
+                "insight",
+                "mine",
+                "comput",
+                "vision",
+                "object",
+                "imag",
+                "facial",
+                "train",
+                "annot",
+                "their",
+                "scenario",
+                "convolut",
+                "neural",
+                "network",
+                "cnns",
+                "general",
+                "addit",
+                "technolog",
+                "access",
+                "practic",
+                "area",
+                "secur",
+                "autonom",
+                "vehicl",
+                "suppli",
+                "chain",
+                "manag",
+                "inventori",
+                "demand",
+                "logist",
+                "oper",
+                "incorpor",
+                "examin",
+                "potenti",
+                "benefit",
+                "into",
+                "exist",
+                "cybersecur",
+                "measur",
+                "intrus",
+                "anomal",
+                "behavior",
+                "traffic",
+                "volum",
+                "evolv",
+                "threat",
+                "fals",
+                "posit",
+                "respons",
+                "solut",
+                "protect",
+                "sensit",
+                "inform",
+                "drug",
+                "discoveri",
+                "efficaci",
+                "new",
+                "pharmaceut",
+                "compound",
+                "candid",
+                "reinforc",
+                "biolog",
+                "chemic",
+                "acceler",
+                "pipelin",
+                "valid",
+                "are",
+                "user",
+                "experi",
+                "recommend",
+                "e-commerc",
+                "prefer",
+                "collabor",
+                "filter",
+                "content-bas",
+                "hybrid",
+                "relev",
+                "engag",
+                "issu",
+                "base",
+                "speech",
+                "accur",
+                "transcrib",
+                "spoken",
+                "noisi",
+                "environ",
+                "differ",
+                "accent",
+                "dialect",
+                "condit",
+                "acoust",
+                "extract",
+                "user-friend"
+              ],
+              "intents": [
+                "positive"
+              ],
+              "perceptrons": [
+                [
+                  1.1872248649597168,
+                  0.17554046213626862,
+                  1.3352150917053223,
+                  0.14065052568912506,
+                  1.4787675142288208,
+                  0.08857475221157074,
+                  0.1159578338265419,
+                  -0.00584538746625185,
+                  -0.023961901664733887,
+                  1.4787675142288208,
+                  1.4787675142288208,
+                  0.16370750963687897,
+                  0.1159578338265419,
+                  -0.00584538746625185,
+                  0.039898037910461426,
+                  1.4787675142288208,
+                  0.0963427796959877,
+                  0.184064120054245,
+                  0.5246142745018005,
+                  0.3741086423397064,
+                  -0.00584538746625185,
+                  0.1159578338265419,
+                  0.010988607071340084,
+                  0.07822800427675247,
+                  0.07822800427675247,
+                  0.0015842149732634425,
+                  -0.08622916042804718,
+                  0.1367003470659256,
+                  0.20543964207172394,
+                  0.1159578338265419,
+                  -0.035278432071208954,
+                  0.12431764602661133,
+                  0.15725308656692505,
+                  0.22010302543640137,
+                  0.051049284636974335,
+                  0.1159578338265419,
+                  1.2417625188827515,
+                  0.1885875016450882,
+                  0.2581247389316559,
+                  -0.00584538746625185,
+                  -0.00584538746625185,
+                  -0.04294190555810928,
+                  0.08438234031200409,
+                  0.027614736929535866,
+                  -0.00584538746625185,
+                  -0.00584538746625185,
+                  0.1902879774570465,
+                  0.2681860029697418,
+                  -0.00584538746625185,
+                  -0.03593553230166435,
+                  -0.023703059181571007,
+                  -0.02533852308988571,
+                  0.018662752583622932,
+                  0.05801979452371597,
+                  -0.00584538746625185,
+                  -0.00584538746625185,
+                  0.08181405067443848,
+                  0.20321477949619293,
+                  0.02017485350370407,
+                  0.003967683296650648,
+                  0.1285799741744995,
+                  -0.07418229430913925,
+                  -0.058668043464422226,
+                  -0.0724567323923111,
+                  -0.00584538746625185,
+                  -0.0724567323923111,
+                  -0.00584538746625185,
+                  -0.00584538746625185,
+                  -0.058668043464422226,
+                  0.10487516224384308,
+                  -0.00584538746625185,
+                  0.08837337791919708,
+                  1.2560510635375977,
+                  1.1693108081817627,
+                  -0.005240780301392078,
+                  -0.0035849919077008963,
+                  0.06095914542675018,
+                  0.05771557241678238,
+                  0.017155449837446213,
+                  0.017155449837446213,
+                  0.13228701055049896,
+                  0.07216911017894745,
+                  0.30988991260528564,
+                  0.021692151203751564,
+                  0.180172860622406,
+                  0.04226887598633766,
+                  0.07216911017894745,
+                  0.03731244429945946,
+                  0.07216911017894745,
+                  0.07216911017894745,
+                  -0.0072493283078074455,
+                  0.13228701055049896,
+                  0.13228701055049896,
+                  0.1986285299062729,
+                  0.10903193801641464,
+                  0.07216911017894745,
+                  0.10903193801641464,
+                  0.13228701055049896,
+                  0.1986285299062729,
+                  0.07216911017894745,
+                  0.12339139729738235,
+                  0.5488620400428772,
+                  0.16022300720214844,
+                  0.3156094551086426,
+                  0.07216911017894745,
+                  0.07216911017894745,
+                  0.07216911017894745,
+                  0.07216911017894745,
+                  0.018918843939900398,
+                  0.07216911017894745,
+                  0.289339154958725,
+                  0.2515220046043396,
+                  0.11973250657320023,
+                  0.20949150621891022,
+                  0.05060632899403572,
+                  0.19683203101158142,
+                  0.19683203101158142,
+                  0.11973250657320023,
+                  0.11973250657320023,
+                  0.023169739171862602,
+                  0.11973250657320023,
+                  0.11973250657320023,
+                  0.038813814520835876,
+                  0.10025465488433838,
+                  -0.0062431106343865395,
+                  -0.06414881348609924,
+                  0.010622256435453892,
+                  -0.04009712114930153,
+                  -0.04009712114930153,
+                  0.17856279015541077,
+                  0.11973250657320023,
+                  0.11973250657320023,
+                  0.11973250657320023,
+                  0.038813814520835876,
+                  0.0474894680082798,
+                  0.1846747100353241,
+                  0.1583004891872406,
+                  0.14367175102233887,
+                  0.04332244396209717,
+                  0.0808437168598175,
+                  0.07201728969812393,
+                  0.11973250657320023,
+                  0.11973250657320023,
+                  0.09475252032279968,
+                  0.11973250657320023,
+                  -0.02038652077317238,
+                  -0.02038652077317238,
+                  -0.02038652077317238,
+                  0.13545115292072296,
+                  -0.02038652077317238,
+                  0.13545115292072296,
+                  -0.02038652077317238,
+                  -0.02038652077317238,
+                  -0.02038652077317238,
+                  -0.06991223245859146,
+                  -0.036582160741090775,
+                  0.14570818841457367,
+                  0.046653710305690765,
+                  0.013852636329829693,
+                  -0.02038652077317238,
+                  -0.02038652077317238,
+                  -0.036582160741090775,
+                  -0.02038652077317238,
+                  0.36320948600769043,
+                  -0.02038652077317238,
+                  0.13545115292072296,
+                  0.10271567106246948,
+                  0.016371065750718117,
+                  -0.02038652077317238,
+                  -0.02038652077317238,
+                  -0.02038652077317238,
+                  -0.02038652077317238,
+                  -0.02038652077317238,
+                  0.14881685376167297,
+                  0.15893343091011047,
+                  0.15893343091011047,
+                  0.15893343091011047,
+                  -0.054476331919431686,
+                  -0.054476331919431686,
+                  -0.055543024092912674,
+                  0.10874397307634354,
+                  -0.054476331919431686,
+                  -0.054476331919431686,
+                  -0.13509316742420197,
+                  -0.054476331919431686,
+                  0.004661779385060072,
+                  -0.054476331919431686,
+                  -0.07424333691596985,
+                  -0.054476331919431686,
+                  -0.01909571886062622,
+                  -0.025539586320519447,
+                  -0.054476331919431686,
+                  -0.054476331919431686,
+                  0.03521045297384262,
+                  0.17532315850257874,
+                  0.1522630900144577,
+                  0.1522630900144577,
+                  0.1522630900144577,
+                  -0.06624196469783783,
+                  -0.08866532891988754,
+                  -0.06624196469783783,
+                  -0.08866532891988754,
+                  -0.08357159793376923,
+                  -0.06624196469783783,
+                  -0.06624196469783783,
+                  0.10682574659585953,
+                  0.1522630900144577,
+                  -0.06624196469783783,
+                  -0.14938855171203613,
+                  -0.06624196469783783,
+                  -0.06624196469783783,
+                  -0.06624196469783783,
+                  -0.06624196469783783,
+                  0.10682574659585953,
+                  -0.06624196469783783,
+                  -0.06624196469783783,
+                  0.10136627405881882,
+                  0.10136627405881882,
+                  0.10136627405881882,
+                  0.10136627405881882,
+                  0.03418650105595589,
+                  0.10136627405881882,
+                  0.03418650105595589,
+                  0.03418650105595589,
+                  0.03418650105595589,
+                  0.014410779811441898,
+                  0.03418650105595589,
+                  0.03418650105595589,
+                  0.03418650105595589,
+                  0.16537421941757202,
+                  0.08773753046989441,
+                  0.16537421941757202,
+                  0.08773753046989441,
+                  0.31248965859413147,
+                  0.08773753046989441,
+                  0.08773753046989441,
+                  0.08773753046989441,
+                  0.08773753046989441,
+                  0.08773753046989441,
+                  0.08773753046989441,
+                  0.08773753046989441,
+                  0.05792967230081558,
+                  0.08773753046989441,
+                  0.08773753046989441,
+                  0.08773753046989441,
+                  0.03230808675289154,
+                  0.03230808675289154,
+                  -0.01757638528943062,
+                  -0.01757638528943062,
+                  0.03230808675289154,
+                  -0.01757638528943062,
+                  -0.01757638528943062,
+                  -0.01757638528943062,
+                  0.03230808675289154,
+                  -0.01757638528943062,
+                  -0.01757638528943062,
+                  -0.01757638528943062,
+                  -0.01757638528943062,
+                  -0.01757638528943062,
+                  0.22886250913143158,
+                  -0.028846846893429756,
+                  0.22886250913143158,
+                  0.22886250913143158,
+                  -0.028846846893429756,
+                  -0.028846846893429756,
+                  -0.028846846893429756,
+                  -0.028846846893429756,
+                  -0.028846846893429756,
+                  -0.028846846893429756,
+                  -0.028846846893429756,
+                  -0.028846846893429756,
+                  -0.028846846893429756,
+                  0.05706913396716118,
+                  -0.02562658302485943,
+                  -0.02562658302485943,
+                  -0.02562658302485943,
+                  -0.02562658302485943,
+                  -0.02562658302485943,
+                  -0.02562658302485943,
+                  -0.02562658302485943,
+                  -0.02562658302485943,
+                  -0.02562658302485943,
+                  0.05706913396716118,
+                  -0.02562658302485943,
+                  -0.02562658302485943,
+                  0.7409864238455028
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    "intentDomains": {},
+    "extraSentences": [
+      [
+        "en",
+        "This research proposal aims to advance the field of machine learning by developing innovative algorithms and techniques to enhance predictive modeling. Specifically, we plan to focus on deep learning approaches that can improve the accuracy of financial forecasts. Our study will involve creating models that integrate multiple sources of data, including historical market data, news sentiment analysis, and social media trends. By leveraging these diverse data inputs, we aim to build more robust and reliable predictive systems. We will also investigate methods to interpret the results of these models, making them more transparent and actionable for financial analysts and decision-makers."
+      ],
+      [
+        "en",
+        "This proposal is related to Machine Learning and involves Machine Learning, predictive modeling, deep learning, financial forecasts, data integration"
+      ],
+      [
+        "en",
+        "This proposal is related to Predictive Analytics and involves Machine Learning, predictive modeling, deep learning, financial forecasts, data integration"
+      ],
+      [
+        "en",
+        "This proposal is related to Finance and involves Machine Learning, predictive modeling, deep learning, financial forecasts, data integration"
+      ],
+      [
+        "en",
+        "This proposal is related to Deep Learning and involves Machine Learning, predictive modeling, deep learning, financial forecasts, data integration"
+      ],
+      [
+        "en",
+        "The proposed research explores the integration of machine learning with Internet of Things (IoT) devices to enhance real-time data analysis and decision-making processes. Our project aims to develop machine learning algorithms that can process and analyze data from various IoT sensors deployed in smart cities. The focus will be on optimizing data collection, improving real-time analytics, and implementing predictive maintenance strategies. We will also explore how these algorithms can be used to detect and respond to anomalies in real time, thus improving the overall efficiency and reliability of smart city infrastructure."
+      ],
+      [
+        "en",
+        "This proposal is related to Machine Learning and involves Machine Learning, IoT, real-time analytics, smart cities, predictive maintenance"
+      ],
+      [
+        "en",
+        "This proposal is related to Internet of Things (IoT) and involves Machine Learning, IoT, real-time analytics, smart cities, predictive maintenance"
+      ],
+      [
+        "en",
+        "This proposal is related to Real-time Data Processing and involves Machine Learning, IoT, real-time analytics, smart cities, predictive maintenance"
+      ],
+      [
+        "en",
+        "This proposal is related to Smart Cities and involves Machine Learning, IoT, real-time analytics, smart cities, predictive maintenance"
+      ],
+      [
+        "en",
+        "Our research aims to enhance natural language processing (NLP) capabilities through advanced machine learning techniques. We will develop models for sentiment analysis, text classification, and named entity recognition using state-of-the-art deep learning architectures. The study will focus on improving model performance across diverse datasets and languages, addressing challenges such as handling ambiguous language and contextual variations. By integrating transfer learning and domain adaptation strategies, we seek to create more robust NLP systems that can be applied to various real-world applications, including customer feedback analysis and automated content moderation."
+      ],
+      [
+        "en",
+        "This proposal is related to Machine Learning and involves Machine Learning, natural language processing, sentiment analysis, text classification, deep learning"
+      ],
+      [
+        "en",
+        "This proposal is related to Natural Language Processing and involves Machine Learning, natural language processing, sentiment analysis, text classification, deep learning"
+      ],
+      [
+        "en",
+        "This proposal is related to Sentiment Analysis and involves Machine Learning, natural language processing, sentiment analysis, text classification, deep learning"
+      ],
+      [
+        "en",
+        "This proposal is related to Text Classification and involves Machine Learning, natural language processing, sentiment analysis, text classification, deep learning"
+      ],
+      [
+        "en",
+        "This proposal outlines a project to develop machine learning models aimed at improving healthcare outcomes through predictive analytics. Our research will focus on creating algorithms that can analyze patient data to predict disease progression and treatment effectiveness. We will explore various machine learning techniques, including supervised and unsupervised learning, to identify patterns and trends in patient records. The ultimate goal is to enhance clinical decision-making and personalize treatment plans, thereby improving patient care and reducing healthcare costs. We will also investigate the ethical implications and data privacy concerns associated with using machine learning in healthcare."
+      ],
+      [
+        "en",
+        "This proposal is related to Machine Learning and involves Machine Learning, healthcare, predictive analytics, personalized medicine, patient care"
+      ],
+      [
+        "en",
+        "This proposal is related to Healthcare and involves Machine Learning, healthcare, predictive analytics, personalized medicine, patient care"
+      ],
+      [
+        "en",
+        "This proposal is related to Predictive Analytics and involves Machine Learning, healthcare, predictive analytics, personalized medicine, patient care"
+      ],
+      [
+        "en",
+        "This proposal is related to Personalized Medicine and involves Machine Learning, healthcare, predictive analytics, personalized medicine, patient care"
+      ],
+      [
+        "en",
+        "The focus of this research is on advancing unsupervised learning techniques in machine learning. We will investigate methods for clustering, anomaly detection, and dimensionality reduction to uncover hidden patterns in large datasets. Our study will involve applying these techniques to various domains, such as customer segmentation and fraud detection. By developing novel algorithms and evaluation metrics, we aim to improve the effectiveness and scalability of unsupervised learning approaches. The research will also address challenges related to data quality and feature selection, ensuring that the models provide meaningful and actionable insights."
+      ],
+      [
+        "en",
+        "This proposal is related to Machine Learning and involves Machine Learning, unsupervised learning, clustering, anomaly detection, dimensionality reduction"
+      ],
+      [
+        "en",
+        "This proposal is related to Unsupervised Learning and involves Machine Learning, unsupervised learning, clustering, anomaly detection, dimensionality reduction"
+      ],
+      [
+        "en",
+        "This proposal is related to Data Mining and involves Machine Learning, unsupervised learning, clustering, anomaly detection, dimensionality reduction"
+      ],
+      [
+        "en",
+        "This proposal is related to Pattern Recognition and involves Machine Learning, unsupervised learning, clustering, anomaly detection, dimensionality reduction"
+      ],
+      [
+        "en",
+        "This proposal aims to enhance computer vision systems using advanced machine learning algorithms. We will focus on developing models for object detection, image segmentation, and facial recognition. The research will involve training models on large annotated image datasets and evaluating their performance in various real-world scenarios. We will explore the integration of convolutional neural networks (CNNs) and transfer learning to improve model accuracy and generalization. Additionally, the study will address challenges related to computational efficiency and model interpretability, making the technology more accessible for practical applications in areas such as security and autonomous vehicles."
+      ],
+      [
+        "en",
+        "This proposal is related to Machine Learning and involves Machine Learning, computer vision, object detection, image segmentation, CNNs"
+      ],
+      [
+        "en",
+        "This proposal is related to Computer Vision and involves Machine Learning, computer vision, object detection, image segmentation, CNNs"
+      ],
+      [
+        "en",
+        "This proposal is related to Image Recognition and involves Machine Learning, computer vision, object detection, image segmentation, CNNs"
+      ],
+      [
+        "en",
+        "This proposal is related to Deep Learning and involves Machine Learning, computer vision, object detection, image segmentation, CNNs"
+      ],
+      [
+        "en",
+        "This research project explores the application of machine learning techniques to optimize supply chain management processes. We aim to develop predictive models for inventory management, demand forecasting, and logistics planning. The study will involve analyzing historical data and implementing machine learning algorithms to improve accuracy and efficiency in supply chain operations. By incorporating advanced analytics and real-time data processing, we seek to enhance decision-making and reduce operational costs. The research will also examine the potential benefits and challenges of integrating machine learning into existing supply chain systems."
+      ],
+      [
+        "en",
+        "This proposal is related to Machine Learning and involves Machine Learning, supply chain management, predictive modeling, inventory management, logistics"
+      ],
+      [
+        "en",
+        "This proposal is related to Supply Chain Management and involves Machine Learning, supply chain management, predictive modeling, inventory management, logistics"
+      ],
+      [
+        "en",
+        "This proposal is related to Predictive Modeling and involves Machine Learning, supply chain management, predictive modeling, inventory management, logistics"
+      ],
+      [
+        "en",
+        "This proposal is related to Logistics and involves Machine Learning, supply chain management, predictive modeling, inventory management, logistics"
+      ],
+      [
+        "en",
+        "Our study aims to advance cybersecurity measures by applying machine learning algorithms to detect and respond to network intrusions. We will develop models that can identify anomalous behavior in network traffic and improve the accuracy of intrusion detection systems. The research will focus on creating algorithms that can handle large volumes of data and adapt to evolving threats. We will also explore techniques for reducing false positives and enhancing real-time response capabilities. The project aims to provide more robust and scalable solutions for protecting sensitive information and ensuring network security."
+      ],
+      [
+        "en",
+        "This proposal is related to Machine Learning and involves Machine Learning, cybersecurity, intrusion detection, anomaly detection, network security"
+      ],
+      [
+        "en",
+        "This proposal is related to Cybersecurity and involves Machine Learning, cybersecurity, intrusion detection, anomaly detection, network security"
+      ],
+      [
+        "en",
+        "This proposal is related to Anomaly Detection and involves Machine Learning, cybersecurity, intrusion detection, anomaly detection, network security"
+      ],
+      [
+        "en",
+        "This proposal is related to Intrusion Detection Systems and involves Machine Learning, cybersecurity, intrusion detection, anomaly detection, network security"
+      ],
+      [
+        "en",
+        "This research focuses on leveraging machine learning to advance drug discovery processes. The study will involve developing models to predict the efficacy of new pharmaceutical compounds and identify potential drug candidates. We will apply various machine learning techniques, including supervised learning and reinforcement learning, to analyze biological and chemical data. The goal is to accelerate the drug discovery pipeline and improve the accuracy of predictions. Additionally, the research will address challenges related to data integration and model validation, ensuring that the developed models are reliable and applicable in real-world scenarios."
+      ],
+      [
+        "en",
+        "This proposal is related to Machine Learning and involves Machine Learning, drug discovery, computational biology, pharmaceutical research, predictive models"
+      ],
+      [
+        "en",
+        "This proposal is related to Drug Discovery and involves Machine Learning, drug discovery, computational biology, pharmaceutical research, predictive models"
+      ],
+      [
+        "en",
+        "This proposal is related to Computational Biology and involves Machine Learning, drug discovery, computational biology, pharmaceutical research, predictive models"
+      ],
+      [
+        "en",
+        "This proposal is related to Pharmaceutical Research and involves Machine Learning, drug discovery, computational biology, pharmaceutical research, predictive models"
+      ],
+      [
+        "en",
+        "This proposal aims to enhance user experience in recommendation systems through machine learning techniques. We will develop algorithms for personalized recommendations in domains such as e-commerce and media. The research will focus on improving recommendation accuracy by analyzing user behavior and preferences. We will explore collaborative filtering, content-based approaches, and hybrid models to provide more relevant and engaging recommendations. Additionally, the study will address issues related to scalability and computational efficiency, ensuring that the recommendation systems can handle large user bases and diverse content."
+      ],
+      [
+        "en",
+        "This proposal is related to Machine Learning and involves Machine Learning, recommendation systems, personalization, e-commerce, user behavior"
+      ],
+      [
+        "en",
+        "This proposal is related to Recommendation Systems and involves Machine Learning, recommendation systems, personalization, e-commerce, user behavior"
+      ],
+      [
+        "en",
+        "This proposal is related to Personalization and involves Machine Learning, recommendation systems, personalization, e-commerce, user behavior"
+      ],
+      [
+        "en",
+        "This proposal is related to E-commerce and involves Machine Learning, recommendation systems, personalization, e-commerce, user behavior"
+      ],
+      [
+        "en",
+        "The focus of this research is on improving speech recognition systems through advanced machine learning techniques. We will develop models that can accurately transcribe spoken language in noisy environments and adapt to different accents and dialects. The study will involve training models on diverse speech datasets and evaluating their performance across various conditions. We will explore techniques such as acoustic modeling, feature extraction, and transfer learning to enhance recognition accuracy. Additionally, the research will address challenges related to real-time processing and system integration, aiming to provide more reliable and user-friendly speech recognition solutions."
+      ],
+      [
+        "en",
+        "This proposal is related to Machine Learning and involves Machine Learning, speech recognition, natural language processing, acoustic modeling, real-time processing"
+      ],
+      [
+        "en",
+        "This proposal is related to Speech Recognition and involves Machine Learning, speech recognition, natural language processing, acoustic modeling, real-time processing"
+      ],
+      [
+        "en",
+        "This proposal is related to Natural Language Processing and involves Machine Learning, speech recognition, natural language processing, acoustic modeling, real-time processing"
+      ],
+      [
+        "en",
+        "This proposal is related to Acoustic Modeling and involves Machine Learning, speech recognition, natural language processing, acoustic modeling, real-time processing"
+      ]
+    ]
+  },
+  "ner": {
+    "settings": {
+      "tag": "ner",
+      "entityPreffix": "%",
+      "entitySuffix": "%"
+    },
+    "rules": {}
+  },
+  "nlgManager": {
+    "settings": {
+      "tag": "nlg-manager"
+    },
+    "responses": {}
+  },
+  "actionManager": {
+    "settings": {
+      "tag": "action-manager"
+    },
+    "actions": {}
+  },
+  "slotManager": {}
+}

@@ -24,8 +24,9 @@
 	--ckeditor5-preview-height: 1000px;
 	font-family: 'Lato';
 	width: fit-content;
-	margin-left: -50px;
-	margin-top: -20px;
+	position: absolute;
+	top: 10px;
+	left: 300px; 
 }
 
 .main-container .presence {

@@ -12,13 +12,22 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import './Sidebar.css';
 
 export default function AccountMenu() {
-  const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
+  const [admin, setAdmin] = useState(null);
+
+  useEffect(() => {
+    // Fetch stored user data from localStorage and set it to the admin state
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setAdmin(JSON.parse(storedUser));
+    }
+  }, []);
+
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -34,7 +43,7 @@ export default function AccountMenu() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.href = '/'; // Update the path based on your routing setup
+    window.location.href = '/adminSignIn'; // Update the path based on your routing setup
   };
 
 
@@ -50,11 +59,14 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            {user && user.profileImage ? (
-              <Avatar src={`http://localhost:5000/public/uploads/${user.profileImage}`} sx={{ width: 79, height: 79 }} />
+            {admin && admin.profileImage ? (
+              <Avatar src={`http://localhost:5000${admin.profileImage}`} sx={{ width: 79, height: 79 }} />
             ) : (
               <Avatar sx={{ width: 79, height: 79 }} /> // Fallback Avatar if no user or no profile image
             )}
+
+
+
           </IconButton>
         </Tooltip>
       </Box>

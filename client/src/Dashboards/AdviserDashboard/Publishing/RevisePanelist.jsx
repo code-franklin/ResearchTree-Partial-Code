@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { List, Typography, Button, message, Modal, Input, Checkbox, ConfigProvider, Select, Progress } from "antd";
-import { EditOutlined, CheckOutlined, LoadingOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, CheckOutlined, LoadingOutlined, DeleteOutlined, PlusOutlined, BookOutlined, StarOutlined   } from "@ant-design/icons";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import CkEditorDocuments from './CkEditorDocuments';
 import axios from "axios";
 
@@ -23,8 +24,19 @@ export default function NewTables() {
   const [taskInput, setTaskInput] = useState("");
   const [tasks, setTasks] = useState([]); // To store tasks
 
-  
   const [progress, setProgress] = useState(0);
+
+  
+  const panelistId = localStorage.getItem('panelistId');  // Example: retrieve panelist ID from localStorage
+
+    // Grading modal states
+    const [isGradingModalVisible, setIsGradingModalVisible] = useState(false);
+    const [gradingRubric, setGradingRubric] = useState({
+      criteria1: 0,
+      criteria2: 0,
+      criteria3: 0,
+    });
+    const [gradingData, setGradingData] = useState([]);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -66,7 +78,11 @@ export default function NewTables() {
     setSelectedChannelId(channelId);
     setIsEditorOpen(true);
   };
-
+  const closeEditorModal = () => {
+    setIsEditorOpen(false); // Close modal
+    setSelectedStudentId(null);
+    setSelectedChannelId(null);
+  };
   // Task for Student
 
   const addTask = async (studentId, taskTitle) => {
@@ -80,66 +96,14 @@ export default function NewTables() {
         body: JSON.stringify({ taskTitle }),
       });
       if (response.ok) {
-        setTasks([...tasks, { title: taskTitle, completed: false }]); // Add new task
-        setTaskInput(""); // Clear task input
-        fetchStudents(); // Refresh the list after adding a task
+        setTasks((prevTasks) => [...prevTasks, { title: taskTitle, completed: false }]);
+        setTaskInput(""); // Clear the input field
+        fetchTasks(studentId); // Fetch tasks again to immediately update the task list in the modal
       }
     } catch (error) {
       console.error('Error adding task:', error);
     }
   };
-
-  
-
-  const updatePanelManuscriptStatus = async (channelId, newStatus, userId) => {
-    try {
-      const response = await axios.patch(
-        'http://localhost:5000/api/advicer/thesis/panel/manuscript-status',
-        { channelId, manuscriptStatus: newStatus, userId }
-      );
-  
-      const { remainingVotes, message: successMessage } = response.data;
-  
-      message.success(successMessage);
-  
-    // Display remaining votes if status is `approvedOnPanel` or `reviseOnPanelist` and there are pending votes
-    if ((newStatus === 'reviseOnPanelist' || newStatus === 'approvedOnPanel') && remainingVotes > 0) {
-      message.info(`Only ${remainingVotes} more vote(s) needed to proceed with the manuscript`);
-    }
-  
-    } catch (error) {
-      if (error.response) {
-        console.error('Error response:', error.response.data);
-        message.error(`Error: ${error.response.data.message || 'Failed to update status'}`);
-      } else {
-        console.error('Error:', error.message);
-        message.error('Error updating status');
-      }
-    }
-  };
-  
-  const deleteTask = async (studentId, taskId) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/advicer/delete-task/${studentId}/${taskId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-  
-      if (response.ok) {
-        message.success('Task deleted successfully');
-        setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId)); // Remove task from state
-      } else {
-        const errorData = await response.json();
-        console.error('Error deleting task:', errorData.message);
-        message.error(`Error: ${errorData.message || 'Failed to delete task'}`);
-      }
-    } catch (error) {
-      console.error('Error deleting task:', error.message);
-      message.error('Error deleting task');
-    }
-  };  
 
   const fetchTaskProgress = async (studentId) => {
     if (!studentId) {
@@ -169,6 +133,86 @@ export default function NewTables() {
       console.error("Error fetching task progress:", error);
     }
   };
+    // Debug: Check the progress value in the component
+    useEffect(() => {
+      filteredStudents.forEach((student) => {
+        fetchTaskProgress(student._id);
+      });
+    }, [filteredStudents]);
+
+  const updateManuscriptStatus2 = async (channelId, newStatus, panelistId) => {
+    try {
+      const response = await axios.patch(
+        'http://localhost:5000/api/advicer/thesis/panel/manuscript-status',
+        { channelId, manuscriptStatus: newStatus, panelistId }  // Send panelist ID with the request
+      );
+  
+      if (newStatus === 'reviseOnPanelist' && response.data.remainingVotes > 0) {
+        message.info(`Vote recorded. ${response.data.remainingVotes} votes remaining`);
+      } else {
+        message.success('Manuscript status updated');
+      }
+  
+    } catch (error) {
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+        message.error(`Error: ${error.response.data.message || 'Failed to update status'}`);
+      } else {
+        console.error('Error:', error.message);
+        message.error('Error updating status');
+      }
+    }
+  };
+
+  const updatePanelManuscriptStatus = async (channelId, newStatus, userId) => {
+    try {
+      const response = await axios.patch(
+        'http://localhost:5000/api/advicer/thesis/panel/manuscript-status',
+        { channelId, manuscriptStatus: newStatus, userId }
+      );
+  
+      const { remainingVotes, message: successMessage } = response.data;
+  
+      message.success(successMessage);
+  
+    // Display remaining votes if status is `approvedOnPanel` or `reviseOnPanelist` and there are pending votes
+    if ((newStatus === 'reviseOnPanelist' || newStatus === 'approvedOnPanel') && remainingVotes > 0) {
+      message.info(`Only ${remainingVotes} more vote(s) needed to proceed with the manuscript`);
+    }
+  
+    } catch (error) {
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+        message.error(`Error: ${error.response.data.message || 'Failed to update status'}`);
+      } else {
+        console.error('Error:', error.message);
+        message.error('Error updating status');
+      }
+    }
+  };
+
+  const deleteTask = async (studentId, taskId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/advicer/delete-task/${studentId}/${taskId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      if (response.ok) {
+        message.success('Task deleted successfully');
+        setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId)); // Remove task from state
+      } else {
+        const errorData = await response.json();
+        console.error('Error deleting task:', errorData.message);
+        message.error(`Error: ${errorData.message || 'Failed to delete task'}`);
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error.message);
+      message.error('Error deleting task');
+    }
+  };  
 
   const fetchTasks = async (studentId) => {
     try {
@@ -190,20 +234,14 @@ export default function NewTables() {
     } catch (error) {
       console.error("Error fetching tasks:", error.message);
     }
-  }; 
+  };  
   
-  useEffect(() => {
-    filteredStudents.forEach((student) => {
-      fetchTaskProgress(student._id);
-    });
-  }, [filteredStudents]);
   
   const openTaskModal = (student) => {
     setCurrentTaskStudent(student);
     setIsModalVisible(true);
     fetchTasks(student._id); // Fetch tasks when opening modal
   };
-
 
   const handleTaskInputChange = (e) => {
     setTaskInput(e.target.value);
@@ -242,7 +280,43 @@ export default function NewTables() {
       }
     };
 
-    
+
+    /* Rubrics Grading for Student */
+
+    const handleGradingIconClick = (student) => {
+      setSelectedStudentId(student._id);
+      setIsGradingModalVisible(true);
+    };
+  
+    const handleRubricChange = (criteria, value) => {
+      setGradingRubric((prev) => ({
+        ...prev,
+        [criteria]: value,
+      }));
+    };
+  
+    const submitGrading = async () => {
+      try {
+        const response = await axios.post(`http://localhost:5000/api/advicer/grade-student`, {
+          studentId: selectedStudentId,
+          panelistId: user._id,
+          gradingRubric,
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        if (response.status === 200) {
+          message.success("Grading submitted successfully.");
+          setIsGradingModalVisible(false);
+          setGradingRubric({ criteria1: 0, criteria2: 0, criteria3: 0 });
+        }
+      } catch (error) {
+        console.error("Error submitting grading:", error);
+        message.error("Failed to submit grading.");
+      }
+    };
+
 
   return (
     <div style={{ flex: 1, overflowX: 'hidden', padding: "20px", width: '1263px' }}>
@@ -355,19 +429,37 @@ export default function NewTables() {
                 <Button type="primary" onClick={() => openTaskModal(student)} style={{ marginBottom: "20px", width: "100px" }}>
                   View Task
                 </Button>
+
               </div>
             </div>
           </List.Item>
         )}
       />
 
-      {isEditorOpen && selectedStudentId && (
+{/*       {isEditorOpen && selectedStudentId && (
         <CkEditorDocuments
           userId={user._id}
           channelId={selectedChannelId}
           onClose={() => setIsEditorOpen(false)}
         />
-      )}
+      )} */}
+
+    {/* Material UI Modal for CKEditor */}
+    <Dialog open={isEditorOpen} onClose={closeEditorModal} fullWidth maxWidth="xxl">
+      
+      <DialogContent  sx={{height: '1200px',}}>
+        
+        {selectedStudentId && selectedChannelId && (
+          <CkEditorDocuments userId={user._id} channelId={selectedChannelId} />
+        )}
+        
+        
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={closeEditorModal} color="primary">Close</Button>
+      </DialogActions>
+    </Dialog>
+
 
  <ConfigProvider
       theme={{
@@ -380,6 +472,7 @@ export default function NewTables() {
         },
       }}
     >
+
 <Modal
   visible={isModalVisible}
 

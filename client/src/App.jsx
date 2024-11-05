@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import { useEffect, useState } from 'react';
 
 import { ThemeProvider, createTheme } from "@mui/material/styles"
 import { Container, CssBaseline } from "@mui/material";
@@ -8,6 +9,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Login from './Auth/Login'
 import Register from './Auth/Registration'
+
+import LoginAdmin from './Auth/LoginAdmin'
 
 
 import StudentRoutes from './Routes/StudentRoutes';
@@ -18,6 +21,12 @@ import AdminRoutes from './Routes/AdminRoutes';
 
 function App() {
 
+  const [token, setToken] = useState(localStorage.getItem('token'));
+
+  const saveToken = (userToken) => {
+    localStorage.setItem('token', userToken);
+    setToken(userToken);
+  };
   
   return (
     <div className="App">
@@ -25,12 +34,16 @@ function App() {
            
         <Routes>
 
+          {/* Student and Advicer */}
           <Route path="/" element={<Login/>} />
           <Route path="/Register" element={<Register/>} />
 
           <Route path="/StudentDashboard/*" element={<StudentRoutes/>} />
           <Route path="/AdviserDashboard/*" element={<AdviserRoutes/>} />
-          <Route path="/AdminDashboard/*" element={<AdminRoutes/>} />
+
+          {/* Admin */}
+          <Route path="/adminSignIn" element={<LoginAdmin setToken={saveToken} />} />
+          <Route path="/AdminDashboard/*" element={token ? <AdminRoutes /> : <LoginAdmin setToken={saveToken} />} />
           
 
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { List, Typography, Button, message, Modal, Input, Checkbox, ConfigProvider, Select, Progress } from "antd";
 import { EditOutlined, CheckOutlined, LoadingOutlined, DeleteOutlined, PlusOutlined, BookOutlined, StarOutlined   } from "@ant-design/icons";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import CkEditorDocuments from './CkEditorDocuments';
 import axios from "axios";
 
@@ -77,7 +78,11 @@ export default function NewTables() {
     setSelectedChannelId(channelId);
     setIsEditorOpen(true);
   };
-
+  const closeEditorModal = () => {
+    setIsEditorOpen(false); // Close modal
+    setSelectedStudentId(null);
+    setSelectedChannelId(null);
+  };
   // Task for Student
 
   const addTask = async (studentId, taskTitle) => {
@@ -232,12 +237,11 @@ export default function NewTables() {
   };  
   
   
-const openTaskModal = (student) => {
-  setCurrentTaskStudent(student);
-  setIsModalVisible(true);
-  console.log("Selected student tasks: ", student.tasks); // Check if tasks exist here
-};
-
+  const openTaskModal = (student) => {
+    setCurrentTaskStudent(student);
+    setIsModalVisible(true);
+    fetchTasks(student._id); // Fetch tasks when opening modal
+  };
 
   const handleTaskInputChange = (e) => {
     setTaskInput(e.target.value);
@@ -382,7 +386,6 @@ const openTaskModal = (student) => {
                 <br /><br />
                 <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
                 <p style={{ color: "#ffffff" }}>USer: {student.name}</p>
-                <br />
 
               </div>
 
@@ -460,13 +463,29 @@ const openTaskModal = (student) => {
         )}
       />
 
-      {isEditorOpen && selectedStudentId && (
+{/*       {isEditorOpen && selectedStudentId && (
         <CkEditorDocuments
           userId={user._id}
           channelId={selectedChannelId}
           onClose={() => setIsEditorOpen(false)}
         />
-      )}
+      )} */}
+
+          {/* Material UI Modal for CKEditor */}
+    <Dialog open={isEditorOpen} onClose={closeEditorModal} fullWidth maxWidth="xxl">
+      
+      <DialogContent  sx={{height: '1200px',}}>
+        
+        {selectedStudentId && selectedChannelId && (
+          <CkEditorDocuments userId={user._id} channelId={selectedChannelId} />
+        )}
+        
+        
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={closeEditorModal} color="primary">Close</Button>
+      </DialogActions>
+    </Dialog>
 
       <Modal
         title="Grading Rubric"

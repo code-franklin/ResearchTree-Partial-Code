@@ -18,7 +18,7 @@ const App = () => {
   useEffect(() => {
     const fetchPendingUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/admin/advicer-pending');
+        const response = await axios.get('http://localhost:5000/api/admin/student-pending');
         setPendingUsers(response.data);
       } catch (error) {
         console.error('Error fetching pending users:', error);

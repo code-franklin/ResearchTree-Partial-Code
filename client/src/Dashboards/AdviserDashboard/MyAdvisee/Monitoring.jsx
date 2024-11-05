@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import React from 'react';
 import { List, Typography, Button, message, Modal, Input, Checkbox, ConfigProvider, Select, Progress, Space } from "antd";
 import { EditOutlined, CheckOutlined, LoadingOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import CkEditorDocuments from './CkEditorDocuments';
 import axios from "axios";
-import { maxWidth } from "@mui/system";
+import { bgcolor, maxWidth } from "@mui/system";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -71,6 +72,13 @@ export default function NewTables() {
     setSelectedChannelId(channelId);
     setIsEditorOpen(true);
   };
+
+  const closeEditorModal = () => {
+    setIsEditorOpen(false); // Close modal
+    setSelectedStudentId(null);
+    setSelectedChannelId(null);
+  };
+
 
   const addTask = async (studentId, taskTitle) => {
     try {
@@ -344,7 +352,13 @@ const openTaskModal = (student) => {
 
                 {student.manuscriptStatus === "reviseOnPanelist" ? (
                   <>
-                    <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)} style={{ marginBottom: "10px" , width: "100px" }}>Edit</Button>
+                    <Button
+                  icon={<EditOutlined />}
+                  onClick={() => handleViewManuscript(student._id, student.channelId)}
+                  style={{ marginBottom: "10px", width: "100px" }}
+                >
+                  Edit
+                </Button>
                     
                   <Button type="primary" onClick={() => openTaskModal(student)} style={{ marginBottom: "20px", width: "100px" }}>
                     View Task
@@ -353,7 +367,7 @@ const openTaskModal = (student) => {
                   </>
                 ) : (
                   <>
-                <Button type="primary" onClick={() => openTaskModal(student)} style={{ marginBottom: "20px", width: "100px" }}>View Task</Button>
+                    <Button type="primary" onClick={() => openTaskModal(student)} style={{ marginBottom: "20px", width: "100px" }}>View Task</Button>
                     <Button onClick={openGradeModal} style={{ marginBottom: "10px", width: "100px" }}>View Grade</Button>
                   </>
                 )}
@@ -363,20 +377,21 @@ const openTaskModal = (student) => {
           </List.Item>
         )}
       />
-
+{/* 
       {isEditorOpen && selectedStudentId && (
         <CkEditorDocuments
           userId={user._id}
           channelId={selectedChannelId}
           onClose={() => setIsEditorOpen(false)}
         />
-      )}
+      )} */}
 
       <Modal visible={isGradeModalVisible} onCancel={closeGradeModal} footer={null}>
         <h2>Grade Rubric</h2>
         {/* Render rubric details here */}
         <p>Rubric information goes here...</p>
       </Modal>
+      
 
  <ConfigProvider
       theme={{
@@ -385,10 +400,32 @@ const openTaskModal = (student) => {
           
             algorithm: true, // Enable algorithm
           },
+
+        
        
         },
       }}
     >
+
+
+
+      {/* Material UI Modal for CKEditor */}
+      <Dialog open={isEditorOpen} onClose={closeEditorModal} fullWidth maxWidth="xxl">
+  
+        <DialogContent  sx={{height: '1200px',}}>
+          
+          {selectedStudentId && selectedChannelId && (
+            <CkEditorDocuments userId={user._id} channelId={selectedChannelId} />
+          )}
+          
+          
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeEditorModal} color="primary">Close</Button>
+        </DialogActions>
+      </Dialog>
+
+
     <Modal
       visible={isModalVisible}
       onCancel={() => setIsModalVisible(false)}

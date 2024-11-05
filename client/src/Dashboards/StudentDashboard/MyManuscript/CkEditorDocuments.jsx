@@ -103,7 +103,7 @@ import 'ckeditor5/ckeditor5.css';
 import 'ckeditor5-premium-features/ckeditor5-premium-features.css';
 
 
-import './adviserckeditor.css';
+import './ckeditor.css';
 
 /**
  * Please update the following values with your actual tokens.
