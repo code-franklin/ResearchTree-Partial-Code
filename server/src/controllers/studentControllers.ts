@@ -17,6 +17,8 @@ interface IStudent extends Document {
   panelists: ObjectId[];
 }
 
+// TITLE PROPOSAL
+
 let NlpManager: any;
 
 // Function to dynamically load NlpManager
@@ -130,6 +132,46 @@ export const createProposal = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+export const chooseAdvisor = async (req: Request, res: Response) => {
+  const { userId, advisorId } = req.body;
+
+  if (!userId || !advisorId) {
+    return res.status(400).json({ message: 'userId and advisorId are required' });
+  }
+
+  try {
+    const student = await User.findById(userId) as IStudent | null;
+    if (student?.chosenAdvisor && student.advisorStatus !== 'declined') {
+      return res.status(400).json({ message: 'Advisor already chosen' });
+    }
+
+    const topAdvisors = await getTopAdvisors();
+    const panelists = topAdvisors.filter(advisor => advisor.id !== advisorId).slice(0, 3);
+
+    if (student) {
+      student.chosenAdvisor = advisorId;
+      student.advisorStatus = 'pending';
+      student.panelists = panelists.map(panelist => new mongoose.Types.ObjectId(panelist.id) as unknown as ObjectId);
+      await student.save();
+    }
+
+    res.status(200).json({ message: 'Advisor chosen and panelists assigned successfully', student });
+  } catch (error) {
+    console.error('Error choosing advisor:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+
+
+
+
+
+
+
+
+
 
 export const getStudentInfoAndProposal = async (req: Request, res: Response) => {
   try {
@@ -267,35 +309,6 @@ export const updateProposalTitle = async (req: Request, res: Response) => {
   }
 };
 
-export const chooseAdvisor = async (req: Request, res: Response) => {
-  const { userId, advisorId } = req.body;
-
-  if (!userId || !advisorId) {
-    return res.status(400).json({ message: 'userId and advisorId are required' });
-  }
-
-  try {
-    const student = await User.findById(userId) as IStudent | null;
-    if (student?.chosenAdvisor && student.advisorStatus !== 'declined') {
-      return res.status(400).json({ message: 'Advisor already chosen' });
-    }
-
-    const topAdvisors = await getTopAdvisors();
-    const panelists = topAdvisors.filter(advisor => advisor.id !== advisorId).slice(0, 3);
-
-    if (student) {
-      student.chosenAdvisor = advisorId;
-      student.advisorStatus = 'pending';
-      student.panelists = panelists.map(panelist => new mongoose.Types.ObjectId(panelist.id) as unknown as ObjectId);
-      await student.save();
-    }
-
-    res.status(200).json({ message: 'Advisor chosen and panelists assigned successfully', student });
-  } catch (error) {
-    console.error('Error choosing advisor:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-};
 
 
 // FOR STUDENT FETCHING THERE OWN ADVICER+
