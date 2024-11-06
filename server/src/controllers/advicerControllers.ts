@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import User from '../models/User';
 import Specialization from '../models/Specialization';
 import Grade, { IGrade } from '../models/Grade';
 import { ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
-dotenv.config(); // This loads the variables from your .env file
+import multer, { StorageEngine } from "multer";
+import { LanguageServiceClient } from '@google-cloud/language';
 
 export const registration = async (req: Request, res: Response) => {
   const { name, email, password, role, course, year, handleNumber, groupMembers } = req.body;
@@ -576,5 +578,178 @@ export const gradePanelToStudent = async (req: Request, res: Response): Promise<
   } catch (error) {
     console.error('Error grading student:', error);
     res.status(500).json({ message: 'Failed to submit grading' });
+  }
+};
+dotenv.config(); // This loads the variables from your .env file
+
+const client = new LanguageServiceClient(); // Google NLP client initialization
+
+// Upload PDF
+const storage: StorageEngine = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./files");
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now();
+    cb(null, uniqueSuffix + file.originalname);
+  },
+});
+
+// Synonym Schema
+const synonymSchema = new mongoose.Schema({
+  term: { type: String, required: true },
+  synonyms: [String],
+});
+
+interface SynonymDocument extends mongoose.Document {
+  term: string;
+  synonyms: string[];
+}
+
+const Synonym = mongoose.model<SynonymDocument>('Synonym', synonymSchema);
+
+// POST route to add new synonyms
+export const postSynonyms = async (req: Request, res: Response) => {
+  const { term, synonyms } = req.body;
+
+  if (!term || !synonyms) {
+    return res.status(400).json({ message: 'Both term and synonyms are required.' });
+  }
+
+  try {
+    let synonymEntry = await Synonym.findOne({ term });
+
+    if (synonymEntry) {
+      synonymEntry.synonyms = Array.from(new Set([...synonymEntry.synonyms, ...synonyms]));
+      await synonymEntry.save();
+    } else {
+      synonymEntry = new Synonym({ term, synonyms });
+      await synonymEntry.save();
+    }
+
+    res.status(201).json({ message: 'Synonyms added successfully', data: synonymEntry });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+export const getSynonymsTerm = async (req: Request, res: Response) => {
+  try {
+    const { term } = req.params;
+    const synonymEntry = await Synonym.findOne({ term });
+
+    if (synonymEntry) {
+      res.json(synonymEntry.synonyms);
+    } else {
+      res.status(404).json({ message: 'No synonyms found for this term' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+// Helper function to get synonyms for entities
+async function expandEntitiesWithSynonyms(entities: string[]): Promise<string[]> {
+  const expandedTerms = new Set<string>();
+
+  for (const term of entities) {
+    expandedTerms.add(term);
+    const synonymEntry = await Synonym.findOne({ term });
+    if (synonymEntry) {
+      synonymEntry.synonyms.forEach((synonym: string) => expandedTerms.add(synonym));
+    }
+  }
+
+  return Array.from(expandedTerms);
+}
+export const postSearch = async (req: Request, res: Response) => {
+  const { query } = req.body;
+
+  if (!query) {
+    return res.status(400).send("Query is required for search.");
+  }
+
+  try {
+    const document = { content: query, type: "PLAIN_TEXT" as const };
+    const [result] = await client.analyzeEntities({ document });
+
+    // Safely handle entities array and ensure no undefined values
+    const entities = result.entities
+      ?.map(entity => entity.name?.toLowerCase())
+      .filter((name): name is string => Boolean(name)) || [];
+
+    console.log("Identified entities:", entities);
+
+    const expandedQueryTerms = await expandEntitiesWithSynonyms(entities);
+    console.log("Expanded search terms:", expandedQueryTerms);
+
+    const searchResults = await PdfSchema.find({
+      $or: [
+        { keywords: { $in: expandedQueryTerms } },
+        { title: { $regex: expandedQueryTerms.join("|"), $options: "i" } },
+        { authors: { $regex: expandedQueryTerms.join("|"), $options: "i" } }
+      ]
+    });
+
+    if (searchResults.length > 0) {
+      return res.status(200).json({ status: "ok", results: searchResults });
+    } else {
+      return res.status(404).json({ status: "not found", message: "No documents found." });
+    }
+  } catch (error) {
+    console.error("Error with Google NLP or searching documents:", error);
+    return res.status(500).send("Error analyzing or searching documents.");
+  }
+};
+
+
+import '../models/pdfDetails'; // Ensure you have a correct schema in pdfDetails.ts
+const PdfSchema = mongoose.model("PdfDetails");
+const upload = multer({ storage });
+
+export const postUploadFiles = async (req: Request, res: Response) => {
+  const { title, authors, dateUploaded, datePublished } = req.body;
+  const fileName = req.file?.filename;
+
+  try {
+    await PdfSchema.create({
+      title,
+      authors,
+      dateUploaded,
+      datePublished,
+      pdf: fileName,
+    });
+    res.send({ status: "ok" });
+  } catch (error) {
+    res.json({ status: (error as Error).message });
+  }
+};
+
+export const getFiles = async (req: Request, res: Response) => {
+  try {
+    const data = await PdfSchema.find({});
+    res.send({ status: "ok", data });
+  } catch (error) {
+    res.json({ status: (error as Error).message });
+  }
+};
+
+export const postAnalyze = async (req: Request, res: Response) => {
+  const { text } = req.body;
+
+  if (!text) {
+    return res.status(400).send("Text is required for analysis.");
+  }
+
+  try {
+    const document = { content: text, type: "PLAIN_TEXT" as const };
+    const [result] = await client.analyzeSentiment({ document });
+    res.status(200).json({
+      sentimentScore: result.documentSentiment?.score,
+      sentimentMagnitude: result.documentSentiment?.magnitude,
+    });
+  } catch (error) {
+    console.error("Error analyzing text:", error);
+    res.status(500).send("Error analyzing text.");
   }
 };

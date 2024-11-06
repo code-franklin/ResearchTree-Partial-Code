@@ -111,16 +111,15 @@ export default function AccountMenu() {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon onClick={handleLogout}>
+        <MenuItem onClick={handleLogout}>
+          <ListItemIcon>
             <Logout
-              onClick={handleLogout}
               fontSize='small'
               sx={{ color: "red" }}
             />{" "}
             {/* Set icon color to red */}
           </ListItemIcon>
-          <span onClick={handleLogout} style={{ color: "red" }}>
+          <span style={{ color: "red" }}>
             Logout
           </span>{" "}
           {/* Set text color to red */}

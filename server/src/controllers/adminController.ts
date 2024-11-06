@@ -282,3 +282,56 @@ export const fetchAdviserInfoWithStudents = async (req: Request, res: Response) 
     res.status(500).json({ success: false, message: "Failed to fetch advisers" });
   }
 };
+
+// Panelist
+export const fetchPanelistInfoWithStudents = async (req: Request, res: Response) => {
+  try {
+    // Step 1: Find all advisors
+    const advisors = await User.find({ role: 'adviser' }, 'name profileImage specializations'); // Make sure 'adviser' is the correct role
+    console.log("Advisors fetched:", advisors); // Log to check if advisors are being fetched
+
+    // Step 2: Fetch students for each advisor where they are a panelist and advisorStatus is 'accepted'
+    const advisorsWithPanelistStudents = await Promise.all(advisors.map(async (advisor) => {
+      const panelistStudents = await User.find(
+        { panelists: advisor._id, advisorStatus: 'accepted' }, // Check if advisorStatus 'accepted' condition is being met
+        'name groupMembers channelId course profileImage chosenAdvisor manuscriptStatus proposals panelists tasks'
+      ).lean();
+
+      console.log(`Panelist students for advisor ${advisor.name}:`, panelistStudents); // Log to verify if students are fetched
+
+      // Step 3: Process each student to include panelist names and latest proposal information
+      const panelistStudentData = await Promise.all(panelistStudents.map(async (student) => {
+        const panelistNames = await User.find({ _id: { $in: student.panelists } }, 'name').lean();
+        const panelistNameList = panelistNames.map((panelist) => panelist.name);
+
+        const latestProposal = student.proposals.length > 0 ? student.proposals[student.proposals.length - 1] : null;
+
+        return {
+          _id: student._id,
+          name: student.name,
+          groupMembers: student.groupMembers,
+          channelId: student.channelId,
+          course: student.course,
+          profileImage: student.profileImage,
+          manuscriptStatus: student.manuscriptStatus,
+          chosenAdvisor: student.chosenAdvisor,
+          panelists: panelistNameList, // Return panelist names instead of IDs
+          proposalTitle: latestProposal ? latestProposal.proposalTitle : 'No proposal submitted',
+          submittedAt: latestProposal ? latestProposal.submittedAt : null,
+          tasks: student.tasks,
+        };
+      }));
+
+      return {
+        ...advisor.toObject(),
+        panelistStudents: panelistStudentData // Attach panelist students to each advisor
+      };
+    }));
+
+    console.log("Final data for advisors with panelist students:", advisorsWithPanelistStudents); // Log final result to inspect
+    res.status(200).json({ success: true, advisors: advisorsWithPanelistStudents });
+  } catch (error) {
+    console.error("Error fetching panelist information with students:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch panelist information" });
+  }
+};

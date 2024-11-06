@@ -18,6 +18,15 @@ import {
     gradePanelToStudent
 } from '../controllers/advicerControllers';
 
+import { 
+    postSynonyms,
+    getSynonymsTerm,
+    postSearch,
+    postUploadFiles,
+    getFiles,
+    postAnalyze
+  } from '../controllers/advicerControllers';
+
 import upload from '../middleware/upload';
 
 const router: Router = express.Router();
@@ -32,6 +41,14 @@ router.get('/specializations', getSpecializations);
 
 /* Adviser routes */
 router.get('/advisor-students/:advisorId', getAdviserStudents);
+
+// Searching Upload
+router.post('/synonyms', postSynonyms);
+router.get('/synonyms/:term', getSynonymsTerm);
+router.post('/search', postSearch);
+router.post('/upload-files', postUploadFiles);
+router.get('/get-files', getFiles);
+router.post('/analyze', postAnalyze);
 
 // Task for My Advicee
 router.post('/add-task/:studentId', postAddTaskMyAdvicee);
@@ -50,10 +67,11 @@ router.get('/panelist-students/:advisorId', getPanelistStudents);
 router.post('/respond-student', respondToStudent);
 router.post('/grade-student', gradePanelToStudent);
 
-
 // admin
 router.get('/students-manage/:advisorId', listStudentsManage);
 router.put('/update-student-status', updateStatusStudent);
+
+
 
 
 export default router;

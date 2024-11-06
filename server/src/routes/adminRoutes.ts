@@ -31,7 +31,8 @@ import {
 
 // Advicer Info w/ Handle Manu
 import { 
-    fetchAdviserInfoWithStudents
+    fetchAdviserInfoWithStudents,
+    fetchPanelistInfoWithStudents
 } from '../controllers/adminController';
 
 import upload from '../middleware/upload';
@@ -64,6 +65,7 @@ router.get('/manuscripts/approvedOnPanel/count', countApprovedOnPanelManuscripts
 
 // Advicer Handle Manuscript
 router.get('/advicer/handle/manuscript', fetchAdviserInfoWithStudents);
+router.get('/panelist/handle/manuscript', fetchPanelistInfoWithStudents);
 
 
 export default router;

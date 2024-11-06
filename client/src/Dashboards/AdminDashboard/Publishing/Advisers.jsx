@@ -1,97 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Avatar, ConfigProvider } from "antd";
 import axios from "axios";
-import { Space, Table, Tag, ConfigProvider, Modal } from "antd";
-import ListManuscript from "./AdviserManuscript";
+import { Button } from "@mui/material";
+import ListManuscript from "./ListManuscript";
 
 const App = () => {
   const [selectedAdviser, setSelectedAdviser] = useState(null);
-  const [advisers, setAdvisers] = useState([]);
+  const [panelistData, setPanelistsData] = useState([]);
+  const [selectedPanelistStudents, setSelectedPanelistStudents] = useState([]);
+
+  const handleAdviserClick = (panelist) => {
+    setSelectedAdviser(panelist.name);
+    setSelectedPanelistStudents(panelist.students); 
+  };
 
   useEffect(() => {
-    const fetchAdvisers = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:7000/api/admin/advicer/handle/manuscript"
-        );
-        console.log(response.data); // Check the structure of the data returned
-        const adviserData = response.data.advisers.map((adviser) => ({
-          key: adviser._id,
-          name: adviser.name,
-          profileImage: adviser.profileImage,
-          specializations: adviser.specializations.join(", "),
-          tags: ["Adviser"],
-        }));
-        setAdvisers(adviserData);
-      } catch (error) {
-        console.error("Error fetching advisers:", error);
-      }
+    const fetchData = async () => {
+      const response = await axios.get(
+        "http://localhost:7000/api/admin/advicer/handle/manuscript"
+      );
+      const data = response.data;
+      setPanelistsData(data.advisers);
     };
-
-    fetchAdvisers();
+    fetchData();
   }, []);
-
-  const handleAdviserClick = (adviser) => {
-    setSelectedAdviser(adviser);
-  };
-
-  const columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      render: (text, record) => (
-        <Space
-          onClick={() => handleAdviserClick(record)}
-          style={{ cursor: "pointer" }}
-        >
-          <img
-            className='h-[37px] inline-block mr-2 mb-1'
-            src={record.profileImage}
-            alt={text}
-          />
-          <a>{text}</a>
-        </Space>
-      ),
-    },
-    {
-      title: "Role",
-      key: "tags",
-      dataIndex: "tags",
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? "geekblue" : "green";
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
-    },
-  ];
-
-  const showProfile = () => {
-    Modal.info({
-      title: selectedAdviser.name,
-      content: (
-        <div>
-          <img
-            src={`http://localhost:7000/public/uploads/${
-              selectedAdviser.profileImage || "default-avatar.png"
-            }`}
-            alt={selectedAdviser.name}
-          />
-
-          <p>Specializations: {selectedAdviser.specializations}</p>
-        </div>
-      ),
-      onOk() {
-        setSelectedAdviser(null);
-      },
-    });
-  };
 
   return (
     <ConfigProvider
@@ -107,26 +39,60 @@ const App = () => {
         },
       }}
     >
-      {!selectedAdviser ? (
-        <Table
-          columns={columns}
-          dataSource={advisers}
-          pagination={false}
-          style={{
-            position: "absolute",
-            width: "1000px",
-            marginTop: "200px",
-            marginLeft: "600px",
-            overflow: "hidden",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-          }}
-        />
-      ) : (
-        <ListManuscript
-          adviserName={selectedAdviser.name}
-          manuscripts={adviserData[selectedAdviser.name]}
-        />
-      )}
+      <div className='flex items-center justify-center w-full h-screen pl-96 px-6 overflow-x-auto'>
+        {!selectedAdviser ? (
+          <table className='min-w-full divide-y-2 divide-gray-200 bg-transparent text-sm'>
+            <thead className='ltr:text-left rtl:text-right'>
+              <tr>
+                <th className='whitespace-nowrap px-4 py-2  text-white font-bold text-2xl'>
+                  Name
+                </th>
+                <th className='whitespace-nowrap px-4 py-2  text-white font-bold text-2xl'>
+                  Role
+                </th>
+                <th className='whitespace-nowrap px-4 py-2  text-white font-bold text-2xl'>
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            {panelistData &&
+              panelistData.length > 0 &&
+              panelistData.map((panelist) => (
+                <tbody key={panelist.name} className='divide-y divide-gray-200'>
+                  <tr>
+                    <td className='whitespace-nowrap text-center px-4 py-3 font-medium text-white'>
+                      <div className=''>
+                        <Avatar
+                          src={panelist.profileImage}
+                          sx={{ width: 79, height: 79 }}
+                        />
+                      </div>
+                      <p className='text-xl'>{panelist.name}</p>
+                    </td>
+                    <td className='whitespace-nowrap text-center  px-4 py-2 text-gray-700'>
+                      <span className='whitespace-nowrap rounded-full bg-lime-100 px-2.5 py-0.5 text-sm text-lime-700'>
+                        Panelists
+                      </span>
+                    </td>
+                    <td className='whitespace-nowrap text-center  px-4 py-2'>
+                      <Button
+                        variant='contained'
+                        onClick={() => handleAdviserClick(panelist)}
+                      >
+                        View Advisees
+                      </Button>
+                    </td>
+                  </tr>
+                </tbody>
+              ))}
+          </table>
+        ) : (
+          <ListManuscript
+            adviserName={selectedAdviser}
+            students={selectedPanelistStudents}
+          />
+        )}
+      </div>
     </ConfigProvider>
   );
 };
