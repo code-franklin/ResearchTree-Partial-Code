@@ -24,26 +24,38 @@
     padding: 20px;
     border-radius: 8px;
     border: solid #4B4B4B 1px;
-    width: 319px;
+    width: 276px;
     height: 110px;
-    margin-left: 10px;
+    margin-left: 0px;
 }
 
 .card-icon-1 {
     position: absolute;
-    left: 275px;
-    bottom: 62px;
+    left: 225px;
+    bottom: 56px;
     
 }
 .card-icon-2 {
     position: absolute;
-    left: 575px;
+    left: 515px;
     bottom: 56px;
     
 }
 .card-icon-3 {
     position: absolute;
-    left: 896px;
+    left: 810px;
+    bottom: 56px;
+
+}
+.card-icon-4 {
+    position: absolute;
+    left: 1100px;
+    bottom: 56px;
+
+}
+.card-icon-5 {
+    position: absolute;
+    left: 1390px;
     bottom: 56px;
 
 }
@@ -57,7 +69,7 @@
     font-size: 22px;
     margin-top: 14px;
     display: flex;
-    margin-left: 37px ;
+    margin-left: 70px ;
     font-weight: 700;
     white-space: nowrap;
 }
@@ -66,7 +78,7 @@
     font-size: 25px;
     margin-top: 10px;
     display: flex;
-    margin-left: 100px ;
+    margin-left: 90px ;
     font-weight: 700;
 }
 
@@ -74,6 +86,6 @@
     font-size: 25px;
     margin-top: 10px;
     display: flex;
-    margin-left: 100px;
+    margin-left: 60px;
     font-weight: 700;
 }

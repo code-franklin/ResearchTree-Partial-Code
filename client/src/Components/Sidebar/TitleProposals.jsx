@@ -168,7 +168,7 @@ export default function BasicModal() {
           <Typography
             sx={{
               position: "absolute",
-              marginLeft: "253px",
+              marginLeft: "243px",
               top: "111px",
               fontWeight: "bold",
             }}
@@ -176,10 +176,74 @@ export default function BasicModal() {
             variant='h6'
             component='h2'
           >
+             {advisorStatus === "null" && "Title Proposals" }
             {advisorStatus === "declined" && "Title Proposals"}
             {advisorStatus === "pending" && "Title Proposals"}
             {advisorStatus === "accepted" && "Your Adviser"}
           </Typography>
+          {/* Render based on advisor status */}
+          {(!advisorInfo || advisorStatus === "null") && (
+            <div>
+              <Tag 
+              style={{position: 'absolute', marginLeft: '100px', marginTop: '50px'}}
+              icon={<CloseCircleOutlined />} 
+              color="#00ff00">
+               Submit your Proposal Title 
+              </Tag>
+              
+              <form onSubmit={(e) => { e.preventDefault(); submitProposal(); }}>
+                <Textarea
+                      sx={{
+                      color: 'white',
+                      position: 'absolute',
+                      top: '200px',
+                      left: '117px',
+                      borderRadius: '20px',
+                      backgroundColor: '#1E1E1E', 
+                      borderColor: '#585050',
+                      width: '495px',
+                      height: '92px',
+                      paddingLeft: '20px',
+                      paddingTop:'10px',
+                    }}
+                      color='success'
+                      minRows={2}
+                      placeholder="Write your research title..."
+                      size="sm"
+                      variant="outlined"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                />
+                
+                <Textarea
+                      sx={{
+                      color: 'white',
+                      position: 'absolute',
+                      top: '310px',
+                      left: '117px',
+                      borderRadius: '20px',
+                      backgroundColor: '#1E1E1E', 
+                      borderColor: '#585050',
+                      width: '495px',
+                      height: '92px',
+                      paddingLeft: '20px',
+                      paddingTop:'10px',
+                    }}
+                      color='success'
+                      minRows={2}
+                      placeholder="Write your research proposal..."
+                      size="sm"
+                      variant="outlined"
+                      value={proposal}
+                      onChange={(e) => setProposal(e.target.value)}
+                />
+                
+                {/* Add a submit button or trigger elsewhere */}
+                <button type="submit" style={{ display: 'block' }}>Submit Proposal</button>
+                </form>
+            </div>
+          )}
+
 
           {/* Render based on advisor status */}
           {(!advisorInfo || advisorStatus === "declined") && (
@@ -260,24 +324,20 @@ export default function BasicModal() {
 
           {advisorInfo && advisorStatus === "pending" && (
             <div>
-              <Tag
-                icon={<SyncOutlined spin />}
-                color='processing'
-                style={{
-                  position: "absolute",
-                  marginLeft: "100px",
-                  marginTop: "-280px",
-                }}
-              >
-                Waiting for Approval of Adviser
-              </Tag>
+              <div className="absolute mt-[-90px] ml-[177px] text-[260px]  text-[orange]">
+              <SyncOutlined spin />
+              </div>
+             
+              <h1 className="absolute mt-[-70px] ml-[270px] text-[15px] font-bold mb-2 text-[orange]">
+              in progress <SyncOutlined spin />
+            </h1>
 
               <img
                 src={`http://localhost:7000/public/uploads/${advisorInfo.profileImage}`}
-                className='mt-[358px] ml-[260px] w-[130px] h-[130px] rounded-full '
+                className='mt-[88px] ml-[200px] w-[230px] h-[230px] rounded-full '
                 alt={advisorInfo.name}
               />
-              <p className='text-[20px] font-bold ml-[245px] mt-[10px]'>
+              <p className='text-[20px] font-bold ml-[20px] mt-[10px] '>
                 {advisorInfo.name}
               </p>
 

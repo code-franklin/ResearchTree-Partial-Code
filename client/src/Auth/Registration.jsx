@@ -1,232 +1,252 @@
-import React, { useEffect, useState } from "react";
-import "./register.css";
-import axios from "axios";
-import Course from "./Course";
-import Year from "./Year";
-import Role from "./Role";
-import {
-  LockOutlined,
-  UserOutlined,
-  UsergroupAddOutlined,
-  UserAddOutlined,
-  ProductOutlined,
-} from "@ant-design/icons";
-import { Button, Form, Input, Alert, Select } from "antd";
-
-const { Option } = Select;
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Select from 'react-select';
+import { TextField, MenuItem, Button, FormControl, InputLabel, Select as MUISelect } from '@mui/material';
 
 const LoginFunction = () => {
-  const [form] = Form.useForm();
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
-    role: "student",
-    groupMembers: "",
-    course: "",
-    year: "",
-    handleNumber: "",
+    name: '',
+    email: '',
+    password: '',
+    role: 'student',
+    profileImage: null,
     specializations: [],
+    course: '', // For student course
+    year: '', // For student year
+    handleNumber: '', // For adviser handle number
+    groupMembers: [] // New field for group members
   });
   const [specializationsOptions, setSpecializationsOptions] = useState([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
+
+  // Generate years from 1900 to 2100
+  const startYear = 2000;
+  const endYear = 2100;
+  const yearOptions = Array.from({ length: endYear - startYear + 1 }, (_, i) => ({
+    value: startYear + i,
+    label: startYear + i,
+  }));
+
+  const courseOptions = [
+    { value: 'BSIT', label: 'BSIT' },
+    { value: 'BSCS', label: 'BSCS' },
+  ];
+
+  useEffect(() => {
+    const fetchSpecializations = async () => {
+      try {
+        const response = await axios.get('http://localhost:7000/api/advicer/specializations');
+        setSpecializationsOptions(response.data.map(spec => ({ value: spec.name, label: spec.name })));
+      } catch (error) {
+        console.error('Error fetching specializations:', error);
+      }
+    };
+
+    fetchSpecializations();
+  }, []);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, profileImage: e.target.files[0] });
   };
 
-  const handleRoleChange = (value) => {
-    setFormData({ ...formData, role: value });
+  const handleSpecializationsChange = (selectedOptions) => {
+    setFormData({ ...formData, specializations: selectedOptions.map(option => option.value) });
   };
 
-  const handleSpecializationChange = (selected) => {
-    setFormData({ ...formData, specializations: selected });
+  const handleGroupMembersChange = (e) => {
+    setFormData({ ...formData, groupMembers: e.target.value.split(',').map(member => member.trim()) });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+    data.append('name', formData.name);
+    data.append('email', formData.email);
+    data.append('password', formData.password);
+    data.append('role', formData.role);
+    data.append('profileImage', formData.profileImage);
+    data.append('specializations', JSON.stringify(formData.specializations));
+    data.append('course', formData.course);
+    data.append('year', formData.year);
+    data.append('handleNumber', formData.handleNumber);
+    data.append('groupMembers', JSON.stringify(formData.groupMembers)); // Add group members
+
     try {
-      const response = await axios.post(
-        "http://localhost:7000/api/advicer/register",
-        formData
-      );
+      const response = await axios.post('http://localhost:7000/api/advicer/register', data);
       setMessage(response.data.message);
     } catch (error) {
-      setMessage(error.response?.data?.message || "Something went wrong");
+      console.error(error.response.data);
+      setMessage('Registration failed. Please try again.');
     }
   };
 
-  // Fetch specializations on mount
-  useEffect(() => {
-    axios
-      .get("http://localhost:7000/api/advicer/specializations")
-      .then((response) => {
-        setSpecializationsOptions(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching specializations:", error);
-      });
-  }, []);
-
   return (
-    <div className='rectangle'>
-      <h1 className='logintext'>
-        REGISTER AS{" "}
-        <span className='text-[#0BF677]'>{formData.role.toUpperCase()}</span>
-      </h1>
-      <h1 className='logintext2'>
-        Fill in the details to create your account.
-      </h1>
+    <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <section className="bg-white">
+  <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
+    <aside className="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
+      <img
+        alt=""
+       src="/src/assets/login-bg.png"
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+    </aside>
 
-      <img className='studentgirl ' src='./src/assets/student.png' />
-      <img className='leaves ' src='./src/assets/leaves.png' />
-      <img className='green-background  ' src='./src/assets/gif.gif' />
-      <img className='logorstree' src='./src/assets/LogoResearchTree.png' />
-      <Form
-        form={form}
-        name='registration'
-        autoComplete='off'
-        layout='vertical'
-        onFinish={handleSubmit}
-        style={{ marginTop: "-450px", marginLeft: "60px" }}
-      >
-        <Form.Item
-          name='username'
-          rules={[{ required: true, message: "Please input your username!" }]}
+    <main
+      className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6"
+    >
+      <div className="max-w-xl lg:max-w-3xl">
+        <a className="block text-blue-600" href="#">
+          <span className="sr-only">Home</span>
+          <img
+        alt=""
+       src="/src/assets/Researchtree-logo.png"
+       className="absolute mt-[-65px] ml-[-20px]"
+      />
+        </a>
+
+        <h1 className="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
+          Welcome to ResearchTree 
+        </h1>
+
+        <p className="mt-4 leading-relaxed text-gray-500">
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam dolorum aliquam,
+          quibusdam aperiam voluptatum.
+        </p>
+
+        <TextField
+        label="Name"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+        required
+      />
+      <TextField
+        label="Group Members (comma-separated)"
+        name="groupMembers"
+        value={formData.groupMembers}
+        onChange={handleGroupMembersChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        type="email"
+        fullWidth
+        margin="normal"
+        required
+      />
+      <TextField
+        label="Password"
+        name="password"
+        value={formData.password}
+        onChange={handleChange}
+        type="password"
+        fullWidth
+        margin="normal"
+        required
+      />
+      <FormControl fullWidth margin="normal">
+        <InputLabel>Role</InputLabel>
+        <MUISelect
+          name="role"
+          value={formData.role}
+          onChange={handleChange}
+          required
         >
-          <Input
-            className='Username'
-            prefix={<UserOutlined />}
-            placeholder='Username'
-            onChange={handleChange}
-          />
-        </Form.Item>
+          <MenuItem value="student">Student</MenuItem>
+          <MenuItem value="adviser">Adviser</MenuItem>
+        </MUISelect>
+      </FormControl>
 
-        <Form.Item
-          name='password'
-          rules={[{ required: true, message: "Please input your password!" }]}
-        >
-          <Input
-            className='Email'
-            prefix={<UserOutlined />}
-            placeholder='Email'
-            onChange={handleChange}
-          />
-          <Input
-            className='Password'
-            prefix={<LockOutlined />}
-            placeholder='Password'
-            onChange={handleChange}
-          />
-        </Form.Item>
+      {formData.role === 'student' && (
+        <>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Course</InputLabel>
+            <MUISelect
+              name="course"
+              value={formData.course || ''}
+              onChange={handleChange}
+              required
+            >
+              {courseOptions.map((course) => (
+                <MenuItem key={course.value} value={course.value}>
+                  {course.label}
+                </MenuItem>
+              ))}
+            </MUISelect>
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Year</InputLabel>
+            <MUISelect
+              name="year"
+              value={formData.year}
+              onChange={handleChange}
+              required
+            >
+              {yearOptions.map((year) => (
+                <MenuItem key={year.value} value={year.value}>{year.label}</MenuItem>
+              ))}
+            </MUISelect>
+          </FormControl>
+        </>
+      )}
 
-        <Form.Item
-          name='confirmPassword'
-          dependencies={["password"]}
-          rules={[
-            { required: true, message: "Please confirm your password!" },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error("The two passwords do not match!")
-                );
-              },
-            }),
-          ]}
-        >
-          <Input
-            className='Retype-Password '
-            prefix={<LockOutlined />}
-            placeholder='Re-type your password'
-            onChange={handleChange}
-          />
-        </Form.Item>
-
-        {/* Role Selection */}
-        <Form.Item>
+      {formData.role === 'adviser' && (
+        <>
+          <label>Specializations:</label>
           <Select
-            name='role'
-            style={{ position: "absolute", width: "100px", marginTop: "46px" }}
-            value={formData.role}
-            onChange={handleRoleChange}
-          >
-            <Option value='student'>Student</Option>
-            <Option value='adviser'>Adviser</Option>
-          </Select>
-        </Form.Item>
+            isMulti
+            name="specializations"
+            options={specializationsOptions}
+            onChange={handleSpecializationsChange}
+          />
+          <TextField
+            label="Handle Number (No. of Advisees)"
+            name="handleNumber"
+            value={formData.handleNumber}
+            onChange={handleChange}
+            type="number"
+            fullWidth
+            margin="normal"
+            required
+          />
+        </>
+      )}
 
-        {/* Conditional Fields */}
-        {formData.role === "student" ? (
-          <>
-            <Input
-              prefix={<UsergroupAddOutlined />}
-              name='Group Members'
-              className='GroupMembers absolute mt-[-60px]'
-              placeholder='Group Members (comma separated)'
-              onChange={handleChange}
-            />
+      <TextField
+        label="Profile Image"
+        name="profileImage"
+        type="file"
+        onChange={handleFileChange}
+        fullWidth
+        margin="normal"
+        InputLabelProps={{ shrink: true }}
+      />
+      
+      <Button type="submit" variant="contained" color="success" fullWidth>
+        Register
+      </Button>
+      {message && <p>{message}</p>}
+      </div>
+    </main>
+  </div>
+</section>
 
-            <div name='Course' className='absolute ml-[110px] mt-[10px]'>
-              {" "}
-              <Course />{" "}
-            </div>
-            <div name='Year' className='absolute ml-[230px] mt-[-15px]'>
-              {" "}
-              <Year />{" "}
-            </div>
-          </>
-        ) : (
-          <>
-            <Input
-              prefix={<UserAddOutlined />}
-              name='Handle'
-              style={{
-                position: "absolute",
-                marginLeft: "110px",
-                marginTop: "7px",
-                width: "90px",
-              }}
-              placeholder='Handle'
-              onChange={handleChange}
-            />
-
-            <Input
-              prefix={<ProductOutlined />}
-              name='Specializations'
-              style={{
-                position: "absolute",
-                marginTop: "-60px",
-                width: "364px",
-                height: "52px",
-                borderRadius: "20px",
-                background: "#F0EDFFCC",
-              }}
-              mode='multiple'
-              placeholder='Select Specializations'
-              options={specializationsOptions}
-              onChange={handleSpecializationChange}
-            />
-          </>
-        )}
-
-        <Button
-          style={{
-            width: "124px",
-            height: "52px",
-            marginLeft: "110px",
-            marginTop: "50px",
-            background: "#0BF677",
-            borderRadius: "15px",
-          }}
-          onClick={handleSubmit}
-        >
-          <span className='text-white font-bold'>Register</span>
-        </Button>
-      </Form>
-      {message && <Alert message={message} type='info' />}
-    </div>
+    </form>
   );
 };
 

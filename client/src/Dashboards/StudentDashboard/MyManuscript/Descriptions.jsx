@@ -44,11 +44,11 @@ const ResearchCard = () => {
     setIsEditorOpen(false);
   };
 
-  const localhostKey = import.meta.env.VITE_APP_LOCALHOSTKEY
+
   
   const fetchAdvisorInfo = async () => {
     try {
-      const response = await fetch(`${localhostKey}/api/student/advisor-info-StudProposal/${user._id}`);
+      const response = await fetch(`http://localhost:7000/api/student/advisor-info-StudProposal/${user._id}`);
       if (response.ok) {
         const data = await response.json();
         setAdvisorInfo(data.chosenAdvisor);
@@ -71,7 +71,7 @@ const ResearchCard = () => {
 
   const fetchUpdatedTasks = async () => {
     try {
-      const response = await fetch(`${localhostKey}/api/student/tasks/${user._id}`, { 
+      const response = await fetch(`http://localhost:7000/api/student/tasks/${user._id}`, { 
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ const ResearchCard = () => {
 
   const markTaskAsCompleted = async (taskId) => {
     try {
-      const response = await fetch(`${localhostKey}/api/student/mark-task/${taskId}`, {
+      const response = await fetch(`http://localhost:7000/api/student/mark-task/${taskId}`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -144,7 +144,7 @@ const ResearchCard = () => {
 // Modify fetchTaskProgress to set progress state based on API response
 const fetchTaskProgress = async (userId) => {
   try {
-    const response = await fetch(`${localhostKey}/api/student/tasks/progress/${userId}`, {
+    const response = await fetch(`http://localhost:7000/api/student/tasks/progress/${userId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
@@ -172,7 +172,7 @@ useEffect(() => {
 
   const handleSaveProposalTitle = async () => {
     try {
-      const response = await fetch(`${localhostKey}/api/student/update-proposal-title/${user._id}`, {
+      const response = await fetch(`http://localhost:7000//api/student/update-proposal-title/${user._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -196,6 +196,7 @@ useEffect(() => {
   // Function to display status message based on advisorStatus
   const getStatusMessage = (advisorStatus, advisorInfo) => {
     if (advisorStatus === 'accepted') {
+      
       return advisorInfo.name; // Just return the advisor name
     } else if (advisorStatus === 'pending') {
       return (
@@ -212,7 +213,7 @@ useEffect(() => {
     } else if (!advisorInfo) {
       return (
         <span style={{ color: 'red' }}>
-          Submit your proposal to select an advisor.
+          Declined
         </span>
       );
     } else {
@@ -249,6 +250,10 @@ useEffect(() => {
 {/* details for student */}
         {advisorStatus === 'accepted' && (
           <div>
+                      
+      
+            
+
             <h1 className="text-2xl font-bold mb-2" style={{ maxWidth: '85%' }}>
               {isEditingProposalTitle ? (
                 <input
@@ -287,6 +292,7 @@ useEffect(() => {
 
         {advisorStatus === 'declined' && (
           <div>
+            
             <h1 className="text-2xl font-bold mb-2">
               Submit another title proposal...
             </h1>
@@ -300,8 +306,9 @@ useEffect(() => {
 
         {!advisorStatus && (
           <div>
-            <h1 className="text-2xl font-bold mb-2">
-              Submit title proposal...
+            
+            <h1 className="text-2xl font-bold mb-2 text-[red]">
+              Submit Another Title Proposal
             </h1>
             <p className="text-gray-500 font-bold mb-4">
               {user.groupMembers

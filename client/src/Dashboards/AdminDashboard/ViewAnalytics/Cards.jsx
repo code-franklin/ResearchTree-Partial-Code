@@ -97,24 +97,15 @@ export const Cards = () => {
                 <Dropdown /> */}
           </div>
 
-          <span className='absolute left-[-1174px] mt-[20px] text-[40px] font-bold'>
+          <span className='absolute left-[-1174px] mt-[-40px] text-[40px] font-bold'>
             View Analytics
           </span>
-          <div className='Tooltop'>
-            <div className='mt-[12px]'>
-              <Tooltip title='Notification' arrow>
-                <img
-                  className='tooltip cursor-pointer w-[auto] inline-block mr-2'
-                  src='/src/assets/notification.png'
-                />
-              </Tooltip>
-            </div>
-          </div>
+       
         </div>
 
         <div className='card'>
-          <div className='card-icon-2'>
-            <img className='' src='' />
+          <div className='card-icon-1'>
+            <img className='' src='/src/assets/adviserAnalytics-icon-1.png'/>
           </div>
           <div className='card-content'>
             <p className='card-title'>New Uploads</p>
@@ -123,12 +114,12 @@ export const Cards = () => {
         </div>
 
         <div className='card'>
-          <div className='card-icon-1'>
-            <img className='' src='/src/assets/student-handle.png' />
+          <div className='card-icon-2'>
+            <img className='' src='/src/assets/adviserAnalytics-icon-2.png' />
           </div>
           <div className='card-content'>
-            <p className='card-title'>Defenders</p>
-            <p className='card-value-1 ml-[80px]'>
+            <p className='card-title'>Student Defenders</p>
+            <p className='card-value-1 ml-[0px]'>
               {readyToDefenseCount} Groups
             </p>
           </div>
@@ -136,7 +127,7 @@ export const Cards = () => {
 
         <div className='card'>
           <div className='card-icon-3'>
-            <img className='' src='' />
+            <img className='' src='/src/assets/adviserAnalytics-icon-3.png' />
           </div>
           <div className='card-content'>
             <p className='card-title'>Revisions for Advicer</p>
@@ -144,8 +135,8 @@ export const Cards = () => {
           </div>
         </div>
         <div className='card'>
-          <div className='card-icon-3'>
-            <img className='' src='' />
+          <div className='card-icon-4'>
+            <img className='' src='/src/assets/adviserAnalytics-icon-4.png'/>
           </div>
 
           <div className='card-content'>
@@ -154,8 +145,8 @@ export const Cards = () => {
           </div>
         </div>
         <div className='card'>
-          <div className='card-icon-4'>
-            <img className='' src='' />
+          <div className='card-icon-5'>
+            <img className='' src='/src/assets/adviserAnalytics-icon-5.png' />
           </div>
           <div className='card-content'>
             <p className='card-title'>Ready to Publish</p>
