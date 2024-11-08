@@ -245,7 +245,7 @@ export const fetchAdviserInfoWithStudents = async (req: Request, res: Response) 
     const advisersWithStudents = await Promise.all(advisers.map(async adviser => {
       const students = await User.find(
         { chosenAdvisor: adviser._id, role: 'student' },
-        'name groupMembers channelId panelists course profileImage manuscriptStatus proposals'
+        'name groupMembers channelId panelists course profileImage manuscriptStatus proposals tasks'
       ).lean();
 
       // Process student data to include panelist names and proposals
@@ -267,6 +267,7 @@ export const fetchAdviserInfoWithStudents = async (req: Request, res: Response) 
           proposalTitle: latestProposal ? latestProposal.proposalTitle : 'No proposal submitted',
           proposalText: latestProposal ? latestProposal.proposalText : 'No proposal submitted',
           submittedAt: latestProposal ? latestProposal.submittedAt : null,
+          task: student.tasks,
         };
       }));
 
