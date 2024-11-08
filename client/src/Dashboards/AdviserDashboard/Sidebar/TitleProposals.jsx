@@ -14,6 +14,7 @@ import {
   Divider,
   Typography,
 } from "antd";
+import { maxWidth } from "@mui/system";
 
 const { Column, ColumnGroup } = Table;
 const { Title, Paragraph } = Typography;
@@ -136,6 +137,7 @@ export default function TabsPricingExample() {
 
   return (
     <Tabs
+
       aria-label='Student Management'
       defaultValue={0}
       sx={{
@@ -189,6 +191,7 @@ export default function TabsPricingExample() {
       {/* Accepted Students List */}
       <TabPanel value={0}>
         <Table
+        
           dataSource={acceptedStudents}
           rowKey='_id'
           style={{
@@ -215,11 +218,12 @@ export default function TabsPricingExample() {
             )}
           />
           <Column
+          
             title='Action'
             key='action'
             render={(_, student) => (
               <Space size='middle'>
-                <Button onClick={() => showModal(student)}>
+                <Button  onClick={() => showModal(student)}>
                   View Proposal
                 </Button>{" "}
                 {/* Pass the student object to showModal */}
@@ -379,6 +383,7 @@ export default function TabsPricingExample() {
 
       {/* Modal to View Proposal */}
       <Modal
+        width={1000}
         title='View Proposal'
         visible={isModalVisible}
         onCancel={handleCancel}
@@ -389,7 +394,7 @@ export default function TabsPricingExample() {
         ]}
       >
         {selectedProposal && (
-          <div style={{ padding: "20px" }}>
+          <div style={{ padding: "20px",}}>
             <Title level={3}>{selectedProposal.title}</Title>{" "}
             {/* Display the proposal title */}
             <Paragraph>{selectedProposal.text}</Paragraph>{" "}

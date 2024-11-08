@@ -3,7 +3,6 @@ import {
   List,
   Typography,
   Button,
-  message,
   Modal,
   Input,
   Checkbox,
@@ -17,93 +16,36 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import CkEditorDocuments from "./CkEditorDocuments";
-import axios from "axios";
 
 const { Text } = Typography;
 const { Option } = Select;
 
-export default function NewTables() {
-  const [acceptedStudents, setAcceptedStudents] = useState([]);
+export default function ListManuscript({ adviserName, students }) {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
 
-  const [courses, setCourses] = useState([]); // To store all unique courses
-  const [filteredStudents, setFilteredStudents] = useState([]); // For filtering based on the course
-  const [selectedCourse, setSelectedCourse] = useState(""); // For the selected course
+  const [courses, setCourses] = useState([]);
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState("");
 
-  // Modal states
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentTaskStudent, setCurrentTaskStudent] = useState(null);
   const [taskInput, setTaskInput] = useState("");
-  const [tasks, setTasks] = useState([]); // To store tasks
-
-  const user = { _id: "dummyUserId" }; // Dummy user ID
-
-  // Dummy student data
-  const dummyData = [
-    {
-      _id: "1",
-      proposalTitle: "AI in ddddd Healthcare",
-      groupMembers: ["JohnDoe", "JaneSmith"],
-      panelists: ["Dr. Adams", "Prof. Taylor"],
-      submittedAt: "2023-09-15",
-      datePublished: "2024-01-10",
-      course: "Computer Science",
-      manuscriptStatus: "reviseOnAdvicer",
-      channelId: "channel1",
-    },
-    {
-      _id: "2",
-      proposalTitle: "Blockchain fdsdsadasdaor Supply Chain",
-      groupMembers: ["AliceJohnson", "BobBrown"],
-      panelists: ["Dr. White", "Prof. Black"],
-      submittedAt: "2024-02-10",
-      datePublished: "2024-02-15",
-      course: "Information Systems",
-      manuscriptStatus: "reviseOnAdvicer",
-      channelId: "channel2",
-    },
-    // Additional dummy students...
-  ];
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    // Simulate fetching students
-    setAcceptedStudents(dummyData);
-    setFilteredStudents(dummyData);
-
-    // Extract unique courses
+    setFilteredStudents(students);
     const uniqueCourses = [
-      ...new Set(dummyData.map((student) => student.course)),
+      ...new Set(students.map((student) => student.course)),
     ];
     setCourses(uniqueCourses);
-  }, []);
+  }, [students]);
 
   const handleViewManuscript = (studentId, channelId) => {
     setSelectedStudentId(studentId);
     setSelectedChannelId(channelId);
     setIsEditorOpen(true);
-  };
-
-  const addTask = (studentId, taskTitle) => {
-    setTasks([...tasks, { title: taskTitle, completed: false }]);
-    setTaskInput("");
-  };
-
-  const updateManuscriptStatus = async (channelId, newStatus) => {
-    try {
-      await axios.patch(
-        "http://localhost:7000/api/advicer/thesis/manuscript-status",
-        {
-          channelId,
-          manuscriptStatus: newStatus,
-        }
-      );
-      message.success("Manuscript status updated");
-    } catch (error) {
-      console.error("Error updating status:", error);
-      message.error("Failed to update status");
-    }
   };
 
   const openTaskModal = (student) => {
@@ -116,7 +58,10 @@ export default function NewTables() {
   };
 
   const handleAddTask = () => {
-    if (taskInput) addTask(currentTaskStudent._id, taskInput);
+    if (taskInput) {
+      setTasks([...tasks, { title: taskInput, completed: false }]);
+      setTaskInput("");
+    }
   };
 
   const handleDeleteTask = (index) => {
@@ -134,21 +79,38 @@ export default function NewTables() {
 
   const handleCourseChange = (value) => {
     setSelectedCourse(value);
-    if (value === "") setFilteredStudents(acceptedStudents);
-    else
+    if (value === "") {
+      setFilteredStudents(students);
+    } else {
       setFilteredStudents(
-        acceptedStudents.filter((student) => student.course === value)
+        students.filter((student) => student.course === value)
       );
+    }
   };
 
   return (
     <div
       style={{ flex: 1, overflowX: "hidden", padding: "20px", width: "1263px" }}
     >
+      <h2 style={{ color: "#ffffff" }}>Advisees of {adviserName}</h2>
+      <Select
+        value={selectedCourse}
+        onChange={handleCourseChange}
+        style={{ marginBottom: "20px", width: "200px" }}
+        placeholder='Select a course'
+      >
+        <Option value=''>All Courses</Option>
+        {courses.map((course) => (
+          <Option key={course} value={course}>
+            {course}
+          </Option>
+        ))}
+      </Select>
+
       <List
         grid={{ gutter: 16, column: 1 }}
         dataSource={filteredStudents.filter(
-          (student) => student.manuscriptStatus === "reviseOnAdvicer"
+          (student) => student.manuscriptStatus === "readyToDefense"
         )}
         renderItem={(student) => (
           <List.Item key={student._id}>
@@ -185,24 +147,28 @@ export default function NewTables() {
                   {student.panelists.join(", ")}
                 </Text>
                 <br />
-                <Text style={{ color: "#ffffff", marginRight: "10px" }}>
-                  <span className='font-bold'>Date Uploaded:</span>{" "}
-                  {new Date(student.submittedAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </Text>
-                <br />
+                {student.submittedAt && (
+                  <Text style={{ color: "#ffffff", marginRight: "10px" }}>
+                    <span className='font-bold'>Date Uploaded:</span>{" "}
+                    {new Date(student.submittedAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </Text>
+                )}
                 <Text style={{ color: "#ffffff" }}>
                   <span className='font-bold'>Date Published:</span>{" "}
                   {student.datePublished || "N/A"}
                 </Text>
                 <br />
-                <Text style={{ color: "#ffffff" }}>
-                  <strong>Manuscript Status:</strong> {student.manuscriptStatus}
-                </Text>
+                <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
+                <p style={{ color: "#ffffff" }}>Course: {student.name}</p>
+                <p style={{ color: "#ffffff" }}>
+                  Manuscript Status: {student.manuscriptStatus}
+                </p>
               </div>
+
               <div
                 style={{
                   display: "flex",
@@ -220,22 +186,16 @@ export default function NewTables() {
                 />
                 <Button
                   icon={<LoadingOutlined />}
-                  onClick={() =>
-                    updateManuscriptStatus(student.channelId, "reviseOnAdvicer")
-                  }
                   style={{ marginBottom: "20px", width: "100px" }}
                 />
                 <Button
                   icon={<CheckOutlined />}
-                  onClick={() =>
-                    updateManuscriptStatus(student.channelId, "readyToDefense")
-                  }
                   style={{ marginBottom: "20px", width: "100px" }}
                 />
                 <Button
                   type='primary'
                   onClick={() => openTaskModal(student)}
-                  style={{ marginBottom: "20px", width: "100px" }}
+                  style={{ width: "100px" }}
                 >
                   View Task
                 </Button>
@@ -247,7 +207,7 @@ export default function NewTables() {
 
       {isEditorOpen && selectedStudentId && (
         <CkEditorDocuments
-          userId={user._id}
+          userId={"dummyUserId"}
           channelId={selectedChannelId}
           onClose={() => setIsEditorOpen(false)}
         />
@@ -270,10 +230,9 @@ export default function NewTables() {
             placeholder='Enter a task'
             value={taskInput}
             onChange={handleTaskInputChange}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleAddTask();
-            }}
+            onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
           />
+          <br />
           <br />
           <List
             dataSource={tasks}
@@ -285,15 +244,16 @@ export default function NewTables() {
                     checked={task.completed}
                     onChange={() => handleCompleteTask(index)}
                   >
-                    Completed
+                    {task.completed ? "Completed" : "Pending"}
                   </Checkbox>,
                   <Button
+                    type='link'
                     icon={<DeleteOutlined />}
                     onClick={() => handleDeleteTask(index)}
                   />,
                 ]}
               >
-                {task.title}
+                <Text delete={task.completed}>{task.title}</Text>
               </List.Item>
             )}
           />

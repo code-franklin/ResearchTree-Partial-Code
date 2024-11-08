@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Avatar, ConfigProvider } from "antd";
 import axios from "axios";
 import { Button } from "@mui/material";
-import ListManuscript from "./ListManuscript";
+import Tables from "./Tables";
 
 const App = () => {
   const [selectedAdviser, setSelectedAdviser] = useState(null);
-  const [panelistData, setPanelistsData] = useState([]);
+  const [advicerData, setAdvicersData] = useState([]);
   const [selectedPanelistStudents, setSelectedPanelistStudents] = useState([]);
 
-  const handleAdviserClick = (panelist) => {
-    setSelectedAdviser(panelist.name);
-    setSelectedPanelistStudents(panelist.students); 
+  const handleAdviserClick = (advicer) => {
+    setSelectedAdviser(advicer.name);
+    setSelectedPanelistStudents(advicer.students); 
   };
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const App = () => {
         "http://localhost:7000/api/admin/advicer/handle/manuscript"
       );
       const data = response.data;
-      setPanelistsData(data.advisers);
+      setAdvicersData(data.advisers);
     };
     fetchData();
   }, []);
@@ -55,19 +55,19 @@ const App = () => {
                 </th>
               </tr>
             </thead>
-            {panelistData &&
-              panelistData.length > 0 &&
-              panelistData.map((panelist) => (
-                <tbody key={panelist.name} className='divide-y divide-gray-200'>
+            {advicerData &&
+              advicerData.length > 0 &&
+              advicerData.map((advicer) => (
+                <tbody key={advicer.name} className='divide-y divide-gray-200'>
                   <tr>
                     <td className='whitespace-nowrap text-center px-4 py-3 font-medium text-white'>
                       <div className=''>
                         <Avatar
-                          src={panelist.profileImage}
+                          src={advicer.profileImage}
                           sx={{ width: 79, height: 79 }}
                         />
                       </div>
-                      <p className='text-xl'>{panelist.name}</p>
+                      <p className='text-xl'>{advicer.name}</p>
                     </td>
                     <td className='whitespace-nowrap text-center  px-4 py-2 text-gray-700'>
                       <span className='whitespace-nowrap rounded-full bg-lime-100 px-2.5 py-0.5 text-sm text-lime-700'>
@@ -77,7 +77,7 @@ const App = () => {
                     <td className='whitespace-nowrap text-center  px-4 py-2'>
                       <Button
                         variant='contained'
-                        onClick={() => handleAdviserClick(panelist)}
+                        onClick={() => handleAdviserClick(advicer)}
                       >
                         View Advisees
                       </Button>
@@ -87,7 +87,7 @@ const App = () => {
               ))}
           </table>
         ) : (
-          <ListManuscript
+          <Tables
             adviserName={selectedAdviser}
             students={selectedPanelistStudents}
           />

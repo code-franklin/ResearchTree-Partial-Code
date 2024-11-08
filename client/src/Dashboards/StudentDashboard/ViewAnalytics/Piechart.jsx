@@ -1,39 +1,92 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import variablePie from 'highcharts/modules/variable-pie';
-import "./Styles/pieChart.css"
+import "./Styles/pieChart.css";
 
 // Initialize the variable pie module
 variablePie(Highcharts);
 
-// Define the VariablePieChart component
-export const PieChart = () => {
+export const PieChart = ({ user }) => {
+    const [tasks, setTasks] = useState([]);
+    const [progress, setProgress] = useState(0);
+
+    // Fetch tasks data
+    const fetchUpdatedTasks = async () => {
+        try {
+            const response = await fetch(`http://localhost:7000/api/student/tasks/${user._id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Failed to fetch updated tasks:', errorData.message || 'Unknown error');
+                return;
+            }
+
+            const data = await response.json();
+            setTasks(data.tasks || []);
+        } catch (error) {
+            console.error('Error fetching updated tasks:', error.message);
+        }
+    };
+
+    // Fetch task progress
+    const fetchTaskProgress = async (userId) => {
+        try {
+          const response = await fetch(`http://localhost:7000/api/student/tasks/progress/${userId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          });
+      
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error fetching task progress:', errorData.message);
+            return;
+          }
+      
+          const { progress } = await response.json();
+          setProgress(progress >= 0 && progress <= 100 ? progress : 0); // Ensure valid range
+        } catch (error) {
+          console.error('Error fetching task progress:', error);
+        }
+    };
+    
+    // Fetch task data when user is updated
+    useEffect(() => {
+        if (user && user._id) {
+          fetchUpdatedTasks();  // Fetch tasks
+          fetchTaskProgress(user._id); // Fetch progress
+        }
+    }, [user]);  // Runs every time `user` is updated
+    
+    // Dynamic chart options based on the progress state
     const options = {
         chart: {
             type: 'variablepie',
             className: 'highcharts-custom-chart',
-            backgroundColor: '#1E1E1E', // Set background color directly here
-            spacingBottom: 15, // Bottom padding
-            spacingTop: 20, // Top padding
-            spacingLeft: 10, // Left padding
-            spacingRight: 10, // Right padding
-            height: 670, // Set height
-            width: 420, // Set width
+            backgroundColor: '#1E1E1E',
+            spacingBottom: 0,
+            spacingTop: 200,
+            spacingLeft: 20,
+            spacingRight: 0,
+            height: 805,
+            width: 450,
         },
         title: {
-            text: 'Total Manuscript',
-            className: 'highcharts-custom-title',
-            style: {
-                color: '#0BF677' // Set title text color to white
-            },
+            text: null,
         },
         legend: {
             align: 'center',
             verticalAlign: 'bottom',
             layout: 'horizontal',
             itemStyle: {
-                color: '#FFFFFF' // Set legend item text color to white
+                color: '#FFFFFF',
             },
         },
         series: [{
@@ -41,38 +94,25 @@ export const PieChart = () => {
             innerSize: '30%',
             zMin: 0,
             showInLegend: true,
-            className: 'highcharts-custom-series',
-            borderColor: 'none', // Remove border color
-            borderWidth: 0, // Remove border width
             dataLabels: {
-                className: 'highcharts-custom-data-label',
+                enabled: false,
             },
-            data: [{
-                name: 'Ai',
-                y: 300,
-                z: 92.9,
-                color: '#FF4444' // Customize color for Spain
-            }, {
-                name: 'Mobile App',
-                y: 50   ,
-                z: 118.7,
-                color: '#0BF677' // Customize color for France
-            }, {
-                name: 'Business',
-                y: 20,
-                z: 124.6,
-                color: '#C70039' // Customize color for Poland
-            }, {
-                name: 'Goverment',
-                y: 372,
-                z: 137.5,
-                color: '#272827' // Customize color for Czech Republic
-            }, {
-                name: 'IOT',
-                y: 200,
-                z: 201.8,
-                color: '#0BF677' // Customize color for Italy
-            }]
+            borderColor: 'none',
+            borderWidth: 0,
+            data: [
+                {
+                    name: 'Tasks',
+                    y: progress,
+                    z: 92.9,
+                    color: '#222222'
+                },
+                {
+                    name: 'Progress',
+                    y: progress,
+                    z: 201.8,
+                    color: '#0BF677'
+                }
+            ]
         }]
     };
 

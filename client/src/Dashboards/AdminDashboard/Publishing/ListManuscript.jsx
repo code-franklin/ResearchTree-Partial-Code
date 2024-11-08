@@ -24,22 +24,23 @@ export default function ListManuscript({ adviserName, students }) {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
-
   const [courses, setCourses] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
-
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentTaskStudent, setCurrentTaskStudent] = useState(null);
   const [taskInput, setTaskInput] = useState("");
   const [tasks, setTasks] = useState([]);
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
   useEffect(() => {
-    setFilteredStudents(students);
+    // Get unique courses from student data for filtering
     const uniqueCourses = [
       ...new Set(students.map((student) => student.course)),
     ];
     setCourses(uniqueCourses);
+    setFilteredStudents(students);
   }, [students]);
 
   const handleViewManuscript = (studentId, channelId) => {
@@ -53,9 +54,7 @@ export default function ListManuscript({ adviserName, students }) {
     setIsModalVisible(true);
   };
 
-  const handleTaskInputChange = (e) => {
-    setTaskInput(e.target.value);
-  };
+  const handleTaskInputChange = (e) => setTaskInput(e.target.value);
 
   const handleAddTask = () => {
     if (taskInput) {
@@ -65,41 +64,35 @@ export default function ListManuscript({ adviserName, students }) {
   };
 
   const handleDeleteTask = (index) => {
-    const updatedTasks = tasks.filter((_, i) => i !== index);
-    setTasks(updatedTasks);
+    setTasks((prevTasks) => prevTasks.filter((_, i) => i !== index));
   };
 
   const handleCompleteTask = (index) => {
-    const updatedTasks = tasks.map((task, i) => {
-      if (i === index) return { ...task, completed: !task.completed };
-      return task;
-    });
-    setTasks(updatedTasks);
+    setTasks((prevTasks) =>
+      prevTasks.map((task, i) =>
+        i === index ? { ...task, completed: !task.completed } : task
+      )
+    );
   };
 
   const handleCourseChange = (value) => {
     setSelectedCourse(value);
-    if (value === "") {
-      setFilteredStudents(students);
-    } else {
-      setFilteredStudents(
-        students.filter((student) => student.course === value)
-      );
-    }
+    setFilteredStudents(
+      value ? students.filter((student) => student.course === value) : students
+    );
   };
 
   return (
-    <div
-      style={{ flex: 1, overflowX: "hidden", padding: "20px", width: "1263px" }}
-    >
+    <div style={{ flex: 1, overflowX: "hidden", padding: "20px", width: "1263px" }}>
       <h2 style={{ color: "#ffffff" }}>Advisees of {adviserName}</h2>
+      
       <Select
         value={selectedCourse}
         onChange={handleCourseChange}
         style={{ marginBottom: "20px", width: "200px" }}
-        placeholder='Select a course'
+        placeholder="Select a course"
       >
-        <Option value=''>All Courses</Option>
+        <Option value="">All Courses</Option>
         {courses.map((course) => (
           <Option key={course} value={course}>
             {course}
@@ -109,94 +102,49 @@ export default function ListManuscript({ adviserName, students }) {
 
       <List
         grid={{ gutter: 16, column: 1 }}
-        dataSource={filteredStudents.filter(
-          (student) => student.manuscriptStatus === null
-        )}
+        dataSource={filteredStudents.filter((student) => student.manuscriptStatus === null)}
         renderItem={(student) => (
           <List.Item key={student._id}>
-            <div
-              style={{
-                height: "200px",
-                padding: "20px",
-                borderRadius: "8px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: "#2B2B2B",
-                marginBottom: "16px",
-              }}
-            >
+            <div style={{
+              height: "200px", padding: "20px", borderRadius: "8px",
+              display: "flex", justifyContent: "space-between",
+              alignItems: "center", backgroundColor: "#2B2B2B", marginBottom: "16px"
+            }}>
               <div style={{ flex: 1 }}>
-                <Text
-                  style={{
-                    color: "#ffffff",
-                    fontSize: "18px",
-                    fontWeight: "bold",
-                  }}
-                >
+                <Text style={{ color: "#ffffff", fontSize: "18px", fontWeight: "bold" }}>
                   {student.proposalTitle}
                 </Text>
                 <br />
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Authors: </span>
-                  {student.groupMembers.join(", ")}
+                  <span className="font-bold">Authors: </span>{student.groupMembers.join(", ")}
                 </Text>
                 <br />
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Panelists: </span>
-                  {student.panelists.join(", ")}
+                  <span className="font-bold">Panelists: </span>{student.panelists.join(", ")}
                 </Text>
                 <br />
                 {student.submittedAt && (
                   <Text style={{ color: "#ffffff", marginRight: "10px" }}>
-                    <span className='font-bold'>Date Uploaded:</span>{" "}
-                    {new Date(student.submittedAt).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
+                    <span className="font-bold">Date Uploaded:</span> {new Date(student.submittedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Date Published:</span>{" "}
-                  {student.datePublished || "N/A"}
+                  <span className="font-bold">Date Published:</span> {student.datePublished || "N/A"}
                 </Text>
                 <br />
-                <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
-                <p style={{ color: "#ffffff" }}>Course: {student.name}</p>
-                <p style={{ color: "#ffffff" }}>
-                  Manuscript Status: {student.manuscriptStatus}
-                </p>
+                <Text style={{ color: "#ffffff" }}>Course: {student.course}</Text>
+                <Text style={{ color: "#ffffff" }}>Name: {student.name}</Text>
+                <Text style={{ color: "#ffffff" }}>Manuscript Status: {student.manuscriptStatus}</Text>
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  marginRight: "10px",
-                }}
-              >
-                <Button
-                  icon={<EditOutlined />}
-                  onClick={() =>
-                    handleViewManuscript(student._id, student.channelId)
-                  }
-                  style={{ marginBottom: "20px", width: "100px" }}
-                />
-                <Button
-                  icon={<LoadingOutlined />}
-                  style={{ marginBottom: "20px", width: "100px" }}
-                />
-                <Button
-                  icon={<CheckOutlined />}
-                  style={{ marginBottom: "20px", width: "100px" }}
-                />
-                <Button
-                  type='primary'
-                  onClick={() => openTaskModal(student)}
-                  style={{ width: "100px" }}
-                >
+              <div style={{
+                display: "flex", flexDirection: "column",
+                alignItems: "center", marginRight: "10px"
+              }}>
+                <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)} style={{ marginBottom: "20px", width: "100px" }} />
+                <Button icon={<LoadingOutlined />} style={{ marginBottom: "20px", width: "100px" }} />
+                <Button icon={<CheckOutlined />} style={{ marginBottom: "20px", width: "100px" }} />
+                <Button type="primary" onClick={() => openTaskModal(student)} style={{ width: "100px" }}>
                   View Task
                 </Button>
               </div>
@@ -207,7 +155,7 @@ export default function ListManuscript({ adviserName, students }) {
 
       {isEditorOpen && selectedStudentId && (
         <CkEditorDocuments
-          userId={"dummyUserId"}
+          userId={user.id}
           channelId={selectedChannelId}
           onClose={() => setIsEditorOpen(false)}
         />
@@ -218,16 +166,16 @@ export default function ListManuscript({ adviserName, students }) {
           visible={isModalVisible}
           onCancel={() => setIsModalVisible(false)}
           footer={[
-            <Button key='close' onClick={() => setIsModalVisible(false)}>
+            <Button key="close" onClick={() => setIsModalVisible(false)}>
               Close
             </Button>,
-            <Button key='add' type='primary' onClick={handleAddTask}>
+            <Button key="add" type="primary" onClick={handleAddTask}>
               Add Task
             </Button>,
           ]}
         >
           <Input
-            placeholder='Enter a task'
+            placeholder="Enter a task"
             value={taskInput}
             onChange={handleTaskInputChange}
             onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
@@ -247,7 +195,7 @@ export default function ListManuscript({ adviserName, students }) {
                     {task.completed ? "Completed" : "Pending"}
                   </Checkbox>,
                   <Button
-                    type='link'
+                    type="link"
                     icon={<DeleteOutlined />}
                     onClick={() => handleDeleteTask(index)}
                   />,

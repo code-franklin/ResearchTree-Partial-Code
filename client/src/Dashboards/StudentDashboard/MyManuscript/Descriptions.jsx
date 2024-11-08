@@ -11,6 +11,7 @@ import { SyncOutlined } from '@ant-design/icons';
 
 
 
+
 const { Title, Text } = Typography;
 
 const ResearchCard = () => {
@@ -213,7 +214,7 @@ useEffect(() => {
     } else if (!advisorInfo) {
       return (
         <span style={{ color: 'red' }}>
-          Declined
+          Required to submit proposals
         </span>
       );
     } else {
@@ -308,7 +309,7 @@ useEffect(() => {
           <div>
             
             <h1 className="text-2xl font-bold mb-2 text-[red]">
-              Submit Another Title Proposal
+              Submit your Title Proposals
             </h1>
             <p className="text-gray-500 font-bold mb-4">
               {user.groupMembers

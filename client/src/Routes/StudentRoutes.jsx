@@ -5,6 +5,8 @@ import MyManuscript from '../Dashboards/StudentDashboard/MyManuscript/MyManuscri
 import ExploreManuscript from '../Dashboards/StudentDashboard/ExploreManuscript/Articles';
 import ViewAnalytics from '../Dashboards/StudentDashboard/ViewAnalytics/ViewAnalyticsComponent';
 
+
+import TitleProposal from '../Components/Sidebar/TitleProposals'
 import Sidebar from '../Components/Sidebar/sidebar';
 import UnauthorizedAccess from './UnauthorizedAccess'; // Import the UnauthorizedAccess component
 import Grading from '../Dashboards/StudentDashboard/MyManuscript/Grading'
@@ -23,6 +25,8 @@ function StudentRoutes() {
         <Route path="/" element={<ViewAnalytics />} />
         <Route path="StudentDashboard/MyManuscript" element={<MyManuscript />} />
         <Route path="StudentDashboard/Grading" element={<Grading />} />
+
+        <Route path="StudentDashboard/TitleProposal" element={<TitleProposal />} />
 
         <Route path="StudentDashboard/ExploreManuscript" element={<ExploreManuscript />} />
         <Route path="StudentDashboard/ViewAnalytics" element={<ViewAnalytics />} />

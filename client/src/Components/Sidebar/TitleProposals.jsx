@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import {
+  SendOutlined
+} from '@ant-design/icons';
 
 import {
   CheckCircleOutlined,
@@ -144,6 +147,7 @@ export default function BasicModal() {
   return (
     <div>
       <button onClick={handleOpen}>
+       
         {" "}
         <img
           className='mt-[420px] ml-[25px]'
@@ -176,74 +180,11 @@ export default function BasicModal() {
             variant='h6'
             component='h2'
           >
-             {advisorStatus === "null" && "Title Proposals" }
-            {advisorStatus === "declined" && "Title Proposals"}
-            {advisorStatus === "pending" && "Title Proposals"}
-            {advisorStatus === "accepted" && "Your Adviser"}
+             
+ 
           </Typography>
           {/* Render based on advisor status */}
-          {(!advisorInfo || advisorStatus === "null") && (
-            <div>
-              <Tag 
-              style={{position: 'absolute', marginLeft: '100px', marginTop: '50px'}}
-              icon={<CloseCircleOutlined />} 
-              color="#00ff00">
-               Submit your Proposal Title 
-              </Tag>
-              
-              <form onSubmit={(e) => { e.preventDefault(); submitProposal(); }}>
-                <Textarea
-                      sx={{
-                      color: 'white',
-                      position: 'absolute',
-                      top: '200px',
-                      left: '117px',
-                      borderRadius: '20px',
-                      backgroundColor: '#1E1E1E', 
-                      borderColor: '#585050',
-                      width: '495px',
-                      height: '92px',
-                      paddingLeft: '20px',
-                      paddingTop:'10px',
-                    }}
-                      color='success'
-                      minRows={2}
-                      placeholder="Write your research title..."
-                      size="sm"
-                      variant="outlined"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                />
-                
-                <Textarea
-                      sx={{
-                      color: 'white',
-                      position: 'absolute',
-                      top: '310px',
-                      left: '117px',
-                      borderRadius: '20px',
-                      backgroundColor: '#1E1E1E', 
-                      borderColor: '#585050',
-                      width: '495px',
-                      height: '92px',
-                      paddingLeft: '20px',
-                      paddingTop:'10px',
-                    }}
-                      color='success'
-                      minRows={2}
-                      placeholder="Write your research proposal..."
-                      size="sm"
-                      variant="outlined"
-                      value={proposal}
-                      onChange={(e) => setProposal(e.target.value)}
-                />
-                
-                {/* Add a submit button or trigger elsewhere */}
-                <button type="submit" style={{ display: 'block' }}>Submit Proposal</button>
-                </form>
-            </div>
-          )}
-
+         
 
           {/* Render based on advisor status */}
           {(!advisorInfo || advisorStatus === "declined") && (
@@ -255,9 +196,9 @@ export default function BasicModal() {
                   marginTop: "50px",
                 }}
                 icon={<CloseCircleOutlined />}
-                color='#cd201f'
+                color='blue'
               >
-                Your Title Proposals is Declined
+                Submit your Proposals
               </Tag>
 
               <form
@@ -311,10 +252,21 @@ export default function BasicModal() {
                   value={proposal}
                   onChange={(e) => setProposal(e.target.value)}
                 />
-
+  
                 {/* Add a submit button or trigger elsewhere */}
-                <button type='submit' style={{ display: "block" }}>
-                  Submit Proposal
+                
+                <button type='submit' 
+                style={{ 
+                  position: 'absolute', 
+                  display: "block", 
+                  background: 'blue', 
+                  width: '104px', 
+                  height: '30px', 
+                  borderRadius: '16px', 
+                  marginTop: '240px', 
+                  marginLeft: '465px'}}>
+
+                  Submit <SendOutlined />
                 </button>
               </form>
             </div>
@@ -408,9 +360,13 @@ export default function BasicModal() {
 
           <br />
           {(!advisorInfo || advisorStatus === "declined") && (
+            
             <section className='top-advisors'>
+              <h2 className='absolute font-bold ml-[250px] text-[19px] mt-[-310px]'>
+                Title Proposals
+              </h2>
               <h2 className='font-bold ml-[266px] text-[19px] mt-[280px]'>
-                Top Advisors
+                Top Advisors:
               </h2>
               <ul className='flex ml-[150px] mt-[50px]'>
                 {" "}

@@ -95,7 +95,7 @@ const LoginFunction = () => {
     <aside className="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
       <img
         alt=""
-       src="/src/assets/login-bg.png"
+       src="/src/assets/bg-reg.gif"
         className="absolute inset-0 h-full w-full object-cover"
       />
     </aside>
@@ -117,10 +117,6 @@ const LoginFunction = () => {
           Welcome to ResearchTree 
         </h1>
 
-        <p className="mt-4 leading-relaxed text-gray-500">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam dolorum aliquam,
-          quibusdam aperiam voluptatum.
-        </p>
 
         <TextField
         label="Name"
