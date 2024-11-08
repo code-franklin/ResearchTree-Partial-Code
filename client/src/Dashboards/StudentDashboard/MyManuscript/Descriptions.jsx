@@ -213,7 +213,7 @@ useEffect(() => {
       );
     } else if (!advisorInfo) {
       return (
-        <span style={{ color: 'red' }}>
+        <span style={{ color: 'lightblue' }}>
           Required to submit proposals
         </span>
       );
@@ -242,19 +242,13 @@ useEffect(() => {
           <span className="bg-[#868686] text-white px-2 py-0 mr-2">Research Title</span>
           <span className="bg-[#1E1E] text-white px-2 py-0 mr-2">{user.course}</span>
           <div className="absolute ml-[920px]"></div>
-          
-          
-        </div>
-
         
+        </div>
 
 {/* details for student */}
         {advisorStatus === 'accepted' && (
           <div>
                       
-      
-            
-
             <h1 className="text-2xl font-bold mb-2" style={{ maxWidth: '85%' }}>
               {isEditingProposalTitle ? (
                 <input
@@ -308,13 +302,13 @@ useEffect(() => {
         {!advisorStatus && (
           <div>
             
-            <h1 className="text-2xl font-bold mb-2 text-[red]">
+            <h1 className="text-2xl font-bold mb-2 text-[lightblue]">
               Submit your Title Proposals
             </h1>
-            <p className="text-gray-500 font-bold mb-4">
-              {user.groupMembers
+            <p className="text-gray-500 font-bold mb-4">Authors: 
+             <span className='font-normal'> {user.groupMembers
                 .map(member => member.replace(/([a-z])([A-Z])/g, '$1 $2')) // Insert space between lowercase and uppercase letters
-                .join(', ')}
+                .join(', ')}</span> 
             </p>
           </div>
         )}
@@ -381,11 +375,11 @@ useEffect(() => {
           {user.channelId} */}
         </div>
         <div className="flex justify-between items-center">
-          <div>
+          {/* <div>
             <h1 className="mb-2 mt-4">Type of Research</h1>
             <span className="bg-purple-500 text-white px-2 py-1 mr-2">Machine Learning</span>
             <span className="bg-yellow-500 text-white px-2 py-1">Web and Mobile</span>
-          </div>
+          </div> */}
           
           <div className="flex items-center">
           <Button 
