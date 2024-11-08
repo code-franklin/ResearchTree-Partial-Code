@@ -3,6 +3,7 @@ import {
   List,
   Typography,
   Button,
+  message,
   Modal,
   Input,
   Checkbox,
@@ -16,31 +17,61 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import CkEditorDocuments from "./CkEditorDocuments";
+import axios from "axios";
 
 const { Text } = Typography;
 const { Option } = Select;
 
-export default function ListManuscript({ adviserName, students }) {
+export default function NewTables() {
+  const [panelistStudents, setPanelistStudents] = useState([]);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
 
-  const [courses, setCourses] = useState([]);
-  const [filteredStudents, setFilteredStudents] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState("");
+  const [courses, setCourses] = useState([]); // To store all unique courses
+  const [filteredStudents, setFilteredStudents] = useState([]); // For filtering based on the course
+  const [selectedCourse, setSelectedCourse] = useState(""); // For the selected course
 
+  // Modal states
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentTaskStudent, setCurrentTaskStudent] = useState(null);
   const [taskInput, setTaskInput] = useState("");
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState([]); // To store tasks
+
+  const [isGradeModalVisible, setIsGradeModalVisible] = useState(false); // State for grade modal
+
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    setFilteredStudents(students);
-    const uniqueCourses = [
-      ...new Set(students.map((student) => student.course)),
-    ];
-    setCourses(uniqueCourses);
-  }, [students]);
+    const fetchPanelistStudents = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:7000/api/advicer/panelist-students/${user._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setPanelistStudents(data.panelistStudents);
+          setFilteredStudents(data.panelistStudents);
+          // Extract unique courses from the students data
+          const uniqueCourses = [
+            ...new Set(data.panelistStudents.map((student) => student.course)),
+          ];
+          setCourses(uniqueCourses);
+        } else {
+          console.error("Error fetching panelist students");
+        }
+      } catch (error) {
+        console.error("Error fetching panelist students:", error.message);
+      }
+    };
+
+    fetchPanelistStudents();
+  }, []);
 
   const handleViewManuscript = (studentId, channelId) => {
     setSelectedStudentId(studentId);
@@ -48,9 +79,62 @@ export default function ListManuscript({ adviserName, students }) {
     setIsEditorOpen(true);
   };
 
+  const closeEditorModal = () => {
+    setIsEditorOpen(false); // Close modal
+    setSelectedStudentId(null);
+    setSelectedChannelId(null);
+  };
+
+  // Task for Student
+
+  const addTask = async (studentId, taskTitle) => {
+    try {
+      const response = await fetch(
+        `http://localhost:7000/api/advicer/add-task/${studentId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ taskTitle }),
+        }
+      );
+      if (response.ok) {
+        setTasks([...tasks, { title: taskTitle, completed: false }]); // Add new task
+        setTaskInput(""); // Clear task input
+        fetchStudents(); // Refresh the list after adding a task
+      }
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
+  };
+
+  const updateManuscriptStatus = async (channelId, newStatus) => {
+    try {
+      const response = await axios.patch(
+        "http://localhost:7000/api/advicer/thesis/manuscript-status",
+        { channelId, manuscriptStatus: newStatus } // Send student ID and new status
+      );
+
+      message.success("Manuscript status updated");
+    } catch (error) {
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        message.error(
+          `Error: ${error.response.data.message || "Failed to update status"}`
+        );
+      } else {
+        console.error("Error:", error.message);
+        message.error("Error updating status");
+      }
+    }
+  };
+
   const openTaskModal = (student) => {
     setCurrentTaskStudent(student);
     setIsModalVisible(true);
+    console.log("Selected student tasks: ", student.tasks); // Check if tasks exist here
   };
 
   const handleTaskInputChange = (e) => {
@@ -59,40 +143,49 @@ export default function ListManuscript({ adviserName, students }) {
 
   const handleAddTask = () => {
     if (taskInput) {
-      setTasks([...tasks, { title: taskInput, completed: false }]);
-      setTaskInput("");
+      addTask(currentTaskStudent._id, taskInput);
     }
   };
 
   const handleDeleteTask = (index) => {
     const updatedTasks = tasks.filter((_, i) => i !== index);
-    setTasks(updatedTasks);
+    setTasks(updatedTasks); // Update task list after deletion
   };
 
   const handleCompleteTask = (index) => {
     const updatedTasks = tasks.map((task, i) => {
-      if (i === index) return { ...task, completed: !task.completed };
+      if (i === index) {
+        return { ...task, completed: !task.completed };
+      }
       return task;
     });
-    setTasks(updatedTasks);
+    setTasks(updatedTasks); // Update task completion status
   };
 
+  // Handle course selection
   const handleCourseChange = (value) => {
     setSelectedCourse(value);
     if (value === "") {
-      setFilteredStudents(students);
+      setFilteredStudents(panelistStudents); // Show all students if no course is selected
     } else {
       setFilteredStudents(
-        students.filter((student) => student.course === value)
+        panelistStudents.filter((student) => student.course === value)
       );
     }
+  };
+
+  const openGradeModal = () => {
+    setIsGradeModalVisible(true);
+  };
+
+  const closeGradeModal = () => {
+    setIsGradeModalVisible(false);
   };
 
   return (
     <div
       style={{ flex: 1, overflowX: "hidden", padding: "20px", width: "1263px" }}
     >
-      <h2 style={{ color: "#ffffff" }}>Advisees of {adviserName}</h2>
       <Select
         value={selectedCourse}
         onChange={handleCourseChange}
@@ -110,7 +203,7 @@ export default function ListManuscript({ adviserName, students }) {
       <List
         grid={{ gutter: 16, column: 1 }}
         dataSource={filteredStudents.filter(
-          (student) => student.manuscriptStatus === "readyToDefense"
+          (student) => student.manuscriptStatus === "approvedOnPanel"
         )}
         renderItem={(student) => (
           <List.Item key={student._id}>
@@ -139,13 +232,16 @@ export default function ListManuscript({ adviserName, students }) {
                 <br />
                 <Text style={{ color: "#ffffff" }}>
                   <span className='font-bold'>Authors: </span>
-                  {student.groupMembers.join(", ")}
+                  {student.groupMembers
+                    .map((member) => member.replace(/([a-z])([A-Z])/g, "$1 $2")) // Insert space between lowercase and uppercase letters
+                    .join(", ")}
                 </Text>
                 <br />
                 <Text style={{ color: "#ffffff" }}>
                   <span className='font-bold'>Panelists: </span>
                   {student.panelists.join(", ")}
                 </Text>
+
                 <br />
                 {student.submittedAt && (
                   <Text style={{ color: "#ffffff", marginRight: "10px" }}>
@@ -158,17 +254,14 @@ export default function ListManuscript({ adviserName, students }) {
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Date Published:</span>{" "}
-                  {student.datePublished || "N/A"}
+                  <span className='font-bold'>Manuscript Status:</span>{" "}
+                  {student.manuscriptStatus}
                 </Text>
-                <br />
+                {/*                 <br /><br />
                 <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
-                <p style={{ color: "#ffffff" }}>Course: {student.name}</p>
-                <p style={{ color: "#ffffff" }}>
-                  Manuscript Status: {student.manuscriptStatus}
-                </p>
+                <p style={{ color: "#ffffff" }}>USer: {student.name}</p>
+                <br /> */}
               </div>
-
               <div
                 style={{
                   display: "flex",
@@ -177,27 +270,26 @@ export default function ListManuscript({ adviserName, students }) {
                   marginRight: "10px",
                 }}
               >
-                <Button
+                {/*                 <Button
                   icon={<EditOutlined />}
-                  onClick={() =>
-                    handleViewManuscript(student._id, student.channelId)
-                  }
+                  onClick={() => handleViewManuscript(student._id, student.channelId)}
                   style={{ marginBottom: "20px", width: "100px" }}
-                />
-                <Button
-                  icon={<LoadingOutlined />}
+                /> */}
+                {/*                 <Button
+                  icon={<LoadingOutlined />}  
+                  onClick={() => updateManuscriptStatus(student._id, 'reviseOnPanelist')}
                   style={{ marginBottom: "20px", width: "100px" }}
                 />
                 <Button
                   icon={<CheckOutlined />}
+                  onClick={() => updateManuscriptStatus(student._id, 'approvedOnPanel')}
                   style={{ marginBottom: "20px", width: "100px" }}
-                />
+                /> */}
                 <Button
-                  type='primary'
-                  onClick={() => openTaskModal(student)}
-                  style={{ width: "100px" }}
+                  onClick={openGradeModal}
+                  style={{ marginBottom: "10px", width: "100px" }}
                 >
-                  View Task
+                  View Grade
                 </Button>
               </div>
             </div>
@@ -205,18 +297,36 @@ export default function ListManuscript({ adviserName, students }) {
         )}
       />
 
-      {isEditorOpen && selectedStudentId && (
+      {/*       {isEditorOpen && selectedStudentId && (
         <CkEditorDocuments
-          userId={"dummyUserId"}
+          userId={user._id}
           channelId={selectedChannelId}
           onClose={() => setIsEditorOpen(false)}
         />
-      )}
+      )} */}
 
-      <ConfigProvider>
+      <Modal
+        visible={isGradeModalVisible}
+        onCancel={closeGradeModal}
+        footer={null}
+      >
+        <h2>Grade Rubric</h2>
+        {/* Render rubric details here */}
+        <p>Rubric information goes here...</p>
+      </Modal>
+
+      <ConfigProvider
+        theme={{
+          components: {
+            Modal: {
+              algorithm: true, // Enable algorithm
+            },
+          },
+        }}
+      >
         <Modal
           visible={isModalVisible}
-          onCancel={() => setIsModalVisible(false)}
+          onCancel={() => setIsModalVisible(false)} // Ensures modal can close
           footer={[
             <Button key='close' onClick={() => setIsModalVisible(false)}>
               Close
@@ -230,13 +340,15 @@ export default function ListManuscript({ adviserName, students }) {
             placeholder='Enter a task'
             value={taskInput}
             onChange={handleTaskInputChange}
-            onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleAddTask();
+            }}
           />
           <br />
           <br />
           <List
             dataSource={tasks}
-            renderItem={(task, index) => (
+            renderItem={(tasks, index) => (
               <List.Item
                 key={index}
                 actions={[
@@ -244,7 +356,7 @@ export default function ListManuscript({ adviserName, students }) {
                     checked={task.completed}
                     onChange={() => handleCompleteTask(index)}
                   >
-                    {task.completed ? "Completed" : "Pending"}
+                    {tasks.completed ? "Completed" : "Pending"}
                   </Checkbox>,
                   <Button
                     type='link'
@@ -253,7 +365,7 @@ export default function ListManuscript({ adviserName, students }) {
                   />,
                 ]}
               >
-                <Text delete={task.completed}>{task.title}</Text>
+                <Text delete={tasks.completed}>{student.tasks}</Text>
               </List.Item>
             )}
           />

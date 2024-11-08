@@ -427,6 +427,15 @@ export default function NewTables() {
                       View Task
                     </Button>
                     <Button
+                      icon={<EditOutlined />}
+                      onClick={() =>
+                        handleViewManuscript(student._id, student.channelId)
+                      }
+                      style={{ marginBottom: "10px", width: "100px" }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
                       onClick={openGradeModal}
                       style={{ marginBottom: "10px", width: "100px" }}
                     >

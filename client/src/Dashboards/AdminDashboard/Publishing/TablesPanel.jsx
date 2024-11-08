@@ -3,21 +3,19 @@ import { Select } from 'antd';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import ListManuscript from './AdvicersTables/ListManuscript';
-import OngoingRevise from './AdvicersTables/OngoingRevise';
-import ReadyforDefense from './AdvicersTables/ReadyforDefense';
-import MonitoringAdvicer from "./AdvicersTables/MonitoringAdvicer"
+import AdvicerApproved from './PanelistTables/AdvicerApproved';
+import RevisePanelist from './PanelistTables/RevisePanelist';
+import ApprovedOnPanel from './PanelistTables/ApprovedOnPanel';
 
 const { Option } = Select;
 
-const Tables = ({ adviserName, adviserImage, students }) => {
+const Tables = ({ panelName, panelImage, panelistStudents }) => {
   const [value, setValue] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
 
   const handleCategorySelect = (value) => {
     setSelectedCategory(value);
@@ -35,7 +33,7 @@ const Tables = ({ adviserName, adviserImage, students }) => {
       flexDirection: 'column'
     }}>
      
-
+      
       <Box sx={{ width: '100%' }}>
         <Box sx={{
           position: 'fixed',
@@ -52,27 +50,24 @@ const Tables = ({ adviserName, adviserImage, students }) => {
             aria-label="basic tabs example"
             TabIndicatorProps={{ sx: { display: 'none' } }}
           >
-            <Tab label="List Manuscript" sx={tabStyles} />
+            <Tab label="Defense" sx={tabStyles} />
             <Tab label="Ongoing Revision" sx={tabStyles} />
-            <Tab label="Ready for Defense" sx={tabStyles} />
-            <Tab label="Monitoring" sx={tabStyles} />
+            <Tab label="Approved" sx={tabStyles} />
           </Tabs>
         </Box>
-
+        
         {/* Render based on selected tab */}
         <Box sx={{ p: 4 }}>
           {value === 0 && (
-            <ListManuscript adviserName={adviserName} adviserImage={adviserImage} students={students} selectedCategory={selectedCategory} />
+            <AdvicerApproved panelName={panelName} panelImage={panelImage} panelistStudents={panelistStudents} selectedCategory={selectedCategory} />
           )}
           {value === 1 && (
-            <OngoingRevise adviserName={adviserName} adviserImage={adviserImage} students={students} selectedCategory={selectedCategory} />
+            <RevisePanelist panelName={panelName} panelImage={panelImage} panelistStudents={panelistStudents} selectedCategory={selectedCategory} />
           )}
           {value === 2 && (
-            <ReadyforDefense adviserName={adviserName} adviserImage={adviserImage} students={students} selectedCategory={selectedCategory} />
+            <ApprovedOnPanel panelName={panelName} panelImage={panelImage} panelistStudents={panelistStudents} selectedCategory={selectedCategory} />
           )}
-          {value === 3 && (
-            <MonitoringAdvicer adviserName={adviserName} adviserImage={adviserImage} students={students} selectedCategory={selectedCategory} />
-          )}
+
         </Box>
       </Box>
     </div>

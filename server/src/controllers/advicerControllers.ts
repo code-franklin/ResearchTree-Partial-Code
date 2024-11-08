@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import User from '../models/User';
+import Admin from '../models/Admin';
 import Specialization from '../models/Specialization';
 import Grade, { IGrade } from '../models/Grade';
 
@@ -81,50 +82,59 @@ export const login = async (req: Request, res: Response) => {
 };
 
 /* ckeditor API */
-
 export const getToken = async (req: Request, res: Response) => {
+  const accessKey = process.env.ACCESS_KEY || 'OxD87DrWZyfxdTVpe4C0SA0BoHINXaKvHmnoBtwpNguQJP0e71DdVkwx3BUD';
+  const environmentId = process.env.ENVIRONMENT_ID || 'WDEpU5WDnTLVaiP5CRd6';
 
-  const accessKey = 'OxD87DrWZyfxdTVpe4C0SA0BoHINXaKvHmnoBtwpNguQJP0e71DdVkwx3BUD';
-  const environmentId = 'WDEpU5WDnTLVaiP5CRd6';
+  try {
+    const userId = req.params.userId;
+    console.log('Fetching user with ID:', userId);
 
-    try {
-        const userId = req.params.userId;
-        console.log('Fetching user with ID:', userId);
+    // Search for the user in both User and Admin collections
+    const user = await User.findById(userId).exec();
+    let userInfo;
 
-        console.log('Environment ID:', process.env.environmentId);
-        console.log('Access Key:', process.env.accessKey);
-
-
-        const user = await User.findById(userId).exec();
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-
-        const payload = {
-            aud: process.env.environmentId || environmentId,
-            sub: (user._id as string).toString(),
-            user: {
-                email: user.email,
-                name: user.name,
-                role: user.role,
-            },
-            auth: {
-                'collaboration': {
-                    '*': {
-                        'role': 'writer'
-                    }
-                }
-            }
+    if (user) {
+      // User found in the User collection
+      userInfo = {
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      };
+    } else {
+      // Search in the Admin collection if not found in User
+      const admin = await Admin.findById(userId).exec();
+      if (admin) {
+        userInfo = {
+          email: admin.email,
+          name: admin.name,
         };
-
-        console.log('Payload for JWT:', payload);
-
-        const token = jwt.sign(payload, accessKey, { algorithm: 'HS256', expiresIn: '24h' });
-        res.send(token);
-    } catch (error) {
-        console.error('Error generating token:', error);
-        res.status(500).send('Error generating token');
+      } else {
+        return res.status(404).send('User or Admin not found');
+      }
     }
+
+    const payload = {
+      aud: environmentId,
+      sub: userId,
+      user: userInfo,
+      auth: {
+        collaboration: {
+          '*': {
+            role: 'writer',
+          },
+        },
+      },
+    };
+
+    console.log('Payload for JWT:', payload);
+
+    const token = jwt.sign(payload, accessKey, { algorithm: 'HS256', expiresIn: '24h' });
+    res.send(token);
+  } catch (error) {
+    console.error('Error generating token:', error);
+    res.status(500).send('Error generating token');
+  }
 };
 
 /* admin & advicer */

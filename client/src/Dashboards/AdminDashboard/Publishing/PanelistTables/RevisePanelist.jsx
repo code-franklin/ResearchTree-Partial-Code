@@ -52,8 +52,6 @@ export default function NewTables() {
 
   const panelistId = localStorage.getItem("panelistId"); // Example: retrieve panelist ID from localStorage
 
-  
-
   // Grading modal states
   const [isGradingModalVisible, setIsGradingModalVisible] = useState(false);
   const [gradingRubric, setGradingRubric] = useState({
@@ -389,7 +387,7 @@ export default function NewTables() {
       <List
         grid={{ gutter: 16, column: 1 }}
         dataSource={filteredStudents.filter(
-          (student) => student.manuscriptStatus === "readyToDefense"
+          (student) => student.manuscriptStatus === "reviseOnPanelist"
         )}
         renderItem={(student) => (
           <List.Item key={student._id}>
@@ -440,13 +438,18 @@ export default function NewTables() {
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Manuscript Status:</span>{" "}
-                  {student.manuscriptStatus}
+                  <span className='font-bold'>Date Published:</span>{" "}
+                  {student.datePublished || "N/A"}
                 </Text>
                 <br />
                 <br />
                 <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
                 <p style={{ color: "#ffffff" }}>USer: {student.name}</p>
+                <br />
+
+                <Text style={{ color: "#ffffff" }}>
+                  <strong>Manuscript Status:</strong> {student.manuscriptStatus}
+                </Text>
               </div>
 
               <div
@@ -455,7 +458,6 @@ export default function NewTables() {
                   flexDirection: "column",
                   alignItems: "center",
                   marginRight: "10px",
-                  gap: "10px",
                 }}
               >
                 <Progress
@@ -468,7 +470,7 @@ export default function NewTables() {
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "40px",
+                    marginTop: "-5px",
                     position: "absolute",
                   }}
                 />
@@ -478,65 +480,25 @@ export default function NewTables() {
                   onClick={() =>
                     handleViewManuscript(student._id, student.channelId)
                   }
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#1890ff", // Blue for 'edit'
-                    color: "#fff", // White text
-                  }}
+                  style={{ marginBottom: "20px", width: "100px" }}
                 />
-
-                <Button
-                  icon={<LoadingOutlined />}
-                  onClick={() =>
-                    updatePanelManuscriptStatus(
-                      student._id,
-                      "reviseOnPanelist",
-                      user._id
-                    )
-                  }
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#faad14", // Yellow for 'revise'
-                    color: "#fff", // White text
-                  }}
+                {/*                 <Button
+                  icon={<LoadingOutlined />}  
+                  onClick={() => updatePanelManuscriptStatus(student._id, 'reviseOnPanelist')}
+                  style={{ marginBottom: "20px", width: "100px" }}
                 />
-
                 <Button
                   icon={<CheckOutlined />}
-                  onClick={() =>
-                    updatePanelManuscriptStatus(
-                      student._id,
-                      "approvedOnPanel",
-                      user._id
-                    )
-                  }
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#52c41a", // Green for 'approve'
-                    color: "#fff", // White text
-                  }}
-                />
-
+                  onClick={() => updatePanelManuscriptStatus(student._id, 'approvedOnPanel')}
+                  style={{ marginBottom: "20px", width: "100px" }}
+                /> */}
                 <Button
-                  icon={<BookOutlined />}
-                  onClick={() => handleGradingIconClick(student)}
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#722ed1", // Purple for 'grading'
-                    color: "#fff", // White text
-                  }}
-                />
-
-                <Button
-                  icon={<PlusOutlined />}
                   type='primary'
                   onClick={() => openTaskModal(student)}
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#f5222d", // Red for 'add task'
-                    color: "#fff", // White text
-                  }}
-                />
+                  style={{ marginBottom: "20px", width: "100px" }}
+                >
+                  View Task
+                </Button>
               </div>
             </div>
           </List.Item>
@@ -573,46 +535,15 @@ export default function NewTables() {
         </DialogActions>
       </Dialog>
 
-      <Modal
-        title='Grading Rubric'
-        visible={isGradingModalVisible}
-        onOk={submitGrading}
-        onCancel={() => setIsGradingModalVisible(false)}
-        okText='Submit'
+      <ConfigProvider
+        theme={{
+          components: {
+            Modal: {
+              algorithm: true, // Enable algorithm
+            },
+          },
+        }}
       >
-        <div>
-          <Text>Criteria 1</Text>
-          <Input
-            type='number'
-            min={0}
-            max={100}
-            value={gradingRubric.criteria1}
-            onChange={(e) => handleRubricChange("criteria1", e.target.value)}
-          />
-        </div>
-        <div>
-          <Text>Criteria 2</Text>
-          <Input
-            type='number'
-            min={0}
-            max={100}
-            value={gradingRubric.criteria2}
-            onChange={(e) => handleRubricChange("criteria2", e.target.value)}
-          />
-        </div>
-        <div>
-          <Text>Criteria 3</Text>
-          <Input
-            type='number'
-            min={0}
-            max={100}
-            value={gradingRubric.criteria3}
-            onChange={(e) => handleRubricChange("criteria3", e.target.value)}
-          />
-        </div>
-      </Modal>
-
-      <ConfigProvider theme={{ components: { Modal: { algorithm: true } } }}>
         <Modal
           visible={isModalVisible}
           onCancel={() => setIsModalVisible(false)} // Ensures modal can close

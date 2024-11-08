@@ -6,12 +6,24 @@ import Tables from "./Tables";
 
 const App = () => {
   const [selectedAdviser, setSelectedAdviser] = useState(null);
+  const [selectedAdviserProfile, setSelectedAdviseProfile] = useState(null);
   const [advicerData, setAdvicersData] = useState([]);
-  const [selectedPanelistStudents, setSelectedPanelistStudents] = useState([]);
+  const [selectedAdvicerStudents, setSelectedAdvicerStudents] = useState([]);
+  
+  const [admin, setAdmin] = useState(null);
+
+  // Fetch admin data from localStorage on initial load
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setAdmin(JSON.parse(storedUser));
+    }
+  }, []);
 
   const handleAdviserClick = (advicer) => {
     setSelectedAdviser(advicer.name);
-    setSelectedPanelistStudents(advicer.students); 
+    setSelectedAdviseProfile(advicer.profileImage);
+    setSelectedAdvicerStudents(advicer.students); 
   };
 
   useEffect(() => {
@@ -63,7 +75,8 @@ const App = () => {
                     <td className='whitespace-nowrap text-center px-4 py-3 font-medium text-white'>
                       <div className=''>
                         <Avatar
-                          src={advicer.profileImage}
+                          src={`http://localhost:7000/public/uploads/${
+                            advicer.profileImage || "default-avatar.png"}`}
                           sx={{ width: 79, height: 79 }}
                         />
                       </div>
@@ -71,7 +84,7 @@ const App = () => {
                     </td>
                     <td className='whitespace-nowrap text-center  px-4 py-2 text-gray-700'>
                       <span className='whitespace-nowrap rounded-full bg-lime-100 px-2.5 py-0.5 text-sm text-lime-700'>
-                        Panelists
+                      {advicer.role}
                       </span>
                     </td>
                     <td className='whitespace-nowrap text-center  px-4 py-2'>
@@ -87,10 +100,12 @@ const App = () => {
               ))}
           </table>
         ) : (
-          <Tables
-            adviserName={selectedAdviser}
-            students={selectedPanelistStudents}
-          />
+        <Tables
+          adviserName={selectedAdviser}
+          adviserImage={selectedAdviserProfile}
+          students={selectedAdvicerStudents}
+        />
+
         )}
       </div>
     </ConfigProvider>

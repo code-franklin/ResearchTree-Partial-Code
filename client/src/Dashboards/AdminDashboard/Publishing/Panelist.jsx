@@ -1,93 +1,113 @@
-import React, { useState } from 'react';
-import { Space, Table, Tag, ConfigProvider } from 'antd';
-import ListManuscript from './AdviserManuscript';
-
-const adviserData = {
-  'Sherwin Sapin': [{ title: 'Manuscript A', status: 'Ongoing' }, { title: 'Manuscript B', status: 'Completed' }],
-  'Crisanto Gulay': [{ title: 'Manuscript C', status: 'Pending' }, { title: 'Manuscript D', status: 'In Review' }],
-  'Aj Matute': [{ title: 'Manuscript E', status: 'Ready for Defense' }],
-};
-
-const columns = (onClickAdviser) => [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text, record) => (
-      <Space onClick={() => onClickAdviser(record.name)} style={{ cursor: 'pointer' }}>
-        <img className="h-[37px] inline-block mr-2 mb-1" src="/src/assets/cris.png" />
-        <a>{text}</a>
-      </Space>
-    ),
-  },
-  {
-    title: 'Role',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'green' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-];
-
-const data = [
-  { key: '1', name: 'Sherwin Sapin', tags: ['Panelist'] },
-  { key: '2', name: 'Crisanto Gulay', tags: ['Panelist']},
-  { key: '3', name: 'Aj Matute', tags: ['Panelist'] },
-  { key: '3', name: 'Aj Matute', tags: ['Panelist'] },
-  { key: '3', name: 'Aj Matute', tags: ['Panelist']},
-];
+import React, { useEffect, useState } from "react";
+import { Avatar, ConfigProvider } from "antd";
+import axios from "axios";
+import { Button } from "@mui/material";
+import TablesPanel from "./TablesPanel";
 
 const App = () => {
-  const [selectedAdviser, setSelectedAdviser] = useState(null);
+  const [selectedPanel, setSelectedPanel] = useState(null);
+  const [selectedPanelProfile, setSelectedPanelProfile] = useState(null);
+  const [panelData, setPanelData] = useState([]);
+  const [selectedPanelStudents, setSelectedPanelStudents] = useState([]);
+  
+  const [admin, setAdmin] = useState(null);
 
-  const handleAdviserClick = (name) => {
-    setSelectedAdviser(name);
+  // Fetch admin data from localStorage on initial load
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setAdmin(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handlePanelClick = (panel) => {
+    setSelectedPanel(panel.name);
+    setSelectedPanelProfile(panel.profileImage);
+    setSelectedPanelStudents(panel.panelistStudents ); 
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(
+        "http://localhost:7000/api/admin/panelist/handle/manuscript"
+      );
+      const data = response.data;
+      setPanelData(data.advisors);
+    };
+    fetchData();
+  }, []);
 
   return (
     <ConfigProvider
       theme={{
         components: {
           Table: {
-            colorBgContainer: '#222222',
+            colorBgContainer: "#222222",
             borderRadius: 10,
-            colorText: 'white',
-            colorTextHeading: 'white',
-            fontSize: '25px',
+            colorText: "white",
+            colorTextHeading: "white",
+            fontSize: "25px",
           },
         },
       }}
     >
-      {!selectedAdviser ? (
-        <Table
-          columns={columns(handleAdviserClick)}
-          dataSource={data}
-          pagination={false}
-          style={{
-            position: 'absolute',
-            width: '1000px',
-            marginTop: '200px',
-            marginLeft: '600px',
-            overflow: 'hidden',
-            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-          }}
+      <div className='flex items-center justify-center w-full h-screen pl-96 px-6 overflow-x-auto'>
+        {!selectedPanel ? (
+          <table className='min-w-full divide-y-2 divide-gray-200 bg-transparent text-sm'>
+            <thead className='ltr:text-left rtl:text-right'>
+              <tr>
+                <th className='whitespace-nowrap px-4 py-2  text-white font-bold text-2xl'>
+                  Name
+                </th>
+                <th className='whitespace-nowrap px-4 py-2  text-white font-bold text-2xl'>
+                  Role
+                </th>
+                <th className='whitespace-nowrap px-4 py-2  text-white font-bold text-2xl'>
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            {panelData &&
+              panelData.length > 0 &&
+              panelData.map((panel) => (
+                <tbody key={panel.name} className='divide-y divide-gray-200'>
+                  <tr>
+                    <td className='whitespace-nowrap text-center px-4 py-3 font-medium text-white'>
+                      <div className=''>
+                        <Avatar
+                          src={`http://localhost:7000/public/uploads/${
+                            panel.profileImage || "default-avatar.png"}`}
+                          sx={{ width: 79, height: 79 }}
+                        />
+                      </div>
+                      <p className='text-xl'>{panel.name}</p>
+                    </td>
+                    <td className='whitespace-nowrap text-center  px-4 py-2 text-gray-700'>
+                      <span className='whitespace-nowrap rounded-full bg-lime-100 px-2.5 py-0.5 text-sm text-lime-700'>
+                      Panelist
+                      </span>
+                    </td>
+                    <td className='whitespace-nowrap text-center  px-4 py-2'>
+                      <Button
+                        variant='contained'
+                        onClick={() => handlePanelClick(panel)}
+                      >
+                        View Advicer Panelist
+                      </Button>
+                    </td>
+                  </tr>
+                </tbody>
+              ))}
+          </table>
+        ) : (
+        <TablesPanel
+          panelName={selectedPanel}
+          panelImage={selectedPanelProfile}
+          panelistStudents={selectedPanelStudents}
         />
-      ) : (
-        <ListManuscript adviserName={selectedAdviser} manuscripts={adviserData[selectedAdviser]} />
-      )}
+
+        )}
+      </div>
     </ConfigProvider>
   );
 };

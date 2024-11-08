@@ -10,7 +10,11 @@ import Box from '@mui/material/Box';
 import TextHeader from './TextHeader'
 
 
-import ListManuscriptData from './ListManuscript'
+import CkEditorDocuments from './CkEditorDocuments';
+
+import AdvicerApproved from './AdvicerApproved'
+import RevisePanelist from './RevisePanelist';
+import ApprovedOnPanel from './ApprovedOnPanel'
 
 
 
@@ -89,7 +93,13 @@ const ListManuscript = () => {
             </div>
            
 
-          
+            <Input
+                placeholder="Search articles..."
+                /* value={searchText}
+                onChange={(e) => handleSearch(e.target.value)} */
+                style={{  position: 'fixed',top: '194px', right: '770px', width: '35%', height: '50px', borderRadius: '20px', paddingLeft: '60px'  }}
+            />
+            <SearchOutlined style={{ position: 'absolute', marginTop: '6px', marginLeft: '60px', color: 'grey', fontSize: '28px' }} />
           </div>
 
         </ConfigProvider>
@@ -107,7 +117,7 @@ const ListManuscript = () => {
       borderBottom: 1,
       borderColor: 'divider',
      
-      width: '33.7%',
+      width: '27.7%',
       marginTop: '-36px',
       marginLeft: '740px',
     }}
@@ -133,10 +143,9 @@ const ListManuscript = () => {
             backgroundColor: 'green', // Customize active background color
           },
         }}
-        label="List Manuscript"
+        label="Defense"
         {...a11yProps(0)}
       />
-      
       <Tab
         sx={{
           marginLeft: '5px',
@@ -168,29 +177,11 @@ const ListManuscript = () => {
             backgroundColor: 'green', // Customize active background color
           },
         }}
-        label="Ready for Defense"
+        label="Approved"
         {...a11yProps(2)}
       />
 
-<Tab
-      
-      sx={{
-        borderRadius: '20px',
-        color: 'green', // Default color
-        '&:hover': {
-          color: 'white', // Customize active text color
-          backgroundColor: 'green', // Customize active background color
-        },
-        '&.Mui-selected': {
-          color: 'white', // Customize active text color
-          backgroundColor: 'green', // Customize active background color
-        },
-      }}
-      label="Monitoring"
-      {...a11yProps(0)}
-    />
     </Tabs>
-
   </Box>
 </Box>
 
@@ -198,17 +189,17 @@ const ListManuscript = () => {
 
 
       <CustomTabPanel value={value} index={0}>
-         <ListManuscriptData />
+        <AdvicerApproved/>
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={1}>
-   
+        <RevisePanelist/>
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={2}>
-    
+        <ApprovedOnPanel/>
       </CustomTabPanel>
-
+  
     </Box>
 
       <ConfigProvider

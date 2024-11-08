@@ -231,6 +231,7 @@ export default function NewTables() {
     }
   };
 
+
   const openTaskModal = (student) => {
     setCurrentTaskStudent(student);
     setIsModalVisible(true);
