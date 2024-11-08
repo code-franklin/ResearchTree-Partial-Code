@@ -433,7 +433,7 @@ export default function App({userId, channelId }) {
 			tokenUrl: CKBOX_TOKEN_URL
 		},
 		cloudServices: {
-			tokenUrl:  `${localhostKey}/api/advicer/get-ckeditor-token/${userId}`,
+			tokenUrl:  `http://localhost:7000/api/advicer/get-ckeditor-token/${userId}`,
 			webSocketUrl: CLOUD_SERVICES_WEBSOCKET_URL
 		},
 		collaboration: {

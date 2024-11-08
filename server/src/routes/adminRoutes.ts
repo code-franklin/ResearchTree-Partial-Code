@@ -35,11 +35,11 @@ import {
     fetchPanelistInfoWithStudents
 } from '../controllers/adminController';
 
-import upload from '../middleware/upload';
+import uploadProfile from '../middleware/uploadProfile';
 const router: Router = express.Router();
 
 // Authentication
-router.post('/register', upload.single('profileImage'), registerAdmin);
+router.post('/register', uploadProfile.single('profileImage'), registerAdmin);
 router.post('/login', loginAdmin);
 
 // User Management

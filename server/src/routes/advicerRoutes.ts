@@ -27,11 +27,12 @@ import {
     postAnalyze
   } from '../controllers/advicerControllers';
 
-import upload from '../middleware/upload';
+import uploadProfile from '../middleware/uploadProfile';
+import uploadPdf from '../middleware/uploadPdf';
 
 const router: Router = express.Router();
 
-router.post('/register', upload.single('profileImage'), registration);
+router.post('/register', uploadProfile.single('profileImage'), registration);
 router.post('/login', login);
 
 // Add the route for CKEditor token
@@ -43,12 +44,12 @@ router.get('/specializations', getSpecializations);
 router.get('/advisor-students/:advisorId', getAdviserStudents);
 
 // Searching Upload
-router.post('/synonyms', postSynonyms);
-router.get('/synonyms/:term', getSynonymsTerm);
-router.post('/search', postSearch);
-router.post('/upload-files', postUploadFiles);
-router.get('/get-files', getFiles);
-router.post('/analyze', postAnalyze);
+router.post('/synonyms', postSynonyms); // done
+router.get('/synonyms/:term', getSynonymsTerm); // done
+router.post('/search', postSearch); // done
+router.post('/upload-files', uploadPdf.single('file'), postUploadFiles); // done
+router.get('/get-files', getFiles); // done
+router.post('/analyze', postAnalyze); // done
 
 // Task for My Advicee
 router.post('/add-task/:studentId', postAddTaskMyAdvicee);

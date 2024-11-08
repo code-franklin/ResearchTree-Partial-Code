@@ -117,8 +117,7 @@ const CLOUD_SERVICES_WEBSOCKET_URL = process.env.REACT_APP_CLOUD_SERVICES_WEBSOC
 const LICENSE_KEY = import.meta.env.VITE_APP_LICENSE_KEY;
 const CKBOX_TOKEN_URL = import.meta.env.VITE_APP_CKBOX_TOKEN_URL; /* 
 const CLOUD_SERVICES_TOKEN_URL = import.meta.env.VITE_APP_CLOUD_SERVICES_TOKEN_URL; */
-const CLOUD_SERVICES_WEBSOCKET_URL = import.meta.env
-  .VITE_APP_CLOUD_SERVICES_WEBSOCKET_URL;
+const CLOUD_SERVICES_WEBSOCKET_URL = import.meta.env.VITE_APP_CLOUD_SERVICES_WEBSOCKET_URL;
 
 /**
  * The `AnnotationsSidebarToggler` plugin adds an icon to the right side of the editor.

@@ -5,9 +5,9 @@ import mongoose from 'mongoose';
 import User from '../models/User';
 import Specialization from '../models/Specialization';
 import Grade, { IGrade } from '../models/Grade';
-import { ObjectId } from 'mongodb';
+
 import dotenv from 'dotenv';
-import multer, { StorageEngine } from "multer";
+
 import { LanguageServiceClient } from '@google-cloud/language';
 
 export const registration = async (req: Request, res: Response) => {
@@ -84,8 +84,8 @@ export const login = async (req: Request, res: Response) => {
 
 export const getToken = async (req: Request, res: Response) => {
 
-  const accessKey = 'Wpung94G477QYTOHnekNJRaFwqwidLblAg5TH3TwhHhP7Kyr3vL00cepfjEs';
-  const environmentId = 'fHHPZIrfIML2dQHco1XV';
+  const accessKey = 'OxD87DrWZyfxdTVpe4C0SA0BoHINXaKvHmnoBtwpNguQJP0e71DdVkwx3BUD';
+  const environmentId = 'WDEpU5WDnTLVaiP5CRd6';
 
     try {
         const userId = req.params.userId;
@@ -582,18 +582,11 @@ export const gradePanelToStudent = async (req: Request, res: Response): Promise<
 };
 dotenv.config(); // This loads the variables from your .env file
 
-const client = new LanguageServiceClient(); // Google NLP client initialization
-
-// Upload PDF
-const storage: StorageEngine = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./files");
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now();
-    cb(null, uniqueSuffix + file.originalname);
-  },
+const client = new LanguageServiceClient({
+  // If you have an API key, you can provide it here
+  apiKey: 'AIzaSyBqx-4PSSfP-vZBhBBgmu4uxmftsHLfTfE',
 });
+
 
 // Synonym Schema
 const synonymSchema = new mongoose.Schema({
@@ -662,6 +655,7 @@ async function expandEntitiesWithSynonyms(entities: string[]): Promise<string[]>
 
   return Array.from(expandedTerms);
 }
+
 export const postSearch = async (req: Request, res: Response) => {
   const { query } = req.body;
 
@@ -703,9 +697,7 @@ export const postSearch = async (req: Request, res: Response) => {
 };
 
 
-import '../models/pdfDetails'; // Ensure you have a correct schema in pdfDetails.ts
-const PdfSchema = mongoose.model("PdfDetails");
-const upload = multer({ storage });
+import PdfSchema from '../models/pdfDetails'; 
 
 export const postUploadFiles = async (req: Request, res: Response) => {
   const { title, authors, dateUploaded, datePublished } = req.body;

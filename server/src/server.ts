@@ -1,10 +1,13 @@
 import express, { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
+
+import multer  from 'multer';
 import cors from 'cors';
 import path from 'path';
 import advicerRoutes from './routes/advicerRoutes';
 import adminRoutes from './routes/adminRoutes';
 import studentRoutes from './routes/studentRoutes';
+
 
 import { LanguageServiceClient } from '@google-cloud/language';
 import * as dotenv from 'dotenv';
@@ -19,6 +22,7 @@ const client = new LanguageServiceClient({
 app.use(cors());
 app.use(express.json());
 app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use("/public/files", express.static("files"));
 
 // Middleware to set CORS headers
 app.use((req: Request, res: Response, next: NextFunction) => {
