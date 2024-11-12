@@ -3,42 +3,24 @@ import axios from 'axios';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
-import Alert from '@mui/material/Alert';
-import IconButton from '@mui/material/IconButton';
-import Collapse from '@mui/material/Collapse';
 import Modal from '@mui/material/Modal';
+import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-// import SearchBar from './SearchAutoComplete';
-// import CategoryComponent from './Categories';
-
-import { AutoComplete, Input, Button, ConfigProvider } from 'antd';
+import { AutoComplete, Input, ConfigProvider, Pagination } from 'antd';
 
 const ArticleList = () => {
-  const [articles, setArticles] = useState([]); // State to hold articles
-  const [open, setOpen] = useState(false); // State for alert
-  const [selectedPdf, setSelectedPdf] = useState(null); // State for selected PDF
+  const [articles, setArticles] = useState([]);
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [selectedPdf, setSelectedPdf] = useState(null);
   const [error, setError] = useState('');
   const [analysis, setAnalysis] = useState(null);
 
   const handleSearch = async () => {
+    if (!query) return; // Only search if there's a query
     try {
       const response = await axios.post('http://localhost:7000/api/student/search', { query });
       if (response.data.status === "ok") {
-        const formattedResults = response.data.results.map(result => ({
-          value: result.title,
-          label: (
-            <div>
-              <h3 className="font-semibold">{highlightText(result.title, query)}</h3>
-              <p className="text-sm text-gray-300">by {result.authors}</p>
-              <p className="text-sm text-gray-400">Date Uploaded: {result.dateUploaded}</p>
-              <p className="text-sm text-gray-400">Date Published: {result.datePublished}</p>
-            </div>
-          ),
-        }));
-        setResults(formattedResults);
-
+        setArticles(response.data.results); // Set articles to display only search results
         const analysisResponse = await axios.post('http://localhost:7000/api/advicer/analyze', { text: query });
         if (analysisResponse.status === 200) {
           setAnalysis(analysisResponse.data);
@@ -50,11 +32,8 @@ const ArticleList = () => {
     }
   };
 
-  // Function to highlight matched text
   const highlightText = (text, query) => {
     if (!query) return text;
-
-    // Use a regex to find and wrap matching text in a span with a highlight style
     const parts = text.split(new RegExp(`(${query})`, 'gi'));
     return parts.map((part, i) => 
       part.toLowerCase() === query.toLowerCase() ? (
@@ -65,19 +44,17 @@ const ArticleList = () => {
     );
   };
 
-  // Fetch articles from the backend
   useEffect(() => {
     const fetchArticles = async () => {
       try {
         const response = await axios.get('http://localhost:7000/api/student/articles');
-        setArticles(response.data); // Set the fetched articles to state
+        setArticles(response.data);
       } catch (error) {
         console.error('Error fetching articles:', error);
       }
     };
-
-    fetchArticles();
-  }, []);
+    if (!query) fetchArticles(); // Fetch articles only if there's no search query
+  }, [query]);
 
   const handleArticleClick = (pdfUrl) => {
     setSelectedPdf(`http://localhost:7000/advicer/upload-files/${pdfUrl}`);
@@ -86,74 +63,49 @@ const ArticleList = () => {
   return (
     <div className="min-h-screen text-white p-6 ml-[300px]">
       <h1 className="text-[38px] font-bold mt-[20px] ml-[0px]">Manuscript</h1>
-      <div className='absolute'> 
-        {/* Search Bar */}
-        <ConfigProvider
-          theme={{
-            components: {
-              AutoComplete: {
-                colorPrimary: '#222222',
-                algorithm: true,
-              },
-              Input: {
-                colorPrimary: '#222222',
-                colorBgBase: '#222222',
-                colorTextBase: 'white',
-                colorBorder: '#1E1E1E',
-                colorPrimaryHover: '#1E1E1E',
-                colorPrimaryActive: '#222222',
-                controlOutline: '#1E1E1E',
-                controlHeightLG: 59,
-                borderRadiusLG: 100,
-                algorithm: true,
-              },
+
+      <ConfigProvider
+        theme={{
+          components: {
+            AutoComplete: {
+              colorPrimary: '#222222',
+              algorithm: true,
             },
-          }}
+            Input: {
+              colorPrimary: '#222222',
+              colorBgBase: '#222222',
+              colorTextBase: 'white',
+              colorBorder: '#1E1E1E',
+              colorPrimaryHover: '#1E1E1E',
+              colorPrimaryActive: '#222222',
+              controlOutline: '#1E1E1E',
+              controlHeightLG: 59,
+              borderRadiusLG: 100,
+              algorithm: true,
+            },
+          },
+        }}
+      >
+        <AutoComplete
+          popupClassName="certain-category-search-dropdown"
+          popupMatchSelectWidth={1080}
+          style={{ width: 1080 }}
+          onSearch={(value) => setQuery(value)}
+          onSelect={handleSearch}
+          size="xxl"
         >
-          <AutoComplete
-            popupClassName="certain-category-search-dropdown"
-            popupMatchSelectWidth={1080}
-            style={{ width: 1080 }}
-            options={results}
-            onSearch={(value) => setQuery(value)}
-            onSelect={handleSearch}
-            size="xxl"
-          >
-            <Input
-              size="large"
-              placeholder="Search"
-              onPressEnter={handleSearch}
-              className="pl-10 ml-0"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </AutoComplete>
-        </ConfigProvider>
+          <Input
+            size="large"
+            placeholder="Search"
+            onPressEnter={handleSearch}
+            className="pl-10 ml-0"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </AutoComplete>
+      </ConfigProvider>
 
-        {error && <p className="mt-4 text-red-500">{error}</p>}
-      </div>
-
-      <header className="">
-        <div className="items-center space-x-2 mr-[100px] mt-[25px] ">
-          <div className="ml-[600px]">
-            
-            <br />
-           
-            <ConfigProvider
-              theme={{
-                token: {
-                  colorPrimary: '#222222',
-                  colorBgBase: '#222222',
-                  colorTextBase: 'white',
-                  zIndex: 1,
-                },
-              }}
-            >
-             
-            </ConfigProvider>
-          </div>
-        </div>
-      </header>
+      {error && <p className="mt-4 text-red-500">{error}</p>}
 
       <div className="articlesScroll flex mt-[100px]">
         <div className="w-3/4">
