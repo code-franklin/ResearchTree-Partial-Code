@@ -166,6 +166,41 @@ export const getStudentInfoAndProposal = async (req: Request, res: Response) => 
   }
 };
 
+
+
+import Article from '../models/pdfDetails';
+export const getAllArticles = async (req: Request, res: Response): Promise<void> => {
+  try {
+      const articles = await Article.find({}, 'title authors dateUploaded datePublished');
+      res.status(200).json(articles);
+  } catch (error) {
+      if (error instanceof Error) {
+          res.status(500).json({ message: error.message });
+      } else {
+          res.status(500).json({ message: 'An unknown error occurred.' });
+      }
+  }
+};
+
+export const searchArticles = async (req: Request, res: Response): Promise<void> => {
+  const { query } = req.query;
+  try {
+      const articles = await Article.find({
+          $or: [
+              { title: new RegExp(query as string, 'i') },
+              { authors: new RegExp(query as string, 'i') }
+          ]
+      }, 'title authors dateUploaded datePublished');
+      res.status(200).json(articles);
+  } catch (error) {
+      if (error instanceof Error) {
+          res.status(500).json({ message: error.message });
+      } else {
+          res.status(500).json({ message: 'An unknown error occurred.' });
+      }
+  }
+};
+
 export const markTaskAsCompleted = async (req: Request, res: Response) => {
   const { taskId } = req.params;
 

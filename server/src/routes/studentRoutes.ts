@@ -7,7 +7,9 @@ import {
     trainModel,
     markTaskAsCompleted,
     getTasks, 
-    getTaskProgress
+    getTaskProgress,
+    getAllArticles,
+    searchArticles,
 /*     postUploadManuscript */
 } from '../controllers/studentControllers';
 
@@ -24,6 +26,10 @@ router.post('/choose-advisor', chooseAdvisor);
 router.get('/advisor-info-StudProposal/:userId', getStudentInfoAndProposal);
 router.put('/update-proposal-title/:userId', updateProposalTitle);
 router.post('/train-model', trainModel);
+
+
+router.get('/articles', getAllArticles);
+router.get('/articles/search', searchArticles);
 /* router.post('/upload-manuscript', postUploadManuscript); */
 
 export default router;
