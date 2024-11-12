@@ -4,15 +4,15 @@ import { useEffect, useState } from 'react';
 
 import ExploreManuscript from '../Dashboards/AdminDashboard/ExploreManuscript/ArticleList'
 import ViewAnalytics from '../Dashboards/AdminDashboard/ViewAnalytics/Chart'
+
+import StudentManuscript from '../Dashboards/AdminDashboard/Publishing/TablesStudent'
 import AdviserManuscript from '../Dashboards/AdminDashboard/Publishing/Advisers'
+import PanelistManuscript from '../Dashboards/AdminDashboard/Publishing/Panelist'
+
 import AdviserRegistered from '../Dashboards/AdminDashboard/ProfileManagement/AdviserRegistered'
 import AdviserPending from '../Dashboards/AdminDashboard/ProfileManagement/AdviserPending'
 import StudentRegistered from '../Dashboards/AdminDashboard/ProfileManagement/StudentRegistered'
 import StudentPending from '../Dashboards/AdminDashboard/ProfileManagement/StudentPending'
-
-import PanelistManuscript from '../Dashboards/AdminDashboard/Publishing/Panelist'
-
-
 
 import Sidebar from '../Dashboards/AdminDashboard/Sidebar/sidebar'
 import UnauthorizedAccess from './UnauthorizedAccess'; // Import the UnauthorizedAccess component
@@ -43,6 +43,7 @@ function AdviserRoutes() {
                 <Route path="/" element={<ViewAnalytics/>} />
                 <Route path="AdminDashboard/ViewAnalytics" element={<ViewAnalytics/>} />
                 <Route path="AdminDashboard/ExploreManuscript" element={<ExploreManuscript/>} />
+                <Route path="AdminDashboard/StudentManuscript" element={<StudentManuscript/>} />
                 <Route path="AdminDashboard/AdviserManuscript" element={<AdviserManuscript/>} />
                 <Route path="AdminDashboard/PanelistManuscript" element={<PanelistManuscript/>} />
                 <Route path="AdminDashboard/AdviserRegistered" element={<AdviserRegistered/>} />

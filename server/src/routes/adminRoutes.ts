@@ -10,7 +10,13 @@ import {
     declineUser, 
     getAllUsersStudent, 
     getAllUsersAdvicer, 
-    deleteUser 
+    deleteUser,
+    updateUserStudent,
+    resetUserPassword,
+    updateUserAdvicer,
+    editAdminProfile,
+    resetAdminPassword
+    // deleteProfileImage
 } from '../controllers/adminController';
 
 // Specialization Management
@@ -30,7 +36,8 @@ import {
 } from '../controllers/adminController';
 
 // Advicer Info w/ Handle Manu
-import { 
+import {
+    fetchAllStudentManuscript,
     fetchAdviserInfoWithStudents,
     fetchPanelistInfoWithStudents
 } from '../controllers/adminController';
@@ -43,10 +50,19 @@ router.post('/register', uploadProfile.single('profileImage'), registerAdmin);
 router.post('/login', loginAdmin);
 
 // User Management
-router.get('/advicer-pending', getPendingUsersAdvicer);
+router.get('/advicer-pending',  getPendingUsersAdvicer);
 router.get('/student-pending', getPendingUsersStudent);
+
 router.get('/student-users', getAllUsersStudent);
 router.get('/advicer-users', getAllUsersAdvicer);
+
+router.put('/student-users/:id', uploadProfile.single('profileImage'),updateUserStudent);
+router.put('/advicer-users/:id', uploadProfile.single('profileImage'),updateUserAdvicer);
+router.put('/users/:id/reset-password', resetUserPassword);
+router.put('/admin-user/:id', uploadProfile.single('profileImage'),editAdminProfile);
+router.put('/admin-user/:id/reset-password', resetAdminPassword);
+// router.delete("/users/:id/delete-image", deleteProfileImage);
+
 router.delete('/users/:id', deleteUser);
 router.put('/approve/:userId', approveUser);
 router.put('/decline/:userId', declineUser);
@@ -64,6 +80,7 @@ router.get('/manuscripts/reviseOnPanel/count', countReviseOnAPanelManuscripts);
 router.get('/manuscripts/approvedOnPanel/count', countApprovedOnPanelManuscripts);
 
 // Advicer Handle Manuscript
+router.get('/list-student/manuscript', fetchAllStudentManuscript);
 router.get('/advicer/handle/manuscript', fetchAdviserInfoWithStudents);
 router.get('/panelist/handle/manuscript', fetchPanelistInfoWithStudents);
 

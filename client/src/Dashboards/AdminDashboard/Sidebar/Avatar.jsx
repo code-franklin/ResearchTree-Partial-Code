@@ -27,6 +27,8 @@ export default function AccountMenu() {
       setAdmin(JSON.parse(storedUser));
     }
   }, []);
+  
+  console.log('Admin already Login: ', admin)
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -59,7 +61,7 @@ export default function AccountMenu() {
           >
             {admin && admin.profileImage ? (
               <Avatar
-                src={`http://localhost:7000${admin.profileImage}`}
+                src={`http://localhost:7000/public/uploads/${admin.profileImage}`}
                 sx={{ width: 79, height: 79 }}
               />
             ) : (
@@ -100,7 +102,7 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem>
+ {/*        <MenuItem>
           <Avatar sx={{ bgcolor: "#444" }} /> Profile
         </MenuItem>
         <MenuItem onClick={handleClose}>
@@ -118,7 +120,7 @@ export default function AccountMenu() {
             <Settings fontSize='small' />
           </ListItemIcon>
           Settings
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout

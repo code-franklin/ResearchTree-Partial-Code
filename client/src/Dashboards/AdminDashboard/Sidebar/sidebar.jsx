@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Button, Modal, Box, Typography } from "@mui/joy";
+import { Input } from "@mui/material";
 import UserAvatar from "./Avatar";
+import axios from "axios";
 import "./Sidebar.css";
 
 const Sidebar = ({ onSelect }) => {
   const location = useLocation();
   const [admin, setAdmin] = useState(null);
+  const [isSpecializationModalOpen, setIsSpecializationModalOpen] = useState(false);
+  const [specializations, setSpecializations] = useState([]);
+  const [newSpecialization, setNewSpecialization] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [editingName, setEditingName] = useState("");
 
   useEffect(() => {
     // Fetch stored user data from localStorage and set it to the admin state
@@ -20,6 +28,56 @@ const Sidebar = ({ onSelect }) => {
   const handleLinkClick = (path) => {
     setActiveLink(path);
   };
+
+  const fetchSpecializations = async () => {
+    try {
+      const response = await axios.get('http://localhost:7000/api/admin/specializations');
+      setSpecializations(response.data);
+    } catch (error) {
+      console.error('Error fetching specializations:', error);
+    }
+  };
+
+  const handleAddSpecialization = async () => {
+    try {
+      const response = await axios.post('http://localhost:7000/api/admin/specializations', { name: newSpecialization });
+      setSpecializations([...specializations, response.data]);
+      setNewSpecialization('');
+    } catch (error) {
+      console.error('Error adding specialization:', error);
+    }
+  };
+
+  const handleEditSpecialization = async () => {
+    try {
+      const response = await axios.put(`http://localhost:7000/api/admin/specializations/${editingId}`, { name: editingName });
+      setSpecializations(specializations.map(spec => (spec._id === editingId ? response.data : spec)));
+      setEditingId(null);
+      setEditingName("");
+    } catch (error) {
+      console.error("Error editing specialization:", error);
+    }
+  };
+
+  const handleDeleteSpecialization = async (id) => {
+    try {
+      await axios.delete(`http://localhost:7000/api/admin/specializations/${id}`);
+      setSpecializations(specializations.filter(spec => spec._id !== id));
+    } catch (error) {
+      console.error('Error deleting specialization:', error);
+    }
+  };
+
+    // Open the modal and fetch specializations
+    const openSpecializationModal = () => {
+      setIsSpecializationModalOpen(true);
+      fetchSpecializations();
+    };
+
+    const startEditing = (id, name) => {
+      setEditingId(id);
+      setEditingName(name);
+    };
 
   return (
     <div className='sidebar z-1 h-screen w-[313px] bg-[#1E1E1E] text-white flex flex-col fixed'>
@@ -95,6 +153,24 @@ const Sidebar = ({ onSelect }) => {
           Explore Manuscript
         </Link>
 
+          {/* Student Manuscript*/}
+                <Link
+          to='AdminDashboard/StudentManuscript'
+          className={`myManuscript mx-10  px-2 ${
+            activeLink === "/AdminDashboard/StudentManuscript"
+              ? "font-semibold ml-[4rem] bg-gradient-to-r from-[#0BF677] to-[#079774]"
+              : "hover:font-medium hover:ml-[4rem] text-white"
+          }`}
+          onClick={() => handleLinkClick("/AdminDashboard/StudentManuscript")}
+        >
+          <img
+            className='inline-block mr-2 mb-1'
+            src='/src/assets/my-manuscript.png'
+            alt='My Manuscript'
+          />
+          Student Manuscript
+        </Link>
+
         {/* Adviser Manuscript*/}
         <Link
           to='AdminDashboard/AdviserManuscript'
@@ -129,9 +205,11 @@ const Sidebar = ({ onSelect }) => {
           />
           Panelist Manuscript
         </Link>
+
+        
       </div>
       {/* Panelist Mode */}
-      <div className='mt-[175px]  ml-[70px] '>
+      <div className='mt-[145px]  ml-[70px] '>
         <Link
           to='AdminDashboard/AdviserPending'
           className={`exploreManuscript mx-10 px-2  ${
@@ -186,6 +264,138 @@ const Sidebar = ({ onSelect }) => {
           Register Student
         </Link>
       </div>
+
+
+
+      <Button
+        variant="solid"
+        color="primary"
+        sx={{
+          top: "15px",
+          width: "100%",
+          fontSize: "18px",
+          fontWeight: "bold",
+          textTransform: "none",
+          borderRadius: "8px",
+        }}
+        onClick={openSpecializationModal}
+      >
+        Manage Specialization
+      </Button>
+
+      <Modal open={isSpecializationModalOpen} onClose={() => setIsSpecializationModalOpen(false)}>
+  <Box
+    sx={{
+      p: 4,
+      bgcolor: "#f9f9f9",
+      borderRadius: 3,
+      maxWidth: 450,
+      mx: "auto",
+      mt: 6,
+      boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)"
+    }}
+  >
+    <Typography variant="h5" mb={3} fontWeight="bold" color="#333">
+      Manage Specializations
+    </Typography>
+
+    {/* Specialization List */}
+    <Box mb={3} maxHeight="500px" overflow="auto" px={1}>
+      {specializations.map((spec) => (
+        <Box
+          key={spec._id}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={1.5}
+          p={2}
+          borderRadius={2}
+          bgcolor="#ffffff"
+          boxShadow="0px 2px 5px rgba(0, 0, 0, 0.05)"
+        >
+          {editingId === spec._id ? (
+            <Input
+              value={editingName}
+              onChange={(e) => setEditingName(e.target.value)}
+              size="small"
+              fullWidth
+              sx={{ mr: 2 }}
+            />
+          ) : (
+            <Typography variant="body1" color="#555">
+              {spec.name}
+            </Typography>
+          )}
+          <div>
+            {editingId === spec._id ? (
+              <Button
+                onClick={handleEditSpecialization}
+                variant="contained"
+                color="primary"
+                size="small"
+                sx={{ mr: 1, textTransform: "none" }}
+              >
+                Save
+              </Button>
+            ) : (
+              <Button
+                onClick={() => startEditing(spec._id, spec.name)}
+                variant="outlined"
+                color="primary"
+                size="small"
+                sx={{ mr: 1, textTransform: "none" }}
+              >
+                Edit
+              </Button>
+            )}
+            <Button
+              onClick={() => handleDeleteSpecialization(spec._id)}
+              variant="outlined"
+              color="error"
+              size="small"
+              sx={{ textTransform: "none" }}
+            >
+              Delete
+            </Button>
+          </div>
+        </Box>
+      ))}
+    </Box>
+
+    {/* Add New Specialization */}
+    <Input
+      placeholder="New Specialization"
+      value={newSpecialization}
+      onChange={(e) => setNewSpecialization(e.target.value)}
+      fullWidth
+      sx={{
+        mb: 2,
+        bgcolor: "#ffffff",
+        borderRadius: 2,
+        px: 2,
+        py: 1.5,
+        boxShadow: "inset 0px 1px 3px rgba(0, 0, 0, 0.1)"
+      }}
+    />
+    <Button
+      onClick={handleAddSpecialization}
+      variant="contained"
+      color="success"
+      sx={{
+        width: "100%",
+        fontWeight: "bold",
+        py: 1.5,
+        textTransform: "none",
+        borderRadius: 2,
+        boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.1)"
+      }}
+    >
+      Add Specialization
+    </Button>
+  </Box>
+</Modal>
+
+
     </div>
   );
 };

@@ -52,8 +52,6 @@ export default function NewTables() {
 
   const panelistId = localStorage.getItem("panelistId"); // Example: retrieve panelist ID from localStorage
 
-  
-
   // Grading modal states
   const [isGradingModalVisible, setIsGradingModalVisible] = useState(false);
   const [gradingRubric, setGradingRubric] = useState({
@@ -613,7 +611,7 @@ export default function NewTables() {
       </Modal>
 
       <ConfigProvider theme={{ components: { Modal: { algorithm: true } } }}>
-        <Modal
+      <Modal
           visible={isModalVisible}
           onCancel={() => setIsModalVisible(false)} // Ensures modal can close
           footer={[
@@ -621,10 +619,15 @@ export default function NewTables() {
               Close
             </Button>,
             <Button key='add' type='primary' onClick={handleAddTask}>
-              Add Task
-            </Button>,
+            Add Task
+          </Button>,
           ]}
         >
+
+          <Text strong style={{ fontSize: "18px", color: "#000000" }}>
+            {currentTaskStudent?.proposalTitle || "Proposal Title"}
+          </Text>
+
           <Input
             placeholder='Enter a task'
             value={taskInput}
@@ -642,17 +645,18 @@ export default function NewTables() {
               <List.Item
                 key={task._id}
                 actions={[
-                  <Checkbox
-                    checked={task.isCompleted}
-                    onChange={() => handleCompleteTask(task._id)}
-                  >
-                    {task.isCompleted ? "Completed" : "Pending"}
-                  </Checkbox>,
+
+
+                   <Text style={{ fontWeight: "bold", color: task.isCompleted ? "green" : "red" }}>
+                    {task.isCompleted ? "Completed" : "Not Done"}
+                  </Text>,
+
                   <Button
                     type='link'
                     icon={<DeleteOutlined />}
                     onClick={() => deleteTask(currentTaskStudent._id, task._id)} // Pass studentId and taskId
                   />,
+                  
                 ]}
               >
                 <Text delete={task.isCompleted}>{task.taskTitle}</Text>

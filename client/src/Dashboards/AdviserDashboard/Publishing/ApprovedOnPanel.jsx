@@ -324,7 +324,7 @@ export default function NewTables() {
           },
         }}
       >
-        <Modal
+      <Modal
           visible={isModalVisible}
           onCancel={() => setIsModalVisible(false)} // Ensures modal can close
           footer={[
@@ -332,10 +332,15 @@ export default function NewTables() {
               Close
             </Button>,
             <Button key='add' type='primary' onClick={handleAddTask}>
-              Add Task
-            </Button>,
+            Add Task
+          </Button>,
           ]}
         >
+
+          <Text strong style={{ fontSize: "18px", color: "#000000" }}>
+            {currentTaskStudent?.proposalTitle || "Proposal Title"}
+          </Text>
+
           <Input
             placeholder='Enter a task'
             value={taskInput}
@@ -348,24 +353,26 @@ export default function NewTables() {
           <br />
           <List
             dataSource={tasks}
-            renderItem={(tasks, index) => (
+            locale={{ emptyText: "No tasks found" }}
+            renderItem={(task) => (
               <List.Item
-                key={index}
+                key={task._id}
                 actions={[
-                  <Checkbox
-                    checked={task.completed}
-                    onChange={() => handleCompleteTask(index)}
-                  >
-                    {tasks.completed ? "Completed" : "Pending"}
-                  </Checkbox>,
+
+
+                   <Text style={{ fontWeight: "bold", color: task.isCompleted ? "green" : "red" }}>
+                    {task.isCompleted ? "Completed" : "Not Done"}
+                  </Text>,
+
                   <Button
                     type='link'
                     icon={<DeleteOutlined />}
-                    onClick={() => handleDeleteTask(index)}
+                    onClick={() => deleteTask(currentTaskStudent._id, task._id)} // Pass studentId and taskId
                   />,
+                  
                 ]}
               >
-                <Text delete={tasks.completed}>{student.tasks}</Text>
+                <Text delete={task.isCompleted}>{task.taskTitle}</Text>
               </List.Item>
             )}
           />

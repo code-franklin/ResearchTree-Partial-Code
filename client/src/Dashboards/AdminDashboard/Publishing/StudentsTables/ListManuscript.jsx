@@ -27,13 +27,14 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import CkEditorDocuments from "./CkEditorDocuments";
+import CkEditorDocuments from "../CkEditorDocuments";
 import axios from "axios";
 
-const { Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
 
-export default function ListManuscript({ panelName, panelImage, panelistStudents }) {
+
+export default function ListManuscript({ studentData  }) {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
@@ -41,11 +42,15 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
   const [courses, setCourses] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedAdvicerStatus, setSelectedAdvicerStatus] = useState("");
+  const [status, setStatus] = useState([]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalTaskVisible, setIsModalTaskVisible] = useState(false);
   const [currentTaskStudent, setCurrentTaskStudent] = useState(null);
   const [taskInput, setTaskInput] = useState("");
 
+  const [selectedProposal, setSelectedProposal] = useState(null);
   const [progress, setProgress] = useState(0);
   const [tasks, setTasks] = useState([]);
 
@@ -67,6 +72,94 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
       setAdmin(JSON.parse(storedUser));
     }
   }, []);
+
+// Function to add a task and update the task list and progress
+const addTask = async (studentId, taskTitle) => {
+  try {
+    const response = await fetch(
+      `http://localhost:7000/api/advicer/add-task/${studentId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ taskTitle }),
+      }
+    );
+    if (response.ok) {
+      const newTask = await response.json(); // Get new task details from response
+      setTasks((prevTasks) => [
+        ...prevTasks,
+        newTask,
+      ]);
+      setTaskInput(""); // Clear the input field
+
+      // Update task progress after adding task
+      fetchTasks(studentId);
+      fetchTaskProgress(studentId);
+    }
+  } catch (error) {
+    console.error("Error adding task:", error);
+  }
+};
+
+// Function to delete a task and update the task list and progress
+const deleteTask = async (studentId, taskId) => {
+  try {
+    const response = await fetch(
+      `http://localhost:7000/api/advicer/delete-task/${studentId}/${taskId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    if (response.ok) {
+      message.success("Task deleted successfully");
+      setTasks((prevTasks) =>
+        prevTasks.filter((task) => task._id !== taskId)
+      ); // Remove task from state
+
+      // Update task progress after deleting task
+      fetchTasks(studentId);
+      fetchTaskProgress(studentId);
+    }
+  } catch (error) {
+    console.error("Error deleting task:", error.message);
+    message.error("Error deleting task");
+  }
+};
+
+// Function to fetch task progress
+const fetchTaskProgress = async (studentId) => {
+  if (!studentId) return;
+  try {
+    const response = await fetch(
+      `http://localhost:7000/api/advicer/tasks/progress/${studentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const { progress: studentProgress } = await response.json();
+      setProgress((prevProgress) => ({
+        ...prevProgress,
+        [studentId]: studentProgress || 0, // Update only specific student's progress
+      }));
+    } else {
+      console.error("Error fetching progress.");
+    }
+  } catch (error) {
+    console.error("Error fetching task progress:", error);
+  }
+};
+
 
   const fetchTasks = async (studentId) => {
     try {
@@ -123,67 +216,6 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
     }
   };
 
-  const fetchTaskProgress = async (studentId) => {
-    if (!studentId) {
-      console.log("No selectedStudentId found."); // Debug statement
-      return;
-    }
-    try {
-      const response = await fetch(
-        `http://localhost:7000/api/advicer/tasks/progress/${studentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const { progress: studentProgress } = await response.json();
-        setProgress((prevProgress) => ({
-          ...prevProgress,
-          [studentId]:
-            studentProgress >= 0 && studentProgress <= 100
-              ? studentProgress
-              : 0,
-        }));
-      } else {
-        console.error("Error fetching progress.");
-      }
-    } catch (error) {
-      console.error("Error fetching task progress:", error);
-    }
-  };
-
-  const deleteTask = async (studentId, taskId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:7000/api/advicer/delete-task/${studentId}/${taskId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        message.success("Task deleted successfully");
-        setTasks((prevTasks) =>
-          prevTasks.filter((task) => task._id !== taskId)
-        ); // Remove task from state
-      } else {
-        const errorData = await response.json();
-        console.error("Error deleting task:", errorData.message);
-        message.error(`Error: ${errorData.message || "Failed to delete task"}`);
-      }
-    } catch (error) {
-      console.error("Error deleting task:", error.message);
-      message.error("Error deleting task");
-    }
-  };
-
-
   useEffect(() => {
     filteredStudents.forEach((student) => {
       fetchTaskProgress(student._id);
@@ -192,13 +224,12 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
 
 
   useEffect(() => {
-    // Get unique courses from student data for filtering
-    const uniqueCourses = [
-      ...new Set(panelistStudents.map((student) => student.course)),
-    ];
+    const uniqueCourses = [...new Set(studentData.map((student) => student.course))];
     setCourses(uniqueCourses);
-    setFilteredStudents(panelistStudents);
-  }, [panelistStudents]);
+    const uniqueStatuses = [...new Set(studentData.map((student) => student.advisorStatus))];
+    setStatus(uniqueStatuses);
+    setFilteredStudents(studentData);
+  }, [studentData]);
 
     // Handle course selection
 
@@ -211,7 +242,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
 
   const openTaskModal = (student) => {
     setCurrentTaskStudent(student);
-    setIsModalVisible(true);
+    setIsModalTaskVisible(true);  
     fetchTasks(student._id); // Fetch tasks when opening modal
   };
 
@@ -253,10 +284,30 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
   const handleCourseChange = (value) => {
     setSelectedCourse(value);
     setFilteredStudents(
-      value ? panelistStudents.filter((student) => student.course === value) : panelistStudents
+      value ? studentData.filter((student) => student.course === value) : studentData
     );
   };
 
+  const handleAdvicerStatusChange = (value) => {
+    setSelectedAdvicerStatus(value);
+    setFilteredStudents(
+      value ? studentData.filter((student) => student.advisorStatus === value) : studentData
+    );
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setSelectedProposal(null); // Clear the selected proposal on cancel
+  };
+
+  // Function to display proposal in a modal
+  const openProposalModal = (student) => {
+    setSelectedProposal({
+      title: student.proposalTitle || "No proposal title available",
+      text: student.proposalText || "No proposal text available",
+    });
+    setIsModalVisible(true);
+  };
   
   /* Rubrics Grading for Student */
 
@@ -300,14 +351,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
 
   return (
     <div style={{ flex: 1, overflowX: "hidden", padding: "20px", width: "1263px" }}>
-      <Avatar
-        src={`http://localhost:7000/public/uploads/${
-          panelImage|| "default-avatar.png"}`}
-        sx={{ width: 79, height: 79 }}
-      />
-
-      <h2 style={{ color: "#ffffff" }}>Advisees of {panelName}</h2>
-      
+    
       <Select
         value={selectedCourse}
         onChange={handleCourseChange}
@@ -322,9 +366,27 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
         ))}
       </Select>
 
+      <Select
+        value={selectedAdvicerStatus}
+        onChange={handleAdvicerStatusChange}
+        style={{ marginBottom: "20px", width: "200px" }}
+        placeholder="Select advisor status"
+      >
+        <Option value="">All Advisor Statuses</Option>
+        {status
+          .filter((advisorStatus) =>
+            ["null", "accepted", "declined", "pending"].includes(advisorStatus)
+          )
+          .map((advisorStatus) => (
+            <Option key={advisorStatus} value={advisorStatus}>
+              {advisorStatus}
+            </Option>
+          ))}
+      </Select>
+
       <List
         grid={{ gutter: 16, column: 1 }}
-        dataSource={filteredStudents.filter((student) => student.manuscriptStatus === "approvedOnPanel")}
+        dataSource={filteredStudents.filter((student) => student.manuscriptStatus === null)}
         renderItem={(student) => (
           <List.Item key={student._id}>
             <div style={{
@@ -378,8 +440,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
 
               <div style={{
                 display: "flex", flexDirection: "column",
-                alignItems: "center",
-                marginRight: "10px", gap: "10px",
+                alignItems: "center", marginRight: "10px"
               }}>
 
                 <Progress
@@ -392,69 +453,17 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "40px",
+                    marginTop: "-15px",
                     position: "absolute",
                   }}
                 />
 
-                <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)}                   style={{
-                    width: "50px",
-                    backgroundColor: "#1890ff", // Blue for 'edit'
-                    color: "#fff", // White text
-                  }} />
-
-                <Button
-                  icon={<LoadingOutlined />}
-                  onClick={() =>
-                    updatePanelManuscriptStatus(
-                      student._id,
-                      "reviseOnPanelist",
-                      admin.id
-                    )
-                  }
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#faad14", // Yellow for 'revise'
-                    color: "#fff", // White text
-                  }}
-                />
-
-                <Button
-                  icon={<CheckOutlined />}
-                  onClick={() =>
-                    updatePanelManuscriptStatus(
-                      student._id,
-                      "approvedOnPanel",
-                      admin.id
-                    )
-                  }
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#52c41a", // Green for 'approve'
-                    color: "#fff", // White text
-                  }}
-                />
-
-                <Button
-                  icon={<BookOutlined />}
-                  onClick={() => handleGradingIconClick(student)}
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#722ed1", // Purple for 'grading'
-                    color: "#fff", // White text
-                  }}
-                />
-
-                <Button
-                  icon={<PlusOutlined />}
-                  type='primary'
-                  onClick={() => openTaskModal(student)}
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#f5222d", // Red for 'add task'
-                    color: "#fff", // White text
-                  }}
-                />
+                <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)} style={{ marginBottom: "20px", width: "100px" }} />
+{/*                 <Button icon={<LoadingOutlined />} style={{ marginBottom: "20px", width: "100px" }} />
+                <Button icon={<CheckOutlined />} style={{ marginBottom: "20px", width: "100px" }} /> */}
+                <Button type="primary" onClick={() => openTaskModal(student)} style={{ width: "100px" }}>
+                  View Task
+                </Button>
               </div>
             </div>
           </List.Item>
@@ -490,46 +499,6 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
             </Button>
           </DialogActions>
         </Dialog>
-
-      <Modal
-        title='Grading Rubric'
-        visible={isGradingModalVisible}
-        onOk={submitGrading}
-        onCancel={() => setIsGradingModalVisible(false)}
-        okText='Submit'
-      >
-        <div>
-          <Text>Criteria 1</Text>
-          <Input
-            type='number'
-            min={0}
-            max={100}
-            value={gradingRubric.criteria1}
-            onChange={(e) => handleRubricChange("criteria1", e.target.value)}
-          />
-        </div>
-        <div>
-          <Text>Criteria 2</Text>
-          <Input
-            type='number'
-            min={0}
-            max={100}
-            value={gradingRubric.criteria2}
-            onChange={(e) => handleRubricChange("criteria2", e.target.value)}
-          />
-        </div>
-        <div>
-          <Text>Criteria 3</Text>
-          <Input
-            type='number'
-            min={0}
-            max={100}
-            value={gradingRubric.criteria3}
-            onChange={(e) => handleRubricChange("criteria3", e.target.value)}
-          />
-        </div>
-      </Modal>
-
 
       <ConfigProvider>
       <Modal

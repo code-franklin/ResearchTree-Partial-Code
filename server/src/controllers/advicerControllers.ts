@@ -12,7 +12,7 @@ import dotenv from 'dotenv';
 import { LanguageServiceClient } from '@google-cloud/language';
 
 export const registration = async (req: Request, res: Response) => {
-  const { name, email, password, role, course, year, handleNumber, groupMembers } = req.body;
+  const { name, email, password, role, course, year, handleNumber, groupMembers, design } = req.body;
   const specializations = JSON.parse(req.body.specializations);
   const profileImage = (req as any).file?.filename;
 
@@ -31,10 +31,11 @@ export const registration = async (req: Request, res: Response) => {
       role,
       profileImage,
       specializations,
-      course, // Add course
-      year,   // Add year
-      handleNumber, // Add handle number
-      groupMembers: JSON.parse(groupMembers), // Store group members
+      course, 
+      year,  
+      handleNumber, 
+      groupMembers: JSON.parse(groupMembers), 
+      design, 
       isApproved: false,
     });
 
@@ -137,31 +138,7 @@ export const getToken = async (req: Request, res: Response) => {
   }
 };
 
-/* admin & advicer */
 
-/* // Get all proposals
-export const getAllProposals = async (req: Request, res: Response) => {
-  try {
-    const proposals = await Proposal.find().populate('userId', 'name email');
-    res.json(proposals);
-  } catch (error) {
-    console.error('Error fetching proposals:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-}; */
-/* admin & advicer */
-/* // Get proposals by user ID
-export const getProposalsByUserId = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-
-  try {
-    const proposals = await Proposal.find({ userId }).populate('userId', 'name email');
-    res.json(proposals);
-  } catch (error) {
-    console.error('Error fetching proposals by user ID:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-}; */
 /* admin & advicer */
   export const listStudentsManage = async (req: Request, res: Response) => {
   const { advisorId } = req.params;
@@ -290,6 +267,52 @@ export const getAdviserStudents = async (req: Request, res: Response) => {
 };
 
 
+export const getPanelistStudents = async (req: Request, res: Response) => {
+  const { advisorId } = req.params;
+
+  try {
+    // Fetch students where the advisor is a panelist and their advisorStatus is 'accepted'
+    const panelistStudents = await User.find(
+      { panelists: advisorId, advisorStatus: 'accepted' },
+      'name groupMembers channelId course profileImage chosenAdvisor manuscriptStatus proposals panelists tasks'
+    )
+    .populate('chosenAdvisor', 'name profileImage') // Populate advisor's name and profile image
+    .populate('panelists', 'name'); // Fetch names of panelists
+    
+
+    // Map through students and fetch names of the panelists
+    const studentData = await Promise.all(
+      panelistStudents.map(async (student) => {
+        // Fetch panelist names
+        const panelistNames = await User.find({ _id: { $in: student.panelists } }, 'name').lean();
+        const panelistNameList = panelistNames.map((panelist) => panelist.name);
+
+        const latestProposal = student.proposals.length > 0 ? student.proposals[student.proposals.length - 1] : null;
+
+        return {
+          _id: student._id,
+          name: student.name,
+          groupMembers: student.groupMembers,
+          channelId: student.channelId,
+          course: student.course,
+          profileImage: student.profileImage,
+          chosenAdvisor: student.chosenAdvisor,
+          manuscriptStatus: student.manuscriptStatus,
+          panelists: panelistNameList, // Return panelist names instead of IDs
+          proposalTitle: latestProposal ? latestProposal.proposalTitle : 'No proposal submitted',
+          submittedAt: latestProposal ? latestProposal.submittedAt : null,
+          tasks: student.tasks,
+        };
+      })
+    );
+
+    res.status(200).json({ panelistStudents: studentData });
+  } catch (error) {
+    console.error('Error fetching panelist students:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
 // Add a task for a student
 export const postAddTaskMyAdvicee = async (req: Request, res: Response) => {
   const { studentId } = req.params;
@@ -406,52 +429,6 @@ export const deleteTaskFromStudent = async (req: Request, res: Response) => {
 
 
 
-
-export const getPanelistStudents = async (req: Request, res: Response) => {
-  const { advisorId } = req.params;
-
-  try {
-    // Fetch students where the advisor is a panelist and their advisorStatus is 'accepted'
-    const panelistStudents = await User.find(
-      { panelists: advisorId, advisorStatus: 'accepted' },
-      'name groupMembers channelId course profileImage chosenAdvisor manuscriptStatus proposals panelists tasks'
-    )
-    .populate('chosenAdvisor', 'name profileImage') // Populate advisor's name and profile image
-    .populate('panelists', 'name'); // Fetch names of panelists
-    
-
-    // Map through students and fetch names of the panelists
-    const studentData = await Promise.all(
-      panelistStudents.map(async (student) => {
-        // Fetch panelist names
-        const panelistNames = await User.find({ _id: { $in: student.panelists } }, 'name').lean();
-        const panelistNameList = panelistNames.map((panelist) => panelist.name);
-
-        const latestProposal = student.proposals.length > 0 ? student.proposals[student.proposals.length - 1] : null;
-
-        return {
-          _id: student._id,
-          name: student.name,
-          groupMembers: student.groupMembers,
-          channelId: student.channelId,
-          course: student.course,
-          profileImage: student.profileImage,
-          chosenAdvisor: student.chosenAdvisor,
-          manuscriptStatus: student.manuscriptStatus,
-          panelists: panelistNameList, // Return panelist names instead of IDs
-          proposalTitle: latestProposal ? latestProposal.proposalTitle : 'No proposal submitted',
-          submittedAt: latestProposal ? latestProposal.submittedAt : null,
-          tasks: student.tasks,
-        };
-      })
-    );
-
-    res.status(200).json({ panelistStudents: studentData });
-  } catch (error) {
-    console.error('Error fetching panelist students:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-};
   
 // Function to update manuscript status for a student
 export const updateManuscriptStatus = async (req: Request, res: Response) => {
@@ -503,10 +480,10 @@ export const updatePanelManuscriptStatus = async (req: Request, res: Response) =
 
       // Add userId to panelistVotes and calculate remaining votes
       student.panelistVotes.push(userId);
-      remainingVotes = 3 - student.panelistVotes.length;
+      remainingVotes = 4 - student.panelistVotes.length;
 
       // Update status if 3 unique panelists have voted for 'reviseOnPanelist'
-      if (student.panelistVotes.length === 3) {
+      if (student.panelistVotes.length === 4) {
         student.manuscriptStatus = 'reviseOnPanelist';
       }
 
@@ -518,10 +495,10 @@ export const updatePanelManuscriptStatus = async (req: Request, res: Response) =
 
       // Add userId to publishingVotes and calculate remaining votes
       student.publishingVotes.push(userId);
-      remainingVotes = 4 - student.publishingVotes.length;
+      remainingVotes = 5 - student.publishingVotes.length;
 
       // Update status if 4 unique panelists have voted for 'approvedOnPanel'
-      if (student.publishingVotes.length === 4) {
+      if (student.publishingVotes.length === 5) {
         student.manuscriptStatus = 'approvedOnPanel';
       }
 

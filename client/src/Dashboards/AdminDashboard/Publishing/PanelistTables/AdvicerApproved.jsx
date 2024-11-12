@@ -1,22 +1,25 @@
 import { useEffect, useState } from "react";
-
-import { Avatar } from "antd";
 import {
   List,
   Typography,
   Button,
+  message,
   Modal,
   Input,
   Checkbox,
   ConfigProvider,
   Select,
   Progress,
+  Avatar
 } from "antd";
 import {
   EditOutlined,
   CheckOutlined,
   LoadingOutlined,
   DeleteOutlined,
+  PlusOutlined,
+  BookOutlined,
+  StarOutlined,
 } from "@ant-design/icons";
 import {
   Dialog,
@@ -24,7 +27,8 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import CkEditorDocuments from "../CkEditorDocuments";
+import CkEditorDocuments from "./CkEditorDocuments";
+import axios from "axios";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -33,9 +37,11 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
+
   const [courses, setCourses] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentTaskStudent, setCurrentTaskStudent] = useState(null);
   const [taskInput, setTaskInput] = useState("");
@@ -44,6 +50,15 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
   const [tasks, setTasks] = useState([]);
 
   const [admin, setAdmin] = useState(null);
+
+    // Grading modal states
+    const [isGradingModalVisible, setIsGradingModalVisible] = useState(false);
+    const [gradingRubric, setGradingRubric] = useState({
+      criteria1: 0,
+      criteria2: 0,
+      criteria3: 0,
+    });
+    const [gradingData, setGradingData] = useState([]);
 
   // Fetch admin data from localStorage on initial load
   useEffect(() => {
@@ -72,6 +87,39 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
       }
     } catch (error) {
       console.error("Error fetching tasks:", error.message);
+    }
+  };
+
+  const updatePanelManuscriptStatus = async (channelId, newStatus, userId) => {
+    try {
+      const response = await axios.patch(
+        "http://localhost:7000/api/advicer/thesis/panel/manuscript-status",
+        { channelId, manuscriptStatus: newStatus, userId }
+      );
+
+      const { remainingVotes, message: successMessage } = response.data;
+
+      message.success(successMessage);
+
+      // Display remaining votes if status is `approvedOnPanel` or `reviseOnPanelist` and there are pending votes
+      if (
+        (newStatus === "reviseOnPanelist" || newStatus === "approvedOnPanel") &&
+        remainingVotes > 0
+      ) {
+        message.info(
+          `Only ${remainingVotes} more vote(s) needed to proceed with the manuscript`
+        );
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        message.error(
+          `Error: ${error.response.data.message || "Failed to update status"}`
+        );
+      } else {
+        console.error("Error:", error.message);
+        message.error("Error updating status");
+      }
     }
   };
 
@@ -106,7 +154,35 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
       console.error("Error fetching task progress:", error);
     }
   };
-  // Debug: Check the progress value in the component
+
+  const deleteTask = async (studentId, taskId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:7000/api/advicer/delete-task/${studentId}/${taskId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        message.success("Task deleted successfully");
+        setTasks((prevTasks) =>
+          prevTasks.filter((task) => task._id !== taskId)
+        ); // Remove task from state
+      } else {
+        const errorData = await response.json();
+        console.error("Error deleting task:", errorData.message);
+        message.error(`Error: ${errorData.message || "Failed to delete task"}`);
+      }
+    } catch (error) {
+      console.error("Error deleting task:", error.message);
+      message.error("Error deleting task");
+    }
+  };
+
 
   useEffect(() => {
     filteredStudents.forEach((student) => {
@@ -151,30 +227,75 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
     setTaskInput(e.target.value);
   };
 
+
   const handleAddTask = () => {
     if (taskInput) {
-      setTasks([...tasks, { title: taskInput, completed: false }]);
-      setTaskInput("");
+      addTask(currentTaskStudent._id, taskInput);
     }
   };
 
   const handleDeleteTask = (index) => {
-    setTasks((prevTasks) => prevTasks.filter((_, i) => i !== index));
+    const updatedTasks = tasks.filter((_, i) => i !== index);
+    setTasks(updatedTasks); // Update task list after deletion
   };
 
   const handleCompleteTask = (index) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task, i) =>
-        i === index ? { ...task, completed: !task.completed } : task
-      )
-    );
+    const updatedTasks = tasks.map((task, i) => {
+      if (i === index) {
+        return { ...task, completed: !task.completed };
+      }
+      return task;
+    });
+    setTasks(updatedTasks); // Update task completion status
   };
+
 
   const handleCourseChange = (value) => {
     setSelectedCourse(value);
     setFilteredStudents(
       value ? panelistStudents.filter((student) => student.course === value) : panelistStudents
     );
+  };
+
+  
+  /* Rubrics Grading for Student */
+
+  const handleGradingIconClick = (student) => {
+    setSelectedStudentId(student._id);
+    setIsGradingModalVisible(true);
+  };
+
+  const handleRubricChange = (criteria, value) => {
+    setGradingRubric((prev) => ({
+      ...prev,
+      [criteria]: value,
+    }));
+  };
+
+  const submitGrading = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:7000/api/advicer/grade-student`,
+        {
+          studentId: selectedStudentId,
+          panelistId: admin.id,
+          gradingRubric,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        message.success("Grading submitted successfully.");
+        setIsGradingModalVisible(false);
+        setGradingRubric({ criteria1: 0, criteria2: 0, criteria3: 0 });
+      }
+    } catch (error) {
+      console.error("Error submitting grading:", error);
+      message.error("Failed to submit grading.");
+    }
   };
 
   return (
@@ -257,7 +378,8 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
 
               <div style={{
                 display: "flex", flexDirection: "column",
-                alignItems: "center", marginRight: "10px"
+                alignItems: "center",
+                marginRight: "10px", gap: "10px",
               }}>
 
                 <Progress
@@ -270,17 +392,69 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "-15px",
+                    marginTop: "40px",
                     position: "absolute",
                   }}
                 />
 
-                <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)} style={{ marginBottom: "20px", width: "100px" }} />
-{/*                 <Button icon={<LoadingOutlined />} style={{ marginBottom: "20px", width: "100px" }} />
-                <Button icon={<CheckOutlined />} style={{ marginBottom: "20px", width: "100px" }} /> */}
-                <Button type="primary" onClick={() => openTaskModal(student)} style={{ width: "100px" }}>
-                  View Task
-                </Button>
+                <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)}                   style={{
+                    width: "50px",
+                    backgroundColor: "#1890ff", // Blue for 'edit'
+                    color: "#fff", // White text
+                  }} />
+
+                <Button
+                  icon={<LoadingOutlined />}
+                  onClick={() =>
+                    updatePanelManuscriptStatus(
+                      student._id,
+                      "reviseOnPanelist",
+                      admin.id
+                    )
+                  }
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#faad14", // Yellow for 'revise'
+                    color: "#fff", // White text
+                  }}
+                />
+
+                <Button
+                  icon={<CheckOutlined />}
+                  onClick={() =>
+                    updatePanelManuscriptStatus(
+                      student._id,
+                      "approvedOnPanel",
+                      admin.id
+                    )
+                  }
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#52c41a", // Green for 'approve'
+                    color: "#fff", // White text
+                  }}
+                />
+
+                <Button
+                  icon={<BookOutlined />}
+                  onClick={() => handleGradingIconClick(student)}
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#722ed1", // Purple for 'grading'
+                    color: "#fff", // White text
+                  }}
+                />
+
+                <Button
+                  icon={<PlusOutlined />}
+                  type='primary'
+                  onClick={() => openTaskModal(student)}
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#f5222d", // Red for 'add task'
+                    color: "#fff", // White text
+                  }}
+                />
               </div>
             </div>
           </List.Item>
@@ -316,6 +490,46 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
             </Button>
           </DialogActions>
         </Dialog>
+
+      <Modal
+        title='Grading Rubric'
+        visible={isGradingModalVisible}
+        onOk={submitGrading}
+        onCancel={() => setIsGradingModalVisible(false)}
+        okText='Submit'
+      >
+        <div>
+          <Text>Criteria 1</Text>
+          <Input
+            type='number'
+            min={0}
+            max={100}
+            value={gradingRubric.criteria1}
+            onChange={(e) => handleRubricChange("criteria1", e.target.value)}
+          />
+        </div>
+        <div>
+          <Text>Criteria 2</Text>
+          <Input
+            type='number'
+            min={0}
+            max={100}
+            value={gradingRubric.criteria2}
+            onChange={(e) => handleRubricChange("criteria2", e.target.value)}
+          />
+        </div>
+        <div>
+          <Text>Criteria 3</Text>
+          <Input
+            type='number'
+            min={0}
+            max={100}
+            value={gradingRubric.criteria3}
+            onChange={(e) => handleRubricChange("criteria3", e.target.value)}
+          />
+        </div>
+      </Modal>
+
 
       <ConfigProvider>
       <Modal

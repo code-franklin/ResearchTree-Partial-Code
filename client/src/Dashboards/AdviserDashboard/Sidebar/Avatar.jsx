@@ -93,7 +93,7 @@ export default function AccountMenu() {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem>
-          <Avatar sx={{ bgcolor: "#444" }} /> Profile
+        <Avatar sx={{ bgcolor: "#444" }} /> Profile
         </MenuItem>
         <MenuItem onClick={handleClose}>
           <Avatar sx={{ bgcolor: "#444" }} /> My account
@@ -110,8 +110,8 @@ export default function AccountMenu() {
             <Settings fontSize='small' />
           </ListItemIcon>
           Settings
-        </MenuItem>
-        <MenuItem onClick={handleLogout}>
+          </MenuItem>        
+          <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout
               fontSize='small'

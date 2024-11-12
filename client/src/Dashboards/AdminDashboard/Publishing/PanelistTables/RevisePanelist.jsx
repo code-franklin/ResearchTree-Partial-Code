@@ -10,6 +10,7 @@ import {
   ConfigProvider,
   Select,
   Progress,
+  Avatar
 } from "antd";
 import {
   EditOutlined,
@@ -32,171 +33,60 @@ import axios from "axios";
 const { Text } = Typography;
 const { Option } = Select;
 
-export default function NewTables() {
-  const [panelistStudents, setPanelistStudents] = useState([]);
+export default function ListManuscript({ panelName, panelImage, panelistStudents }) {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
 
-  const [courses, setCourses] = useState([]); // To store all unique courses
-  const [filteredStudents, setFilteredStudents] = useState([]); // For filtering based on the course
-  const [selectedCourse, setSelectedCourse] = useState(""); // For the selected course
+  const [courses, setCourses] = useState([]);
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState("");
 
-  // Modal states
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentTaskStudent, setCurrentTaskStudent] = useState(null);
   const [taskInput, setTaskInput] = useState("");
-  const [tasks, setTasks] = useState([]); // To store tasks
 
   const [progress, setProgress] = useState(0);
+  const [tasks, setTasks] = useState([]);
 
-  const panelistId = localStorage.getItem("panelistId"); // Example: retrieve panelist ID from localStorage
+  const [admin, setAdmin] = useState(null);
 
-  // Grading modal states
-  const [isGradingModalVisible, setIsGradingModalVisible] = useState(false);
-  const [gradingRubric, setGradingRubric] = useState({
-    criteria1: 0,
-    criteria2: 0,
-    criteria3: 0,
-  });
-  const [gradingData, setGradingData] = useState([]);
+    // Grading modal states
+    const [isGradingModalVisible, setIsGradingModalVisible] = useState(false);
+    const [gradingRubric, setGradingRubric] = useState({
+      criteria1: 0,
+      criteria2: 0,
+      criteria3: 0,
+    });
+    const [gradingData, setGradingData] = useState([]);
 
-  const user = JSON.parse(localStorage.getItem("user"));
-
+  // Fetch admin data from localStorage on initial load
   useEffect(() => {
-    const fetchPanelistStudents = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:7000/api/advicer/panelist-students/${user._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setPanelistStudents(data.panelistStudents);
-          setFilteredStudents(data.panelistStudents);
-          // Extract unique courses from the students data
-          const uniqueCourses = [
-            ...new Set(data.panelistStudents.map((student) => student.course)),
-          ];
-          setCourses(uniqueCourses);
-        } else {
-          console.error("Error fetching panelist students");
-        }
-      } catch (error) {
-        console.error("Error fetching panelist students:", error.message);
-      }
-    };
-
-    fetchPanelistStudents();
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setAdmin(JSON.parse(storedUser));
+    }
   }, []);
 
-  const handleViewManuscript = (studentId, channelId) => {
-    setSelectedStudentId(studentId);
-    setSelectedChannelId(channelId);
-    setIsEditorOpen(true);
-  };
-  const closeEditorModal = () => {
-    setIsEditorOpen(false); // Close modal
-    setSelectedStudentId(null);
-    setSelectedChannelId(null);
-  };
-  // Task for Student
-
-  const addTask = async (studentId, taskTitle) => {
+  const fetchTasks = async (studentId) => {
     try {
       const response = await fetch(
-        `http://localhost:7000/api/advicer/add-task/${studentId}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ taskTitle }),
-        }
-      );
-      if (response.ok) {
-        setTasks((prevTasks) => [
-          ...prevTasks,
-          { title: taskTitle, completed: false },
-        ]);
-        setTaskInput(""); // Clear the input field
-        fetchTasks(studentId); // Fetch tasks again to immediately update the task list in the modal
-      }
-    } catch (error) {
-      console.error("Error adding task:", error);
-    }
-  };
-
-  const fetchTaskProgress = async (studentId) => {
-    if (!studentId) {
-      console.log("No selectedStudentId found."); // Debug statement
-      return;
-    }
-    try {
-      const response = await fetch(
-        `http://localhost:7000/api/advicer/tasks/progress/${studentId}`,
+        `http://localhost:7000/api/advicer/tasks/${studentId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-
       if (response.ok) {
-        const { progress: studentProgress } = await response.json();
-        setProgress((prevProgress) => ({
-          ...prevProgress,
-          [studentId]:
-            studentProgress >= 0 && studentProgress <= 100
-              ? studentProgress
-              : 0,
-        }));
+        const data = await response.json();
+        setTasks(data.tasks); // Set fetched tasks
       } else {
-        console.error("Error fetching progress.");
+        const errorData = await response.json();
+        console.error("Error fetching tasks:", errorData.message);
       }
     } catch (error) {
-      console.error("Error fetching task progress:", error);
-    }
-  };
-  // Debug: Check the progress value in the component
-  useEffect(() => {
-    filteredStudents.forEach((student) => {
-      fetchTaskProgress(student._id);
-    });
-  }, [filteredStudents]);
-
-  const updateManuscriptStatus2 = async (channelId, newStatus, panelistId) => {
-    try {
-      const response = await axios.patch(
-        "http://localhost:7000/api/advicer/thesis/panel/manuscript-status",
-        { channelId, manuscriptStatus: newStatus, panelistId } // Send panelist ID with the request
-      );
-
-      if (
-        newStatus === "reviseOnPanelist" &&
-        response.data.remainingVotes > 0
-      ) {
-        message.info(
-          `Vote recorded. ${response.data.remainingVotes} votes remaining`
-        );
-      } else {
-        message.success("Manuscript status updated");
-      }
-    } catch (error) {
-      if (error.response) {
-        console.error("Error response:", error.response.data);
-        message.error(
-          `Error: ${error.response.data.message || "Failed to update status"}`
-        );
-      } else {
-        console.error("Error:", error.message);
-        message.error("Error updating status");
-      }
+      console.error("Error fetching tasks:", error.message);
     }
   };
 
@@ -233,6 +123,38 @@ export default function NewTables() {
     }
   };
 
+  const fetchTaskProgress = async (studentId) => {
+    if (!studentId) {
+      console.log("No selectedStudentId found."); // Debug statement
+      return;
+    }
+    try {
+      const response = await fetch(
+        `http://localhost:7000/api/advicer/tasks/progress/${studentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const { progress: studentProgress } = await response.json();
+        setProgress((prevProgress) => ({
+          ...prevProgress,
+          [studentId]:
+            studentProgress >= 0 && studentProgress <= 100
+              ? studentProgress
+              : 0,
+        }));
+      } else {
+        console.error("Error fetching progress.");
+      }
+    } catch (error) {
+      console.error("Error fetching task progress:", error);
+    }
+  };
+
   const deleteTask = async (studentId, taskId) => {
     try {
       const response = await fetch(
@@ -261,26 +183,30 @@ export default function NewTables() {
     }
   };
 
-  const fetchTasks = async (studentId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:7000/api/advicer/tasks/${studentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setTasks(data.tasks); // Set fetched tasks
-      } else {
-        const errorData = await response.json();
-        console.error("Error fetching tasks:", errorData.message);
-      }
-    } catch (error) {
-      console.error("Error fetching tasks:", error.message);
-    }
+
+  useEffect(() => {
+    filteredStudents.forEach((student) => {
+      fetchTaskProgress(student._id);
+    });
+  }, [filteredStudents]);
+
+
+  useEffect(() => {
+    // Get unique courses from student data for filtering
+    const uniqueCourses = [
+      ...new Set(panelistStudents.map((student) => student.course)),
+    ];
+    setCourses(uniqueCourses);
+    setFilteredStudents(panelistStudents);
+  }, [panelistStudents]);
+
+    // Handle course selection
+
+
+  const handleViewManuscript = (studentId, channelId) => {
+    setSelectedStudentId(studentId);
+    setSelectedChannelId(channelId);
+    setIsEditorOpen(true);
   };
 
   const openTaskModal = (student) => {
@@ -289,9 +215,18 @@ export default function NewTables() {
     fetchTasks(student._id); // Fetch tasks when opening modal
   };
 
+  const closeEditorModal = () => {
+    setIsEditorOpen(false); // Close modal
+    setSelectedStudentId(null);
+    setSelectedChannelId(null);
+  };
+
+
+
   const handleTaskInputChange = (e) => {
     setTaskInput(e.target.value);
   };
+
 
   const handleAddTask = () => {
     if (taskInput) {
@@ -314,18 +249,15 @@ export default function NewTables() {
     setTasks(updatedTasks); // Update task completion status
   };
 
-  // Handle course selection
+
   const handleCourseChange = (value) => {
     setSelectedCourse(value);
-    if (value === "") {
-      setFilteredStudents(panelistStudents); // Show all students if no course is selected
-    } else {
-      setFilteredStudents(
-        panelistStudents.filter((student) => student.course === value)
-      );
-    }
+    setFilteredStudents(
+      value ? panelistStudents.filter((student) => student.course === value) : panelistStudents
+    );
   };
 
+  
   /* Rubrics Grading for Student */
 
   const handleGradingIconClick = (student) => {
@@ -346,7 +278,7 @@ export default function NewTables() {
         `http://localhost:7000/api/advicer/grade-student`,
         {
           studentId: selectedStudentId,
-          panelistId: user._id,
+          panelistId: admin.id,
           gradingRubric,
         },
         {
@@ -367,16 +299,22 @@ export default function NewTables() {
   };
 
   return (
-    <div
-      style={{ flex: 1, overflowX: "hidden", padding: "20px", width: "1263px" }}
-    >
+    <div style={{ flex: 1, overflowX: "hidden", padding: "20px", width: "1263px" }}>
+      <Avatar
+        src={`http://localhost:7000/public/uploads/${
+          panelImage|| "default-avatar.png"}`}
+        sx={{ width: 79, height: 79 }}
+      />
+
+      <h2 style={{ color: "#ffffff" }}>Advisees of {panelName}</h2>
+      
       <Select
         value={selectedCourse}
         onChange={handleCourseChange}
         style={{ marginBottom: "20px", width: "200px" }}
-        placeholder='Select a course'
+        placeholder="Select a course"
       >
-        <Option value=''>All Courses</Option>
+        <Option value="">All Courses</Option>
         {courses.map((course) => (
           <Option key={course} value={course}>
             {course}
@@ -386,23 +324,14 @@ export default function NewTables() {
 
       <List
         grid={{ gutter: 16, column: 1 }}
-        dataSource={filteredStudents.filter(
-          (student) => student.manuscriptStatus === "reviseOnPanelist"
-        )}
+        dataSource={filteredStudents.filter((student) => student.manuscriptStatus === "reviseOnPanelist")}
         renderItem={(student) => (
           <List.Item key={student._id}>
-            <div
-              style={{
-                height: "200px",
-                padding: "20px",
-                borderRadius: "8px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: "#2B2B2B",
-                marginBottom: "16px",
-              }}
-            >
+            <div style={{
+              height: "200px", padding: "20px", borderRadius: "8px",
+              display: "flex", justifyContent: "space-between",
+              alignItems: "center", backgroundColor: "#2B2B2B", marginBottom: "16px"
+            }}>
               <div style={{ flex: 1 }}>
                 <Text
                   style={{
@@ -438,28 +367,21 @@ export default function NewTables() {
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Date Published:</span>{" "}
-                  {student.datePublished || "N/A"}
+                  <span className='font-bold'>Manuscript Status:</span>{" "}
+                  {student.manuscriptStatus}
                 </Text>
                 <br />
                 <br />
                 <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
-                <p style={{ color: "#ffffff" }}>USer: {student.name}</p>
-                <br />
-
-                <Text style={{ color: "#ffffff" }}>
-                  <strong>Manuscript Status:</strong> {student.manuscriptStatus}
-                </Text>
+                <p style={{ color: "#ffffff" }}>User: {student.name}</p>
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  marginRight: "10px",
-                }}
-              >
+              <div style={{
+                display: "flex", flexDirection: "column",
+                alignItems: "center",
+                marginRight: "10px", gap: "10px",
+              }}>
+
                 <Progress
                   type='dashboard'
                   steps={8}
@@ -470,100 +392,162 @@ export default function NewTables() {
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "-5px",
+                    marginTop: "40px",
                     position: "absolute",
                   }}
                 />
 
+                <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)}                   style={{
+                    width: "50px",
+                    backgroundColor: "#1890ff", // Blue for 'edit'
+                    color: "#fff", // White text
+                  }} />
+
                 <Button
-                  icon={<EditOutlined />}
+                  icon={<LoadingOutlined />}
                   onClick={() =>
-                    handleViewManuscript(student._id, student.channelId)
+                    updatePanelManuscriptStatus(
+                      student._id,
+                      "reviseOnPanelist",
+                      admin.id
+                    )
                   }
-                  style={{ marginBottom: "20px", width: "100px" }}
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#faad14", // Yellow for 'revise'
+                    color: "#fff", // White text
+                  }}
                 />
-                {/*                 <Button
-                  icon={<LoadingOutlined />}  
-                  onClick={() => updatePanelManuscriptStatus(student._id, 'reviseOnPanelist')}
-                  style={{ marginBottom: "20px", width: "100px" }}
-                />
+
                 <Button
                   icon={<CheckOutlined />}
-                  onClick={() => updatePanelManuscriptStatus(student._id, 'approvedOnPanel')}
-                  style={{ marginBottom: "20px", width: "100px" }}
-                /> */}
+                  onClick={() =>
+                    updatePanelManuscriptStatus(
+                      student._id,
+                      "approvedOnPanel",
+                      admin.id
+                    )
+                  }
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#52c41a", // Green for 'approve'
+                    color: "#fff", // White text
+                  }}
+                />
+
                 <Button
+                  icon={<BookOutlined />}
+                  onClick={() => handleGradingIconClick(student)}
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#722ed1", // Purple for 'grading'
+                    color: "#fff", // White text
+                  }}
+                />
+
+                <Button
+                  icon={<PlusOutlined />}
                   type='primary'
                   onClick={() => openTaskModal(student)}
-                  style={{ marginBottom: "20px", width: "100px" }}
-                >
-                  View Task
-                </Button>
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#f5222d", // Red for 'add task'
+                    color: "#fff", // White text
+                  }}
+                />
               </div>
             </div>
           </List.Item>
         )}
       />
-
-      {/*       {isEditorOpen && selectedStudentId && (
+{/* 
+      {isEditorOpen && selectedStudentId && (
         <CkEditorDocuments
-          userId={user._id}
+          userId={admin.id}
           channelId={selectedChannelId}
           onClose={() => setIsEditorOpen(false)}
         />
       )} */}
 
-      {/* Material UI Modal for CKEditor */}
-      <Dialog
-        open={isEditorOpen}
-        onClose={closeEditorModal}
-        fullWidth
-        maxWidth='xxl'
-      >
-        <DialogContent sx={{ height: "1200px" }}>
-          {selectedStudentId && selectedChannelId && (
-            <CkEditorDocuments
-              userId={user._id}
-              channelId={selectedChannelId}
-            />
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeEditorModal} color='primary'>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+              {/* Material UI Modal for CKEditor */}
+        <Dialog
+          open={isEditorOpen}
+          onClose={closeEditorModal}
+          fullWidth
+          maxWidth='xxl'
+        >
+          <DialogContent sx={{ height: "1200px" }}>
+            {selectedStudentId && selectedChannelId && (
+              <CkEditorDocuments
+                userId={admin.id}
+                channelId={selectedChannelId}
+              />
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeEditorModal} color='primary'>
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-      <ConfigProvider
-        theme={{
-          components: {
-            Modal: {
-              algorithm: true, // Enable algorithm
-            },
-          },
-        }}
+      <Modal
+        title='Grading Rubric'
+        visible={isGradingModalVisible}
+        onOk={submitGrading}
+        onCancel={() => setIsGradingModalVisible(false)}
+        okText='Submit'
       >
-        <Modal
+        <div>
+          <Text>Criteria 1</Text>
+          <Input
+            type='number'
+            min={0}
+            max={100}
+            value={gradingRubric.criteria1}
+            onChange={(e) => handleRubricChange("criteria1", e.target.value)}
+          />
+        </div>
+        <div>
+          <Text>Criteria 2</Text>
+          <Input
+            type='number'
+            min={0}
+            max={100}
+            value={gradingRubric.criteria2}
+            onChange={(e) => handleRubricChange("criteria2", e.target.value)}
+          />
+        </div>
+        <div>
+          <Text>Criteria 3</Text>
+          <Input
+            type='number'
+            min={0}
+            max={100}
+            value={gradingRubric.criteria3}
+            onChange={(e) => handleRubricChange("criteria3", e.target.value)}
+          />
+        </div>
+      </Modal>
+
+
+      <ConfigProvider>
+      <Modal
           visible={isModalVisible}
           onCancel={() => setIsModalVisible(false)} // Ensures modal can close
           footer={[
             <Button key='close' onClick={() => setIsModalVisible(false)}>
               Close
             </Button>,
-            <Button key='add' type='primary' onClick={handleAddTask}>
+/*             <Button key='add' type='primary' onClick={handleAddTask}>
               Add Task
-            </Button>,
+            </Button>, */
           ]}
         >
-          <Input
-            placeholder='Enter a task'
-            value={taskInput}
-            onChange={handleTaskInputChange}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleAddTask();
-            }}
-          />
+
+          <Text strong style={{ fontSize: "18px", color: "#000000" }}>
+            {currentTaskStudent?.proposalTitle || "Proposal Title"}
+          </Text>
           <br />
           <br />
           <List
@@ -573,17 +557,21 @@ export default function NewTables() {
               <List.Item
                 key={task._id}
                 actions={[
-                  <Checkbox
+/*                   <Checkbox
                     checked={task.isCompleted}
                     onChange={() => handleCompleteTask(task._id)}
                   >
                     {task.isCompleted ? "Completed" : "Pending"}
-                  </Checkbox>,
-                  <Button
+                  </Checkbox>, */
+
+                  <Text style={{ fontWeight: "bold", color: task.isCompleted ? "green" : "red" }}>
+                    {task.isCompleted ? "Completed" : "Not Done"}
+                  </Text>
+/*                   <Button
                     type='link'
                     icon={<DeleteOutlined />}
                     onClick={() => deleteTask(currentTaskStudent._id, task._id)} // Pass studentId and taskId
-                  />,
+                  />, */
                 ]}
               >
                 <Text delete={task.isCompleted}>{task.taskTitle}</Text>

@@ -27,13 +27,14 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import CkEditorDocuments from "./CkEditorDocuments";
+import CkEditorDocuments from "../CkEditorDocuments";
 import axios from "axios";
 
 const { Text } = Typography;
 const { Option } = Select;
 
-export default function ListManuscript({ panelName, panelImage, panelistStudents }) {
+
+export default function ListManuscript({ studentData  }) {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
@@ -123,66 +124,92 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
     }
   };
 
-  const fetchTaskProgress = async (studentId) => {
-    if (!studentId) {
-      console.log("No selectedStudentId found."); // Debug statement
-      return;
-    }
-    try {
-      const response = await fetch(
-        `http://localhost:7000/api/advicer/tasks/progress/${studentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const { progress: studentProgress } = await response.json();
-        setProgress((prevProgress) => ({
-          ...prevProgress,
-          [studentId]:
-            studentProgress >= 0 && studentProgress <= 100
-              ? studentProgress
-              : 0,
-        }));
-      } else {
-        console.error("Error fetching progress.");
+// Function to add a task and update the task list and progress
+const addTask = async (studentId, taskTitle) => {
+  try {
+    const response = await fetch(
+      `http://localhost:7000/api/advicer/add-task/${studentId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ taskTitle }),
       }
-    } catch (error) {
-      console.error("Error fetching task progress:", error);
+    );
+    if (response.ok) {
+      const newTask = await response.json(); // Get new task details from response
+      setTasks((prevTasks) => [
+        ...prevTasks,
+        newTask,
+      ]);
+      setTaskInput(""); // Clear the input field
+
+      // Update task progress after adding task
+      fetchTasks(studentId);
+      fetchTaskProgress(studentId);
     }
-  };
+  } catch (error) {
+    console.error("Error adding task:", error);
+  }
+};
 
-  const deleteTask = async (studentId, taskId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:7000/api/advicer/delete-task/${studentId}/${taskId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        message.success("Task deleted successfully");
-        setTasks((prevTasks) =>
-          prevTasks.filter((task) => task._id !== taskId)
-        ); // Remove task from state
-      } else {
-        const errorData = await response.json();
-        console.error("Error deleting task:", errorData.message);
-        message.error(`Error: ${errorData.message || "Failed to delete task"}`);
+// Function to delete a task and update the task list and progress
+const deleteTask = async (studentId, taskId) => {
+  try {
+    const response = await fetch(
+      `http://localhost:7000/api/advicer/delete-task/${studentId}/${taskId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       }
-    } catch (error) {
-      console.error("Error deleting task:", error.message);
-      message.error("Error deleting task");
-    }
-  };
+    );
 
+    if (response.ok) {
+      message.success("Task deleted successfully");
+      setTasks((prevTasks) =>
+        prevTasks.filter((task) => task._id !== taskId)
+      ); // Remove task from state
+
+      // Update task progress after deleting task
+      fetchTasks(studentId);
+      fetchTaskProgress(studentId);
+    }
+  } catch (error) {
+    console.error("Error deleting task:", error.message);
+    message.error("Error deleting task");
+  }
+};
+
+// Function to fetch task progress
+const fetchTaskProgress = async (studentId) => {
+  if (!studentId) return;
+  try {
+    const response = await fetch(
+      `http://localhost:7000/api/advicer/tasks/progress/${studentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const { progress: studentProgress } = await response.json();
+      setProgress((prevProgress) => ({
+        ...prevProgress,
+        [studentId]: studentProgress || 0, // Update only specific student's progress
+      }));
+    } else {
+      console.error("Error fetching progress.");
+    }
+  } catch (error) {
+    console.error("Error fetching task progress:", error);
+  }
+};
 
   useEffect(() => {
     filteredStudents.forEach((student) => {
@@ -194,11 +221,11 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
   useEffect(() => {
     // Get unique courses from student data for filtering
     const uniqueCourses = [
-      ...new Set(panelistStudents.map((student) => student.course)),
+      ...new Set(studentData.map((student) => student.course)),
     ];
     setCourses(uniqueCourses);
-    setFilteredStudents(panelistStudents);
-  }, [panelistStudents]);
+    setFilteredStudents(studentData);
+  }, [studentData]);
 
     // Handle course selection
 
@@ -253,7 +280,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
   const handleCourseChange = (value) => {
     setSelectedCourse(value);
     setFilteredStudents(
-      value ? panelistStudents.filter((student) => student.course === value) : panelistStudents
+      value ? studentData.filter((student) => student.course === value) : studentData
     );
   };
 
@@ -300,14 +327,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
 
   return (
     <div style={{ flex: 1, overflowX: "hidden", padding: "20px", width: "1263px" }}>
-      <Avatar
-        src={`http://localhost:7000/public/uploads/${
-          panelImage|| "default-avatar.png"}`}
-        sx={{ width: 79, height: 79 }}
-      />
-
-      <h2 style={{ color: "#ffffff" }}>Advisees of {panelName}</h2>
-      
+    
       <Select
         value={selectedCourse}
         onChange={handleCourseChange}
@@ -324,11 +344,11 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
 
       <List
         grid={{ gutter: 16, column: 1 }}
-        dataSource={filteredStudents.filter((student) => student.manuscriptStatus === "approvedOnPanel")}
+        dataSource={filteredStudents.filter((student) => student.manuscriptStatus === "readyToDefense")}
         renderItem={(student) => (
           <List.Item key={student._id}>
             <div style={{
-              height: "200px", padding: "20px", borderRadius: "8px",
+              height: "auto", padding: "20px", borderRadius: "8px",
               display: "flex", justifyContent: "space-between",
               alignItems: "center", backgroundColor: "#2B2B2B", marginBottom: "16px"
             }}>
@@ -535,19 +555,27 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
       <Modal
           visible={isModalVisible}
           onCancel={() => setIsModalVisible(false)} // Ensures modal can close
+          closable={true}
           footer={[
-            <Button key='close' onClick={() => setIsModalVisible(false)}>
-              Close
-            </Button>,
-/*             <Button key='add' type='primary' onClick={handleAddTask}>
-              Add Task
-            </Button>, */
+
+            <Button key='add' type='primary' onClick={handleAddTask}>
+            Add Task
+          </Button>,
           ]}
         >
 
           <Text strong style={{ fontSize: "18px", color: "#000000" }}>
             {currentTaskStudent?.proposalTitle || "Proposal Title"}
           </Text>
+
+          <Input
+            placeholder='Enter a task'
+            value={taskInput}
+            onChange={handleTaskInputChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleAddTask();
+            }}
+          />
           <br />
           <br />
           <List
@@ -557,21 +585,18 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
               <List.Item
                 key={task._id}
                 actions={[
-/*                   <Checkbox
-                    checked={task.isCompleted}
-                    onChange={() => handleCompleteTask(task._id)}
-                  >
-                    {task.isCompleted ? "Completed" : "Pending"}
-                  </Checkbox>, */
 
-                  <Text style={{ fontWeight: "bold", color: task.isCompleted ? "green" : "red" }}>
+
+                   <Text style={{ fontWeight: "bold", color: task.isCompleted ? "green" : "red" }}>
                     {task.isCompleted ? "Completed" : "Not Done"}
-                  </Text>
-/*                   <Button
+                  </Text>,
+
+                  <Button
                     type='link'
                     icon={<DeleteOutlined />}
                     onClick={() => deleteTask(currentTaskStudent._id, task._id)} // Pass studentId and taskId
-                  />, */
+                  />,
+                  
                 ]}
               >
                 <Text delete={task.isCompleted}>{task.taskTitle}</Text>

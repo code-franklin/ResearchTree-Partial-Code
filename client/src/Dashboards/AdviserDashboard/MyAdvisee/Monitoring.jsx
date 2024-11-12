@@ -16,8 +16,10 @@ import {
 import {
   EditOutlined,
   CheckOutlined,
-  LoadingOutlined,
-  DeleteOutlined,
+  FileDoneOutlined,
+  DeleteOutlined,  
+  PlusOutlined,
+  BookOutlined,
 } from "@ant-design/icons";
 import {
   Dialog,
@@ -235,6 +237,39 @@ export default function NewTables() {
     }
   };
 
+  const updatePanelManuscriptStatus = async (channelId, newStatus, userId) => {
+    try {
+      const response = await axios.patch(
+        "http://localhost:7000/api/advicer/thesis/panel/manuscript-status",
+        { channelId, manuscriptStatus: newStatus, userId }
+      );
+
+      const { remainingVotes, message: successMessage } = response.data;
+
+      message.success(successMessage);
+
+      // Display remaining votes if status is `approvedOnPanel` or `reviseOnPanelist` and there are pending votes
+      if (
+        (newStatus === "reviseOnPanelist" || newStatus === "approvedOnPanel") &&
+        remainingVotes > 0
+      ) {
+        message.info(
+          `Only ${remainingVotes} more vote(s) needed to proceed with the manuscript`
+        );
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        message.error(
+          `Error: ${error.response.data.message || "Failed to update status"}`
+        );
+      } else {
+        console.error("Error:", error.message);
+        message.error("Error updating status");
+      }
+    }
+  };
+
   const openTaskModal = (student) => {
     setCurrentTaskStudent(student);
     setIsModalVisible(true);
@@ -416,6 +451,23 @@ export default function NewTables() {
                     >
                       Submit
                     </Button>
+
+                    <Button
+                      icon={<FileDoneOutlined />}
+                      onClick={() =>
+                        updatePanelManuscriptStatus(
+                          student._id,
+                          "approvedOnPanel",
+                          user._id
+                        )
+                      }
+                      style={{
+                        width: "50px",
+                        backgroundColor: "#faad14", // Yellow for 'revise'
+                        color: "#fff", // White text
+                      }}
+                    />
+
                   </>
                 ) : (
                   <>
@@ -426,15 +478,7 @@ export default function NewTables() {
                     >
                       View Task
                     </Button>
-                    <Button
-                      icon={<EditOutlined />}
-                      onClick={() =>
-                        handleViewManuscript(student._id, student.channelId)
-                      }
-                      style={{ marginBottom: "10px", width: "100px" }}
-                    >
-                      Edit
-                    </Button>
+
                     <Button
                       onClick={openGradeModal}
                       style={{ marginBottom: "10px", width: "100px" }}

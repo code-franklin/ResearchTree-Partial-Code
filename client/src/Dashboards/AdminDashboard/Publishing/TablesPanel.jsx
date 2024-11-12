@@ -11,15 +11,11 @@ const { Option } = Select;
 
 const Tables = ({ panelName, panelImage, panelistStudents }) => {
   const [value, setValue] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const handleCategorySelect = (value) => {
-    setSelectedCategory(value);
-  };
 
   return (
     <div style={{
@@ -57,15 +53,15 @@ const Tables = ({ panelName, panelImage, panelistStudents }) => {
         </Box>
         
         {/* Render based on selected tab */}
-        <Box sx={{ p: 4 }}>
+        <Box sx={{ p: 3 }}>
           {value === 0 && (
-            <AdvicerApproved panelName={panelName} panelImage={panelImage} panelistStudents={panelistStudents} selectedCategory={selectedCategory} />
+            <AdvicerApproved panelName={panelName} panelImage={panelImage} panelistStudents={panelistStudents} />
           )}
           {value === 1 && (
-            <RevisePanelist panelName={panelName} panelImage={panelImage} panelistStudents={panelistStudents} selectedCategory={selectedCategory} />
+            <RevisePanelist panelName={panelName} panelImage={panelImage} panelistStudents={panelistStudents} />
           )}
           {value === 2 && (
-            <ApprovedOnPanel panelName={panelName} panelImage={panelImage} panelistStudents={panelistStudents} selectedCategory={selectedCategory} />
+            <ApprovedOnPanel panelName={panelName} panelImage={panelImage} panelistStudents={panelistStudents} />
           )}
 
         </Box>

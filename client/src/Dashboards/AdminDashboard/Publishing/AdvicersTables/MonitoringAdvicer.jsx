@@ -264,7 +264,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "10px",
+                    marginTop: "-12px",
                     position: "absolute",
                   }}
                 />
@@ -289,7 +289,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                       View Task
                     </Button>
 
-                    <Button
+{/*                     <Button
                       icon={<CheckOutlined />}
                       onClick={() =>
                         updateManuscriptStatus(student._id, "readyToDefense")
@@ -297,7 +297,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                       style={{ marginBottom: "10px" }}
                     >
                       Submit
-                    </Button>
+                    </Button> */}
                   </>
                 ) : (
                   <>

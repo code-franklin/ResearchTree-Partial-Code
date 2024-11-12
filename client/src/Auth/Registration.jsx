@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Select from 'react-select';
 import { TextField, MenuItem, Button, FormControl, InputLabel, Select as MUISelect } from '@mui/material';
@@ -11,16 +12,17 @@ const LoginFunction = () => {
     role: 'student',
     profileImage: null,
     specializations: [],
-    course: '', // For student course
-    year: '', // For student year
-    handleNumber: '', // For adviser handle number
-    groupMembers: [] // New field for group members
+    course: '', 
+    year: '', 
+    handleNumber: '', 
+    groupMembers: [], 
+    design: ''
   });
   const [specializationsOptions, setSpecializationsOptions] = useState([]);
   const [message, setMessage] = useState('');
 
   // Generate years from 1900 to 2100
-  const startYear = 2000;
+  const startYear = 2024;
   const endYear = 2100;
   const yearOptions = Array.from({ length: endYear - startYear + 1 }, (_, i) => ({
     value: startYear + i,
@@ -30,6 +32,12 @@ const LoginFunction = () => {
   const courseOptions = [
     { value: 'BSIT', label: 'BSIT' },
     { value: 'BSCS', label: 'BSCS' },
+  ];
+
+  const designOptions = [
+    { value: 'Subject Expert', label: 'Subject Expert' },
+    { value: 'Statistician', label: 'Statistician' },
+    { value: 'Technical Expert', label: 'Technical Expert' }
   ];
 
   useEffect(() => {
@@ -78,6 +86,7 @@ const LoginFunction = () => {
     data.append('year', formData.year);
     data.append('handleNumber', formData.handleNumber);
     data.append('groupMembers', JSON.stringify(formData.groupMembers)); // Add group members
+    data.append('design', formData.design); // Send design data
 
     try {
       const response = await axios.post('http://localhost:7000/api/advicer/register', data);
@@ -89,160 +98,170 @@ const LoginFunction = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} encType="multipart/form-data">
-      <section className="bg-white">
-  <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
-    <aside className="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
-      <img
-        alt=""
-       src="/src/assets/bg-reg.gif"
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-    </aside>
-
-    <main
-      className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6"
-    >
-      <div className="max-w-xl lg:max-w-3xl">
-        <a className="block text-blue-600" href="#">
-          <span className="sr-only">Home</span>
-          <img
-        alt=""
-       src="/src/assets/Researchtree-logo.png"
-       className="absolute mt-[-65px] ml-[-20px]"
-      />
-        </a>
-
-        <h1 className="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
-          Welcome to ResearchTree 
-        </h1>
-
+    <form onSubmit={handleSubmit} encType="multipart/form-data" className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <div className="text-center mb-6">
+          <img src="/src/assets/Researchtree-logo.png" alt="ResearchTree Logo" className="mx-auto mb-4" />
+          <h1 className="text-3xl font-bold text-gray-900">Welcome to ResearchTree</h1>
+        </div>
 
         <TextField
-        label="Name"
-        name="name"
-        value={formData.name}
-        onChange={handleChange}
-        fullWidth
-        margin="normal"
-        required
-      />
-      <TextField
-        label="Group Members (comma-separated)"
-        name="groupMembers"
-        value={formData.groupMembers}
-        onChange={handleGroupMembersChange}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Email"
-        name="email"
-        value={formData.email}
-        onChange={handleChange}
-        type="email"
-        fullWidth
-        margin="normal"
-        required
-      />
-      <TextField
-        label="Password"
-        name="password"
-        value={formData.password}
-        onChange={handleChange}
-        type="password"
-        fullWidth
-        margin="normal"
-        required
-      />
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Role</InputLabel>
-        <MUISelect
-          name="role"
-          value={formData.role}
+          label="Name"
+          name="name"
+          value={formData.name}
           onChange={handleChange}
+          fullWidth
+          margin="normal"
           required
-        >
-          <MenuItem value="student">Student</MenuItem>
-          <MenuItem value="adviser">Adviser</MenuItem>
-        </MUISelect>
-      </FormControl>
+          className="mb-4"
+        />
 
-      {formData.role === 'student' && (
-        <>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Course</InputLabel>
-            <MUISelect
-              name="course"
-              value={formData.course || ''}
-              onChange={handleChange}
-              required
-            >
-              {courseOptions.map((course) => (
-                <MenuItem key={course.value} value={course.value}>
-                  {course.label}
-                </MenuItem>
-              ))}
-            </MUISelect>
-          </FormControl>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Year</InputLabel>
-            <MUISelect
-              name="year"
-              value={formData.year}
-              onChange={handleChange}
-              required
-            >
-              {yearOptions.map((year) => (
-                <MenuItem key={year.value} value={year.value}>{year.label}</MenuItem>
-              ))}
-            </MUISelect>
-          </FormControl>
-        </>
-      )}
+        <TextField
+          label="Email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          type="email"
+          fullWidth
+          margin="normal"
+          required
+          className="mb-4"
+        />
 
-      {formData.role === 'adviser' && (
-        <>
-          <label>Specializations:</label>
-          <Select
-            isMulti
-            name="specializations"
-            options={specializationsOptions}
-            onChange={handleSpecializationsChange}
-          />
-          <TextField
-            label="Handle Number (No. of Advisees)"
-            name="handleNumber"
-            value={formData.handleNumber}
+        <TextField
+          label="Password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          type="password"
+          fullWidth
+          margin="normal"
+          required
+          className="mb-4"
+        />
+
+        <FormControl fullWidth margin="normal" className="mb-4">
+          <InputLabel>Role</InputLabel>
+          <MUISelect
+            name="role"
+            value={formData.role}
             onChange={handleChange}
-            type="number"
-            fullWidth
-            margin="normal"
             required
-          />
-        </>
-      )}
+          >
+            <MenuItem value="student">Student</MenuItem>
+            <MenuItem value="adviser">Adviser</MenuItem>
+          </MUISelect>
+        </FormControl>
 
-      <TextField
-        label="Profile Image"
-        name="profileImage"
-        type="file"
-        onChange={handleFileChange}
-        fullWidth
-        margin="normal"
-        InputLabelProps={{ shrink: true }}
-      />
-      
-      <Button type="submit" variant="contained" color="success" fullWidth>
-        Register
-      </Button>
-      {message && <p>{message}</p>}
+        {formData.role === 'student' && (
+          <>
+            <TextField
+              label="Group Members (comma-separated)"
+              name="groupMembers"
+              value={formData.groupMembers}
+              onChange={handleGroupMembersChange}
+              fullWidth
+              margin="normal"
+              className="mb-4"
+            />
+
+            <FormControl fullWidth margin="normal" className="mb-4">
+              <InputLabel>Course</InputLabel>
+              <MUISelect
+                name="course"
+                value={formData.course || ''}
+                onChange={handleChange}
+                required
+              >
+                {courseOptions.map((course) => (
+                  <MenuItem key={course.value} value={course.value}>
+                    {course.label}
+                  </MenuItem>
+                ))}
+              </MUISelect>
+            </FormControl>
+
+            <FormControl fullWidth margin="normal" className="mb-4">
+              <InputLabel>Year</InputLabel>
+              <MUISelect
+                name="year"
+                value={formData.year}
+                onChange={handleChange}
+                required
+              >
+                {yearOptions.map((year) => (
+                  <MenuItem key={year.value} value={year.value}>{year.label}</MenuItem>
+                ))}
+              </MUISelect>
+            </FormControl>
+          </>
+        )}
+
+        {formData.role === 'adviser' && (
+          <>
+            <label className=" mb-2 text-gray-700">Specializations:</label>
+            <Select
+              isMulti
+              name="specializations"
+              options={specializationsOptions}
+              onChange={handleSpecializationsChange}
+              className="mb-4"
+            />
+            <TextField
+              label="Handle Number (No. of Advisees)"
+              name="handleNumber"
+              value={formData.handleNumber}
+              onChange={handleChange}
+              type="number"
+              fullWidth
+              margin="normal"
+              required
+              className="mb-4"
+              
+            />
+            {/* Add Design Dropdown */}
+            <FormControl fullWidth margin="normal" className="mb-4">
+              <InputLabel>Design</InputLabel>
+              <MUISelect
+                name="design"
+                value={formData.design}
+                onChange={handleChange}
+                required
+              >
+                {designOptions.map(option => (
+                  <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                ))}
+              </MUISelect>
+            </FormControl>
+          </>
+        )}
+
+        <TextField
+          label="Profile Image"
+          name="profileImage"
+          type="file"
+          onChange={handleFileChange}
+          fullWidth
+          margin="normal"
+          InputLabelProps={{ shrink: true }}
+          className="mb-4"
+        />
+
+        <Button type="submit" variant="contained" color="success" fullWidth className="mb-4">
+          Register
+        </Button>
+
+        <div className="text-center mt-4">
+          <p className="text-gray-600">Already have an account?</p>
+          <Link to="/" className="text-blue-500 hover:underline">
+            Sign In here
+          </Link>
+        </div>
+
+        {message && <p className="text-center mt-4 text-green-600">{message}</p>}
       </div>
-    </main>
-  </div>
-</section>
-
     </form>
+
   );
 };
 

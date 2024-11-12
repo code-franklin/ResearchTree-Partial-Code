@@ -33,6 +33,7 @@ export interface IUser extends Document {
   declinedAdvisors: Schema.Types.ObjectId[];
   panelists: Schema.Types.ObjectId[];
   channelId?: string;
+  design: 'Subject Expert' | 'Statistician' | 'Technical Expert';
   groupMembers: string[];
   proposals: IProposal[];
   tasks: mongoose.Types.DocumentArray<ITask>; // Updated tasks array
@@ -67,6 +68,7 @@ const userSchema: Schema = new Schema<IUser>({
   declinedAdvisors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   panelists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   channelId: { type: String },
+  design: { type: String, enum: ['Subject Expert', 'Statistician', 'Technical Expert'] },
   groupMembers: { type: [String], required: function() { return this.role === 'student'; } },
   proposals: [{
     proposalTitle: { type: String, required: true },

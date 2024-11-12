@@ -87,7 +87,6 @@ const ResearchCard = () => {
       }
   
       const data = await response.json();
-      console.log('Fetched updated tasks:', data.tasks);
   
       if (data.tasks && Array.isArray(data.tasks)) {
         // Update user state and localStorage with the new tasks
@@ -141,34 +140,41 @@ const ResearchCard = () => {
     }
   };
   
-// edit the Title
-// Modify fetchTaskProgress to set progress state based on API response
-const fetchTaskProgress = async (userId) => {
-  try {
-    const response = await fetch(`http://localhost:7000/api/student/tasks/progress/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Error fetching task progress:', errorData.message);
-      return;
+
+  const fetchTaskProgress = async (userId) => {
+    try {
+      const response = await fetch(`http://localhost:7000/api/student/tasks/progress/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        // Instead of showing an error, just display the message
+        if (errorData.message === 'No tasks found for this student') {
+          console.log('No tasks available for this advisor or panel.');
+          setProgress(null); // You can set progress to null or any other default value
+          return;
+        }
+        console.error('Fetching task progress:', errorData.message);
+        return;
+      }
+  
+      const { progress } = await response.json();
+      setProgress(progress >= 0 && progress <= 100 ? progress : 0); // Ensure valid range
+    } catch (error) {
+      console.error('Error fetching task progress:', error);
     }
-
-    const { progress } = await response.json();
-    setProgress(progress >= 0 && progress <= 100 ? progress : 0); // Ensure valid range
-  } catch (error) {
-    console.error('Error fetching task progress:', error);
-  }
-};
-
-useEffect(() => {
-  if (user && user._id) {
-    fetchTaskProgress(user._id);
-  }
-}, [user]);
+  };
+  
+  useEffect(() => {
+    if (user && user._id) {
+      fetchTaskProgress(user._id);
+    }
+  }, [user]);
+  
 
 
   const handleSaveProposalTitle = async () => {
@@ -267,7 +273,7 @@ useEffect(() => {
               {user.groupMembers
                 .map(member => member.replace(/([a-z])([A-Z])/g, '$1 $2')) // Insert space between lowercase and uppercase letters
                 .join(', ')}
-            </p>
+            </p>  
           </div>
         )}
 
@@ -322,7 +328,7 @@ useEffect(() => {
           { type: "Task", value: 100 - (progress || 0) }
         ]}
         autoFit
-        key={progress}
+        key={progress || 0}
         legend={false}
         width={250}
         height={600}

@@ -4,6 +4,9 @@ import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin';
 import User from '../models/User'
 import Specialization from '../models/Specialization';
+import path from 'path';
+import fs from 'fs';
+
 
 const JWT_SECRET = 'your_jwt_secret';
 
@@ -76,6 +79,84 @@ export const loginAdmin = async (req: Request, res: Response) => {
   }
 };
 
+export const editAdminProfile = async (req: Request, res: Response) => {
+  const { id } = req.params; // Admin ID
+  const { name, email, deleteProfileImage } = req.body; // Data from request body
+
+  const profileImage = (req as any).file?.filename; // Get new profile image if exists
+
+  try {
+    // Find the admin by ID
+    const admin = await Admin.findById(id);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    // Prepare the update object conditionally
+    const updateData: any = {
+      name,
+      email,
+    };
+
+    if (deleteProfileImage) {
+      // Check if profile image exists before deleting it
+      if (admin.profileImage) {
+        const imagePath = path.join(__dirname, "../public/uploads", admin.profileImage);
+        // Remove the old image if it exists
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath); // Delete the old image file
+        }
+      }
+
+      updateData.profileImage = ""; // Remove image from database
+    }
+
+    if (profileImage) {
+      // If a new image is provided, update it
+      updateData.profileImage = profileImage;
+    }
+
+    // Find the admin and update with new details
+    const updatedAdmin = await Admin.findByIdAndUpdate(id, updateData, { new: true });
+
+    res.json({ message: "Admin profile updated successfully", admin: updatedAdmin });
+  } catch (error) {
+    console.error("Error updating admin profile:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+export const resetAdminPassword = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { newPassword } = req.body;
+
+  if (!newPassword) {
+    return res.status(400).json({ message: "New password is required." });
+  }
+
+  try {
+    const admin = await Admin.findById(id);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // Update the password
+    admin.password = hashedPassword;
+
+    // Save the updated admin
+    await admin.save();
+    return res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error", error });
+  }
+  };
+
+
 export const approveUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
@@ -124,7 +205,7 @@ export const getPendingUsersStudent = async (req: Request, res: Response) => {
 
 export const getAllUsersStudent = async (req: Request, res: Response) => {
   try {
-    const users = await User.find({role: 'student'});
+    const users = await User.find({role: 'student', isApproved: true});
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
@@ -133,7 +214,7 @@ export const getAllUsersStudent = async (req: Request, res: Response) => {
 
 export const getAllUsersAdvicer = async (req: Request, res: Response) => {
   try {
-    const users = await User.find({role: 'adviser'});
+    const users = await User.find({role: 'adviser', isApproved: true});
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
@@ -148,6 +229,127 @@ export const deleteUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
+// Update or delete profile image
+export const updateUserStudent = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { name, email, course, groupMembers, deleteProfileImage } = req.body;
+  const profileImage = (req as any).file?.filename;
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Prepare the update object conditionally
+    const updateData: any = {
+      name,
+      email,
+      course,
+      groupMembers,
+    };
+
+    if (deleteProfileImage) {
+      // If we need to delete the profile image
+      const imagePath = path.join(__dirname, "../public/uploads", user.profileImage);
+      // Remove the old image if it exists
+      if (user.profileImage && fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+
+      updateData.profileImage = ""; // Remove image from database
+    }
+
+    if (profileImage) {
+      // If a new image is provided, update it
+      updateData.profileImage = profileImage;
+    }
+
+    // Find the user and update with new details
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+
+    res.json({ message: "User updated successfully", user: updatedUser });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+export const updateUserAdvicer = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { name, email, handleNumber, design, deleteProfileImage } = req.body;
+
+  // Parse specializations safely
+  const specializations = Array.isArray(req.body.specializations) 
+  ? req.body.specializations 
+  : JSON.parse(req.body.specializations || "[]");
+
+  const profileImage = (req as any).file?.filename;
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Prepare the update object conditionally
+    const updateData: any = {
+      name,
+      email,
+      handleNumber,
+      design,
+      specializations, // Ensure this is an array
+    };
+
+    if (deleteProfileImage) {
+      // If we need to delete the profile image
+      const imagePath = path.join(__dirname, "../public/uploads", user.profileImage);
+      // Remove the old image if it exists
+      if (user.profileImage && fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+
+      updateData.profileImage = ""; // Remove image from database
+    }
+
+    if (profileImage) {
+      // If a new image is provided, update it
+      updateData.profileImage = profileImage;
+    }
+
+    // Find the user and update with new details
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+
+    res.json({ message: "User updated successfully", user: updatedUser });
+    
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+
+export const resetUserPassword = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { newPassword } = req.body;
+
+  if (!newPassword) {
+    return res.status(400).json({ message: "New password is required" });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    await User.findByIdAndUpdate(id, { password: hashedPassword });
+    res.json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
 
 
 export const getSpecializations = async (req: Request, res: Response) => {
@@ -243,8 +445,48 @@ export const countApprovedOnPanelManuscripts = async (req: Request, res: Respons
   }
 };
 
-// Advicer
+export const fetchAllStudentManuscript = async (req: Request, res: Response) => {
+  try {
+    // Fetch students with relevant manuscript and proposal data
+    const students = await User.find(
+      { role: 'student' }, 
+      'name groupMembers channelId panelists course profileImage manuscriptStatus proposals tasks advisorStatus'
+    ).lean();
 
+    // Process each student to include panelist names and latest proposal details
+    const studentData = await Promise.all(students.map(async (student) => {
+      const panelistNames = await User.find({ _id: { $in: student.panelists } }, 'name').lean();
+      const panelistNameList = panelistNames.map(panelist => panelist.name);
+      
+      const latestProposal = student.proposals.length > 0 
+        ? student.proposals[student.proposals.length - 1] 
+        : null;
+
+      return {
+        _id: student._id,
+        name: student.name,
+        groupMembers: student.groupMembers,
+        channelId: student.channelId,
+        panelists: panelistNameList,
+        course: student.course,
+        profileImage: student.profileImage,
+        manuscriptStatus: student.manuscriptStatus,
+        advisorStatus: student.advisorStatus,
+        proposalTitle: latestProposal ? latestProposal.proposalTitle : 'No proposal submitted',
+        proposalText: latestProposal ? latestProposal.proposalText : 'No proposal submitted',
+        submittedAt: latestProposal ? latestProposal.submittedAt : null,
+        tasks: student.tasks,
+      };
+    }));
+
+    res.status(200).json({ success: true, students: studentData });
+  } catch (error) {
+    console.error("Error fetching student manuscripts:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch student manuscripts", error });
+  }
+};
+
+// Advicer
 export const fetchAdviserInfoWithStudents = async (req: Request, res: Response) => {
   try {
     // Find users with role 'adviser'
