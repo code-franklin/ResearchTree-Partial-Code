@@ -314,8 +314,9 @@ useEffect(() => {
         )}
 
         
-    <div className='absolute mt-[-350px] ml-[60%]'>
+    <div className='absolute  mt-[-310px] ml-[60%]'>
       <DonutChart
+    
         data={[
           { type: "Progress", value: progress || 0 },
           { type: "Task", value: 100 - (progress || 0) }
@@ -323,7 +324,7 @@ useEffect(() => {
         autoFit
         key={progress}
         legend={false}
-        width={200}
+        width={250}
         height={600}
         radius={0.9}
         innerRadius={0.7}
@@ -332,6 +333,7 @@ useEffect(() => {
         colorField="type"
         color={["#0BF677", "#353535"]}
         pieStyle={{
+          
           stroke: "", 
           lineWidth: 1, 
           lineCap: "round",
@@ -381,9 +383,10 @@ useEffect(() => {
             <span className="bg-yellow-500 text-white px-2 py-1">Web and Mobile</span>
           </div> */}
           
-          <div className="flex items-center">
+          <div className="ml-[-10px] flex items-center">
           <Button 
             type="primary" 
+           
             className="rounded-full text-center text-white mr-4 cursor-pointer w-[120px] h-[37px] border 1px solid #6A6A6A "  
             onClick={openEditorModal}>
               Open Editor
@@ -398,7 +401,7 @@ useEffect(() => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeEditorModal} color="primary">Close</Button>
+          <Button onClick={closeEditorModal}  color="primary">Close</Button>
         </DialogActions>
       </Dialog>
             

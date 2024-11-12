@@ -44,7 +44,7 @@ export default function AccountMenu() {
           <IconButton
             onClick={handleClick}
             size='small'
-            sx={{ ml: 5 }}
+            sx={{ ml: 0 }}
             aria-controls={open ? "account-menu" : undefined}
             aria-haspopup='true'
             aria-expanded={open ? "true" : undefined}
@@ -52,10 +52,10 @@ export default function AccountMenu() {
             {user && user.profileImage ? (
               <Avatar
                 src={`http://localhost:7000/public/uploads/${user.profileImage}`}
-                sx={{ width: 79, height: 79 }}
+                sx={{ width: 79, height: 79, }}
               />
             ) : (
-              <Avatar sx={{ width: 79, height: 79 }} /> // Fallback Avatar if no user or no profile image
+              <Avatar sx={{ width: 79, height: 79, }} /> // Fallback Avatar if no user or no profile image
             )}
           </IconButton>
         </Tooltip>
@@ -72,7 +72,7 @@ export default function AccountMenu() {
             overflow: "visible",
             filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
             mt: 1.5,
-            ml: 4,
+            ml: 5,
             bgcolor: "#1E1E1E",
             color: "white", // Set text color to white
             "& .MuiAvatar-root": {
@@ -92,10 +92,10 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        {/* <MenuItem>
-          <Avatar sx={{ bgcolor: "#444" }} /> Profile
+         <MenuItem>
+          <Avatar sx={{ bgcolor: "#444" }} /> Profile Settings
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        {/* <MenuItem onClick={handleClose}>
           <Avatar sx={{ bgcolor: "#444" }} /> My account
         </MenuItem>
         <Divider sx={{ bgcolor: "white" }} />
@@ -110,7 +110,7 @@ export default function AccountMenu() {
             <Settings fontSize='small' />
           </ListItemIcon>
           Settings
-        </MenuItem> */}
+        </MenuItem>  */}
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize='small' sx={{ color: "red" }} />{" "}

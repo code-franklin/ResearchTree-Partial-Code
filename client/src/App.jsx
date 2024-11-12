@@ -20,6 +20,9 @@ import AdminRoutes from './Routes/AdminRoutes';
 // 
 
 
+import TestComponent from '../../client/src/Dashboards/StudentDashboard/ViewAnalytics/testing';
+
+
 
 function App() {
 
@@ -39,6 +42,10 @@ function App() {
           {/* Student and Advicer */}
           <Route path="/" element={<Login/>} />
           <Route path="/Register" element={<Register/>} />
+
+
+
+          <Route path="/Testing" element={<TestComponent />} />
 
 
           <Route path="/StudentDashboard/*" element={<StudentRoutes/>} />

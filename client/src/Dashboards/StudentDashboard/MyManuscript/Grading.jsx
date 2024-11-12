@@ -54,7 +54,7 @@ export default function GradingTable() {
   };
 
   return (
-    <div className="text-[14px] p-4 w-[1400px] h-[600px] ml-[400px] mt-[450px]">
+    <div className="text-[14px] p-4 w-[1400px] h-[600px] ml-[400px] mt-[380px]">
       <div className="flex justify-between items-center mb-4">
       <img className=" ml-[12px] mb-10 " src="/src/assets/view-grade.png" alt="View Grade" />
       </div>

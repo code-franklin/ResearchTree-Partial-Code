@@ -2,8 +2,9 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import MyManuscript from '../Dashboards/StudentDashboard/MyManuscript/MyManuscriptComponent';
-import ExploreManuscript from '../Dashboards/StudentDashboard/ExploreManuscript/Articles';
+import ExploreManuscript from '../Dashboards/StudentDashboard/ExploreManuscript/SearchArticles';
 import ViewAnalytics from '../Dashboards/StudentDashboard/ViewAnalytics/ViewAnalyticsComponent';
+
 
 
 import TitleProposal from '../Components/Sidebar/TitleProposals'
@@ -25,6 +26,7 @@ function StudentRoutes() {
         <Route path="/" element={<ViewAnalytics />} />
         <Route path="StudentDashboard/MyManuscript" element={<MyManuscript />} />
         <Route path="StudentDashboard/Grading" element={<Grading />} />
+
 
         <Route path="StudentDashboard/TitleProposal" element={<TitleProposal />} />
 

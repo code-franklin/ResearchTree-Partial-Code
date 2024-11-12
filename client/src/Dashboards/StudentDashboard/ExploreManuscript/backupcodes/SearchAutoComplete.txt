@@ -12,7 +12,7 @@ const SearchComponent = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.post('http://localhost:7000/api/advicer/search', { query });
+      const response = await axios.post('http://localhost:7000/api/student/search', { query });
       if (response.data.status === "ok") {
         // Format results for AutoComplete
         const formattedResults = response.data.results.map(result => ({
@@ -87,7 +87,7 @@ const SearchComponent = () => {
       {error && <p className="mt-4 text-red-500">{error}</p>}
 
       {/* Display Results (for further details below the search bar) */}
-      <div className="w-full max-w-xxl mt-6 p-4 rounded-lg">
+      {/* <div className="w-full max-w-xxl mt-6 p-4 rounded-lg">
         <div className="w-3/4">
           {results.length > 0 ? (
             results.map((result, index) => (
@@ -106,7 +106,7 @@ const SearchComponent = () => {
             <p></p>
           )}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

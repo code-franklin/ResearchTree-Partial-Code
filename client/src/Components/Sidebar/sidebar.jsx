@@ -22,15 +22,27 @@ const Sidebar = () => {
       <div>
         <img className="" src="/src/assets/rstreelogo.png" />
       </div>
+
+      <div className="max-w-xs mx-auto p-4 flex flex-col items-center mt-5">
+      {/* Avatar */}
+     
+      <UserAvatar />
+
+      {/* Name */}
+      <h2 className="myName text-[21px] font-bold text-white text-center">{user.name}</h2>
+
+      {/* Role */}
+      <p className="text-gray-600 text-center">{user.role}</p>
+    </div>
       
-      <div className='flex ml-[9px]'>
+      {/* <div className='flex ml-[9px]'>
         <div className="myName ml-[50px] mt-[20px] p-4 text-center">
           <UserAvatar />
           <span className="text-[21px] font-semibold ml-2">{user.name}</span>
           <p className="font-light text-[#4B4B4B]">{user.role}</p>
         </div>
       </div>
-      
+       */}
       <div className="mr-5 mt-[30px] space-y-2 text-[20px]">
         {/* My Manuscript */}
         <Link
