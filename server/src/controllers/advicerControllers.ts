@@ -593,38 +593,38 @@ export const getAllArticles = async (req: Request, res: Response): Promise<void>
 };
 
 // Synonym Schema
-const synonymSchema = new mongoose.Schema({
-  term: { type: String, required: true },
-  synonyms: [String],
+const searchSynonymSchema = new mongoose.Schema({
+  searchTerm: { type: String, required: true },
+  searchSynonyms: [String],
 });
 
-interface SynonymDocument extends mongoose.Document {
-  term: string;
-  synonyms: string[];
+interface SearchSynonymDocument extends mongoose.Document {
+  searchTerm: string;
+  searchSynonyms: string[];
 }
 
-const Synonym = mongoose.model<SynonymDocument>('SynonymSearch', synonymSchema);
+const Synonym = mongoose.model<SearchSynonymDocument>('SynonymSearch', searchSynonymSchema);
 
 // POST route to add new synonyms
 export const postSynonyms = async (req: Request, res: Response) => {
-  const { term, synonyms } = req.body;
+  const { searchTerm, searchSynonyms } = req.body;
 
-  if (!term || !synonyms) {
-    return res.status(400).json({ message: 'Both term and synonyms are required.' });
+  if (!searchTerm || !searchSynonyms) {
+    return res.status(400).json({ message: 'Both Search Term and Search Synonyms are required.' });
   }
 
   try {
-    let synonymEntry = await Synonym.findOne({ term });
+    let synonymEntry = await Synonym.findOne({ searchTerm });
 
     if (synonymEntry) {
-      synonymEntry.synonyms = Array.from(new Set([...synonymEntry.synonyms, ...synonyms]));
+      synonymEntry.searchSynonyms = Array.from(new Set([...synonymEntry.searchSynonyms, ...searchSynonyms]));
       await synonymEntry.save();
     } else {
-      synonymEntry = new Synonym({ term, synonyms });
+      synonymEntry = new Synonym({ searchTerm, searchSynonyms });
       await synonymEntry.save();
     }
 
-    res.status(201).json({ message: 'Synonyms added successfully', data: synonymEntry });
+    res.status(201).json({ message: 'Search Synonyms added successfully', data: synonymEntry });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
@@ -632,13 +632,13 @@ export const postSynonyms = async (req: Request, res: Response) => {
 
 export const getSynonymsTerm = async (req: Request, res: Response) => {
   try {
-    const { term } = req.params;
-    const synonymEntry = await Synonym.findOne({ term });
+    const { searchTerm } = req.params;
+    const synonymEntry = await Synonym.findOne({ searchTerm });
 
     if (synonymEntry) {
-      res.json(synonymEntry.synonyms);
+      res.json(synonymEntry.searchSynonyms);
     } else {
-      res.status(404).json({ message: 'No synonyms found for this term' });
+      res.status(404).json({ message: 'No Search Synonyms found for this Search Term' });
     }
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
@@ -649,11 +649,11 @@ export const getSynonymsTerm = async (req: Request, res: Response) => {
 async function expandEntitiesWithSynonyms(entities: string[]): Promise<string[]> {
   const expandedTerms = new Set<string>();
 
-  for (const term of entities) {
-    expandedTerms.add(term);
-    const synonymEntry = await Synonym.findOne({ term });
+  for (const searchTerm of entities) {
+    expandedTerms.add(searchTerm);
+    const synonymEntry = await Synonym.findOne({ searchTerm });
     if (synonymEntry) {
-      synonymEntry.synonyms.forEach((synonym: string) => expandedTerms.add(synonym));
+      synonymEntry.searchSynonyms.forEach((synonym: string) => expandedTerms.add(synonym));
     }
   }
 
@@ -730,6 +730,7 @@ export const getFiles = async (req: Request, res: Response) => {
   }
 };
 
+// Giving sentimentscore
 export const postAnalyze = async (req: Request, res: Response) => {
   const { text } = req.body;
 
