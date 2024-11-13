@@ -98,8 +98,8 @@ const LoginFunction = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} encType="multipart/form-data" className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+    <form onSubmit={handleSubmit} encType="multipart/form-data" className="flex justify-center items-center bg-[#1E1E1E]">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-[670px] h-[950px]">l
         <div className="text-center mb-6">
           <img src="/src/assets/Researchtree-logo.png" alt="ResearchTree Logo" className="mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900">Welcome to ResearchTree</h1>
@@ -221,7 +221,7 @@ const LoginFunction = () => {
             />
             {/* Add Design Dropdown */}
             <FormControl fullWidth margin="normal" className="mb-4">
-              <InputLabel>Design</InputLabel>
+              <InputLabel>Panelist Role</InputLabel>
               <MUISelect
                 name="design"
                 value={formData.design}
