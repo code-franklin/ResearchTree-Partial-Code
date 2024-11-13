@@ -200,6 +200,7 @@ export const getStudentInfoAndProposal = async (req: Request, res: Response) => 
 
 
 import Article from '../models/pdfDetails';
+
 export const getAllArticles = async (req: Request, res: Response): Promise<void> => {
   try {
       const articles = await Article.find({}, 'title authors dateUploaded datePublished');

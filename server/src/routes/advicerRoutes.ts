@@ -24,7 +24,8 @@ import {
     postSearch,
     postUploadFiles,
     getFiles,
-    postAnalyze
+    postAnalyze,
+    getAllArticles
   } from '../controllers/advicerControllers';
 
 import uploadProfile from '../middleware/uploadProfile';
@@ -43,9 +44,14 @@ router.get('/specializations', getSpecializations);
 /* Adviser routes */
 router.get('/advisor-students/:advisorId', getAdviserStudents);
 
+// Articles PDF
+/* router.get('/articles/search', searchArticles); */
+router.get('/articles', getAllArticles);
+
 // Searching Upload
 router.post('/synonyms', postSynonyms); // done
 router.get('/synonyms/:term', getSynonymsTerm); // done
+
 router.post('/search', postSearch); // done
 router.post('/upload-files', uploadPdf.single('file'), postUploadFiles); // done
 router.get('/get-files', getFiles); // done

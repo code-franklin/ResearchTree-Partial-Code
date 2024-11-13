@@ -47,7 +47,7 @@ const ArticleList = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await axios.get('http://localhost:7000/api/student/articles');
+        const response = await axios.get('http://localhost:7000/api/advicer/articles');
         setArticles(response.data);
       } catch (error) {
         console.error('Error fetching articles:', error);
@@ -57,7 +57,7 @@ const ArticleList = () => {
   }, [query]);
 
   const handleArticleClick = (pdfUrl) => {
-    setSelectedPdf(`http://localhost:7000/advicer/upload-files/${pdfUrl}`);
+    setSelectedPdf(`http://localhost:7000/public/files/${pdfUrl}`);
   };
 
   return (

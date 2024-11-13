@@ -6,6 +6,7 @@ import User from '../models/User';
 import Admin from '../models/Admin';
 import Specialization from '../models/Specialization';
 import Grade, { IGrade } from '../models/Grade';
+import ArticlePDF from '../models/pdfDetails';
 
 import dotenv from 'dotenv';
 
@@ -575,6 +576,22 @@ const client = new LanguageServiceClient({
 });
 
 
+
+
+
+export const getAllArticles = async (req: Request, res: Response): Promise<void> => {
+  try {
+      const articles = await ArticlePDF.find({}, 'title authors dateUploaded datePublished pdf');
+      res.status(200).json(articles);
+  } catch (error) {
+      if (error instanceof Error) {
+          res.status(500).json({ message: error.message });
+      } else {
+          res.status(500).json({ message: 'An unknown error occurred.' });
+      }
+  }
+};
+
 // Synonym Schema
 const synonymSchema = new mongoose.Schema({
   term: { type: String, required: true },
@@ -586,7 +603,7 @@ interface SynonymDocument extends mongoose.Document {
   synonyms: string[];
 }
 
-const Synonym = mongoose.model<SynonymDocument>('Synonym', synonymSchema);
+const Synonym = mongoose.model<SynonymDocument>('SynonymSearch', synonymSchema);
 
 // POST route to add new synonyms
 export const postSynonyms = async (req: Request, res: Response) => {

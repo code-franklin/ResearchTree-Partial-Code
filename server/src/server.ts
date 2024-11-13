@@ -22,7 +22,7 @@ const client = new LanguageServiceClient({
 app.use(cors());
 app.use(express.json());
 app.use('/public', express.static(path.join(__dirname, 'public')));
-app.use("/public/files", express.static("files"));
+app.use("/public/files", express.static("public/files"));
 
 // Middleware to set CORS headers
 app.use((req: Request, res: Response, next: NextFunction) => {
