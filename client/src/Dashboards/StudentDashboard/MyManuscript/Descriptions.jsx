@@ -5,6 +5,7 @@ import { Modal, Checkbox, Divider, Typography, List } from 'antd';
 import CkEditorDocuments from './CkEditorDocuments';
 import './Styles/descriptions.css';
 import Categories from './Categories';
+import { Tooltip } from '@mui/material';
 
 import { DonutChart } from "bizcharts";
 import { SyncOutlined } from '@ant-design/icons';
@@ -24,6 +25,7 @@ const ResearchCard = () => {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
   const [isTaskVisible, setIsTaskVisible] = useState(false);
+
   // button edit for Title
   const [isEditingProposalTitle, setIsEditingProposalTitle] = useState(false);
   const [newProposalTitle, setNewProposalTitle] = useState('');
@@ -174,12 +176,10 @@ const ResearchCard = () => {
       fetchTaskProgress(user._id);
     }
   }, [user]);
-  
-
 
   const handleSaveProposalTitle = async () => {
     try {
-      const response = await fetch(`http://localhost:7000//api/student/update-proposal-title/${user._id}`, {
+      const response = await fetch(`http://localhost:7000/api/student/update-proposal-title/${user._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -254,21 +254,29 @@ const ResearchCard = () => {
 {/* details for student */}
         {advisorStatus === 'accepted' && (
           <div>
-                      
-            <h1 className="text-2xl font-bold mb-2" style={{ maxWidth: '85%' }}>
+        <button 
+                type="button" 
+                onClick={handleEditProposalTitle} 
+                /* className='absolute mt-[-59px] ml-[1220px] cursor-pointer ' */
+                >
+                <Tooltip title="Edit Title"><img src="/src/assets/edit-title-icon.png"/></Tooltip>
+        </button>
+            
+            <h1 className="text-2xl font-bold mb-2 max-w-[1000px]">
               {isEditingProposalTitle ? (
                 <input
                   type="text"
                   value={newProposalTitle}
                   onChange={(e) => setNewProposalTitle(e.target.value)}
                   onBlur={handleSaveProposalTitle}
-                  style={{color: 'black', width: '1150px', height:'50px'}}
+                  style={{color: 'black', width: '950px', height:'50px'}}
                 />
               ) : (
                 proposal?.proposalTitle
               )}
             </h1>
-            <button onClick={handleEditProposalTitle}>Edit</button>
+{/* 
+            <button onClick={handleEditProposalTitle}>Edit</button> */}
             <p className="text-gray-500 font-bold mb-4">
               {user.groupMembers
                 .map(member => member.replace(/([a-z])([A-Z])/g, '$1 $2')) // Insert space between lowercase and uppercase letters
@@ -320,7 +328,7 @@ const ResearchCard = () => {
         )}
 
         
-    <div className='absolute  mt-[-310px] ml-[60%]'>
+    <div className='absolute  mt-[-360px] ml-[60%]'>
       <DonutChart
     
         data={[

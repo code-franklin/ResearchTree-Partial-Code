@@ -1,5 +1,10 @@
 import express, { Router } from 'express';
 
+// Data Analytics
+import { 
+    getPdfDetailsCount
+} from '../controllers/adminController';
+
 // Profile Management
 import { 
     registerAdmin, 
@@ -48,6 +53,9 @@ const router: Router = express.Router();
 // Authentication
 router.post('/register', uploadProfile.single('profileImage'), registerAdmin);
 router.post('/login', loginAdmin);
+
+// Data Visualization
+router.get("/pdfdetails/count", getPdfDetailsCount);
 
 // User Management
 router.get('/advicer-pending',  getPendingUsersAdvicer);

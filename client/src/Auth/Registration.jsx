@@ -93,7 +93,7 @@ const LoginFunction = () => {
       setMessage(response.data.message);
     } catch (error) {
       console.error(error.response.data);
-      setMessage('Registration failed. Please try again.');
+      setMessage('User already exists!".');
     }
   };
 
@@ -221,7 +221,7 @@ const LoginFunction = () => {
             />
             {/* Add Design Dropdown */}
             <FormControl fullWidth margin="normal" className="mb-4">
-              <InputLabel>Design</InputLabel>
+              <InputLabel>Designation</InputLabel>
               <MUISelect
                 name="design"
                 value={formData.design}

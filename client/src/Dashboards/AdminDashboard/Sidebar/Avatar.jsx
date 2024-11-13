@@ -1,38 +1,29 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import PersonAdd from "@mui/icons-material/PersonAdd";
-import Settings from "@mui/icons-material/Settings";
-import Logout from "@mui/icons-material/Logout";
-
+import React, { useEffect, useState } from "react";
+import {
+  Box, Avatar, Menu, MenuItem, IconButton, Tooltip, Dialog, DialogTitle,
+  DialogContent, DialogActions, Modal, TextField, Button, Typography, Divider, ListItemIcon
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-
-import "./Sidebar.css";
+import Logout from "@mui/icons-material/Logout";
+import Settings from "@mui/icons-material/Settings";
+import axios from "axios";
 
 export default function AccountMenu() {
   const navigate = useNavigate();
   const [admin, setAdmin] = useState(null);
-
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [resetPasswordModalOpen, setResetPasswordModalOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [updatedProfile, setUpdatedProfile] = useState({ name: "", email: "", profileImage: null });
+  
   useEffect(() => {
-    // Fetch stored user data from localStorage and set it to the admin state
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setAdmin(JSON.parse(storedUser));
     }
   }, []);
   
-  console.log('Admin already Login: ', admin)
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -44,98 +35,140 @@ export default function AccountMenu() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    window.location.href = "/adminSignIn"; // Update the path based on your routing setup
+    window.location.href = "/adminSignIn";
+  };
+
+  const openModal = () => {
+    setUpdatedProfile({ name: admin.name, email: admin.email });
+    setIsModalOpen(true);
+  };
+
+  const handleProfileChange = (e) => {
+    const { name, value, files } = e.target;
+    if (files) {
+      setUpdatedProfile((prev) => ({ ...prev, profileImage: files[0] }));
+    } else {
+      setUpdatedProfile((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const saveProfileChanges = async () => {
+    const formData = new FormData();
+    formData.append("name", updatedProfile.name);
+    formData.append("email", updatedProfile.email);
+    if (updatedProfile.profileImage) formData.append("profileImage", updatedProfile.profileImage);
+
+    try {
+      const { data } = await axios.put(`http://localhost:7000/api/admin/admin-user/${admin.id}`, formData);
+      const updatedAdmin = data.admin;
+
+      // Update localStorage with new profile data
+      localStorage.setItem("user", JSON.stringify(updatedAdmin));
+      setAdmin(updatedAdmin);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    try {
+      await axios.put(`http://localhost:7000/api/admin/admin-user/${admin.id}/reset-password`, {
+        newPassword
+      });
+      setResetPasswordModalOpen(false);
+      setNewPassword("");
+      alert("Password reset successfully.");
+    } catch (error) {
+      console.error("Error resetting password:", error);
+    }
   };
 
   return (
     <React.Fragment>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
-        <Tooltip title='Account settings'>
-          <IconButton
-            onClick={handleClick}
-            size='small'
-            sx={{ ml: 5 }}
-            aria-controls={open ? "account-menu" : undefined}
-            aria-haspopup='true'
-            aria-expanded={open ? "true" : undefined}
-          >
+        <Tooltip title="Account settings">
+          <IconButton onClick={handleClick} size="small" sx={{ ml: 5 }}>
             {admin && admin.profileImage ? (
-              <Avatar
-                src={`http://localhost:7000/public/uploads/${admin.profileImage}`}
-                sx={{ width: 79, height: 79 }}
-              />
+              <Avatar src={`http://localhost:7000/public/uploads/${admin.profileImage}`} sx={{ width: 79, height: 79 }} />
             ) : (
-              <Avatar sx={{ width: 79, height: 79 }} /> // Fallback Avatar if no user or no profile image
+              <Avatar sx={{ width: 79, height: 79 }} />
             )}
           </IconButton>
         </Tooltip>
       </Box>
       <Menu
         anchorEl={anchorEl}
-        id='account-menu'
-        open={open}
+        open={Boolean(anchorEl)}
         onClose={handleClose}
-        onClick={handleClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: "visible",
-            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            mt: 1.5,
-            ml: 4,
-            bgcolor: "#1E1E1E",
-            color: "white", // Set text color to white
-            "& .MuiAvatar-root": {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-            "& .MuiMenuItem-root": {
-              color: "white", // Ensure all MenuItem text is white
-            },
-            "& .MuiListItemIcon-root": {
-              color: "white", // Ensure all icons are white
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        PaperProps={{ sx: { mt: 1.5, ml: 4, bgcolor: "#1E1E1E", color: "white" } }}
       >
- {/*        <MenuItem>
-          <Avatar sx={{ bgcolor: "#444" }} /> Profile
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar sx={{ bgcolor: "#444" }} /> My account
+        <MenuItem onClick={openModal}>
+          <ListItemIcon><Settings fontSize="small" /></ListItemIcon>
+          Edit Profile
         </MenuItem>
         <Divider sx={{ bgcolor: "white" }} />
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <PersonAdd fontSize='small' />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Settings fontSize='small' />
-          </ListItemIcon>
-          Settings
-        </MenuItem> */}
         <MenuItem onClick={handleLogout}>
-          <ListItemIcon>
-            <Logout
-              onClick={handleLogout}
-              fontSize='small'
-              sx={{ color: "red" }}
-            />{" "}
-            {/* Set icon color to red */}
-          </ListItemIcon>
-          <span style={{ color: "red" }}>
-            Logout
-          </span>{" "}
-          {/* Set text color to red */}
+          <ListItemIcon><Logout fontSize="small" sx={{ color: "red" }} /></ListItemIcon>
+          <span style={{ color: "red" }}>Logout</span>
         </MenuItem>
       </Menu>
+
+      {/* Edit Profile Modal */}
+      <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <DialogTitle>Edit Profile</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Name"
+            name="name"
+            value={updatedProfile.name}
+            onChange={handleProfileChange}
+            fullWidth
+            margin="dense"
+          />
+          <TextField
+            label="Email"
+            name="email"
+            value={updatedProfile.email}
+            onChange={handleProfileChange}
+            fullWidth
+            margin="dense"
+          />
+          <input
+            accept="image/*"
+            type="file"
+            onChange={handleProfileChange}
+            style={{ marginTop: "1rem" }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
+          <Button onClick={saveProfileChanges} color="primary">Save Changes</Button>
+          <Button variant="outlined" onClick={() => setResetPasswordModalOpen(true)}>
+            Reset Password
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Reset Password Modal */}
+      <Dialog open={resetPasswordModalOpen} onClose={() => setResetPasswordModalOpen(false)}>
+        <DialogTitle>Reset Password</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="New Password"
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            fullWidth
+            margin="dense"
+            // margin="normal"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleResetPassword} color="primary">Reset Password</Button>
+        </DialogActions>
+      </Dialog>
+
     </React.Fragment>
   );
 }
