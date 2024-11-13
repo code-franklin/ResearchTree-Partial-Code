@@ -118,8 +118,8 @@ export const Cards = () => {
             <img className='' src='/src/assets/adviserAnalytics-icon-2.png' />
           </div>
           <div className='card-content'>
-            <p className='card-title'>Student Defenders</p>
-            <p className='card-value-1 ml-[0px]'>
+            <p className='card-title'>Adviser's Revision</p>
+            <p className='card-value-1'>
               {readyToDefenseCount} Groups
             </p>
           </div>
@@ -130,7 +130,7 @@ export const Cards = () => {
             <img className='' src='/src/assets/adviserAnalytics-icon-3.png' />
           </div>
           <div className='card-content'>
-            <p className='card-title'>Revisions for Advicer</p>
+            <p className='card-title'>Ready for Defense</p>
             <p className='card-value-3'>{reviseOnAdvicerCount} Groups</p>
           </div>
         </div>
@@ -140,7 +140,7 @@ export const Cards = () => {
           </div>
 
           <div className='card-content'>
-            <p className='card-title'>Revisions for Panel</p>
+            <p className='card-title'>Panel's Revision</p>
             <p className='card-value-3'>{reviseOnPanelCount} Groups</p>
           </div>
         </div>
@@ -149,7 +149,7 @@ export const Cards = () => {
             <img className='' src='/src/assets/adviserAnalytics-icon-5.png' />
           </div>
           <div className='card-content'>
-            <p className='card-title'>Ready to Publish</p>
+            <p className='card-title'>Publishing</p>
             <p className='card-value-3'>{ApprovedOnPanelCount} Groups</p>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { Button, Modal, Box, Typography } from "@mui/joy";
 import { Input } from "@mui/material";
 import UserAvatar from "./Avatar";
 import axios from "axios";
+import {DeploymentUnitOutlined } from '@ant-design/icons'
 import "./Sidebar.css";
 
 const Sidebar = ({ onSelect }) => {
@@ -85,12 +86,12 @@ const Sidebar = ({ onSelect }) => {
         <img src='/src/assets/rstreelogo.png' alt='Logo' />
 
         <img
-          className='absolute mt-[630px] ml-[20px]'
+          className='absolute mt-[610px] ml-[30px]'
           src='/src/assets/ListStudent.png'
           alt='Logo'
         />
         <img
-          className='absolute mt-[480px] ml-[20px]'
+          className='absolute mt-[460px] ml-[35px]'
           src='/src/assets/profile-management.png'
           alt='Logo'
         />
@@ -209,7 +210,7 @@ const Sidebar = ({ onSelect }) => {
         
       </div>
       {/* Panelist Mode */}
-      <div className='mt-[145px]  ml-[70px] '>
+      <div className='mt-[125px]  ml-[80px] '>
         <Link
           to='AdminDashboard/AdviserPending'
           className={`exploreManuscript mx-10 px-2  ${
@@ -237,13 +238,13 @@ const Sidebar = ({ onSelect }) => {
         </Link>
       </div>
 
-      <div className='mt-[45px]  ml-[70px] '>
+      <div className='mt-[45px]  ml-[80px] '>
         <Link
           to='AdminDashboard/StudentPending'
           className={`exploreManuscript mx-10 px-2  ${
             activeLink === "/AdminDashboard/StudentPending"
-              ? "font-semibold ml-[4rem]  "
-              : "hover:font-medium hover:ml-[4rem] "
+            ? "font-semibold ml-[4rem] whitespace-nowrap"
+            : "hover:font-medium hover:ml-[4rem] whitespace-nowrap"
           }`}
           onClick={() => handleLinkClick("/AdminDashboard/StudentPending")}
         >
@@ -253,10 +254,10 @@ const Sidebar = ({ onSelect }) => {
 
         <Link
           to='AdminDashboard/StudentRegistered'
-          className={`exploreManuscript mx-10 px-2  ${
+          className={`exploreManuscript mx-10 px-2 ${
             activeLink === "/AdminDashboard/StudentRegistered"
-              ? "font-semibold ml-[4rem]  "
-              : "hover:font-medium hover:ml-[4rem] "
+               ? "font-semibold ml-[4rem] whitespace-nowrap"
+      : "hover:font-medium hover:ml-[4rem] whitespace-nowrap"
           }`}
           onClick={() => handleLinkClick("/AdminDashboard/StudentRegistered")}
         >
@@ -268,35 +269,48 @@ const Sidebar = ({ onSelect }) => {
 
 
       <Button
-        variant="solid"
-        color="primary"
+        variant="outlined"
+        color=""
         sx={{
-          top: "15px",
-          width: "100%",
+          color: 'white',
+          background: '#0BF677',
+          top: "40px",
+          left: "30px",
+          width: "250px",
           fontSize: "18px",
           fontWeight: "bold",
           textTransform: "none",
           borderRadius: "8px",
+          transition: "all 0.3s ease", // Smooth transition effect for all properties
+          '&:hover': {
+            background: '#08D667', // Slightly darker shade
+            transform: 'scale(1.05)', // Slightly enlarge the button
+            boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.3)', // Add a shadow effect
+          },
         }}
+        
+        
         onClick={openSpecializationModal}
       >
-        Manage Specialization
+     <DeploymentUnitOutlined />  <span className="ml-2"> Manage Specialization </span> 
       </Button>
 
       <Modal open={isSpecializationModalOpen} onClose={() => setIsSpecializationModalOpen(false)}>
   <Box
     sx={{
       p: 4,
-      bgcolor: "#f9f9f9",
+      color: 'white',
+      bgcolor: "#1E1E1E",
       borderRadius: 3,
-      maxWidth: 450,
+      maxWidth: 700,
       mx: "auto",
       mt: 6,
       boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)"
     }}
   >
-    <Typography variant="h5" mb={3} fontWeight="bold" color="#333">
-      Manage Specializations
+    
+    <Typography variant="h5" mb={3} fontWeight={800} color="#333">
+      Manage Specializations 
     </Typography>
 
     {/* Specialization List */}
@@ -310,7 +324,8 @@ const Sidebar = ({ onSelect }) => {
           mb={1.5}
           p={2}
           borderRadius={2}
-          bgcolor="#ffffff"
+          bgcolor="#222222"
+          color="white"
           boxShadow="0px 2px 5px rgba(0, 0, 0, 0.05)"
         >
           {editingId === spec._id ? (
@@ -318,11 +333,11 @@ const Sidebar = ({ onSelect }) => {
               value={editingName}
               onChange={(e) => setEditingName(e.target.value)}
               size="small"
-              fullWidth
-              sx={{ mr: 2 }}
+         
+              sx={{ mr: 2, color: 'white',}}
             />
           ) : (
-            <Typography variant="body1" color="#555">
+            <Typography variant="body1" color="white">
               {spec.name}
             </Typography>
           )}
@@ -333,14 +348,14 @@ const Sidebar = ({ onSelect }) => {
                 variant="contained"
                 color="primary"
                 size="small"
-                sx={{ mr: 1, textTransform: "none" }}
+                sx={{ mr: 1, textTransform: "none", color:'blue' }}
               >
                 Save
               </Button>
             ) : (
               <Button
                 onClick={() => startEditing(spec._id, spec.name)}
-                variant="outlined"
+                variant=""
                 color="primary"
                 size="small"
                 sx={{ mr: 1, textTransform: "none" }}
@@ -353,7 +368,7 @@ const Sidebar = ({ onSelect }) => {
               variant="outlined"
               color="error"
               size="small"
-              sx={{ textTransform: "none" }}
+              sx={{ textTransform: "none", color: 'red'}}
             >
               Delete
             </Button>
@@ -370,6 +385,7 @@ const Sidebar = ({ onSelect }) => {
       fullWidth
       sx={{
         mb: 2,
+        
         bgcolor: "#ffffff",
         borderRadius: 2,
         px: 2,
@@ -379,18 +395,24 @@ const Sidebar = ({ onSelect }) => {
     />
     <Button
       onClick={handleAddSpecialization}
-      variant="contained"
-      color="success"
+      variant=""
+      color=""
       sx={{
-        width: "100%",
+        marginLeft: '245px',
+        background: '#0BF677',
+        height: '20px',
+        width: "160px",
         fontWeight: "bold",
         py: 1.5,
         textTransform: "none",
-        borderRadius: 2,
+        borderRadius: 60,
         boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.1)"
       }}
     >
+      <span className="text-[15px]">
       Add Specialization
+      </span>
+    
     </Button>
   </Box>
 </Modal>

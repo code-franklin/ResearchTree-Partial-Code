@@ -46,7 +46,7 @@ const Tables = () => {
       height: 'auto',
       borderRadius: '8px',
       padding: '16px',
-      backgroundColor: '#f5f5f5',
+      backgroundColor: '#222222',
     }}>
       <Box
         sx={{
@@ -60,7 +60,7 @@ const Tables = () => {
         }}
       >
         <Box display="flex" flexDirection="column" alignItems="center" sx={{ width: '45%' }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333333', mb: 1 }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white', mb: 1 }}>
             Advicer Side
           </Typography>
           <Tabs
@@ -68,13 +68,13 @@ const Tables = () => {
             onChange={handleChange}
             TabIndicatorProps={{ sx: { display: 'none' } }}
           >
-            <Tab label="List Manuscript" sx={tabStyles} />
+            <Tab label="New Uploads" sx={tabStyles} />
             <Tab label="Ongoing Revision" sx={tabStyles} />
             <Tab label="Ready for Defense" sx={tabStyles} />
           </Tabs>
         </Box>
         <Box display="flex" flexDirection="column" alignItems="center" sx={{ width: '45%' }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333333', mb: 1 }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white', mb: 1 }}>
             Panel Side
           </Typography>
           <Tabs
@@ -89,7 +89,7 @@ const Tables = () => {
         </Box>
       </Box>
 
-      <Box sx={{ p: 6, backgroundColor: '#ffffff', borderRadius: '8px', boxShadow: 1 }}>
+      <Box sx={{ p: 6, backgroundColor: '#1E1E1E', borderRadius: '8px', boxShadow: 1, height: '760px' }}>
         {value === 0 && <ListManuscript studentData={studentData} />}
         {value === 1 && <OngoingRevise studentData={studentData} />}
         {value === 2 && <ReadyforDefense studentData={studentData} />}

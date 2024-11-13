@@ -51,9 +51,9 @@ const App = () => {
         },
       }}
     >
-      <div className='flex items-center justify-center w-full h-screen pl-96 px-6 overflow-x-auto'>
+      <div className='flex items-center justify-center h-[900px] ml-[120px] w-[1500px] pl-96 px-6 overflow-x-auto'>
         {!selectedAdviser ? (
-          <table className='min-w-full divide-y-2 divide-gray-200 bg-transparent text-sm'>
+          <table className='w-[1000px] divide-y-2 divide-gray-200 text-sm'>
             <thead className='ltr:text-left rtl:text-right'>
               <tr>
                 <th className='whitespace-nowrap px-4 py-2  text-white font-bold text-2xl'>
@@ -70,9 +70,9 @@ const App = () => {
             {advicerData &&
               advicerData.length > 0 &&
               advicerData.map((advicer) => (
-                <tbody key={advicer.name} className='divide-y divide-gray-200'>
+                <tbody key={advicer.name} className=' divide-y divide-gray-200'>
                   <tr>
-                    <td className='whitespace-nowrap text-center px-4 py-3 font-medium text-white'>
+                    <td className='flex whitespace-nowrap text-center px-4 py-3 font-medium text-white '>
                       <div className=''>
                         <Avatar
                           src={`http://localhost:7000/public/uploads/${
@@ -80,16 +80,17 @@ const App = () => {
                           sx={{ width: 79, height: 79 }}
                         />
                       </div>
-                      <p className='text-xl'>{advicer.name}</p>
+                      <p className='text-xl ml-[10px]'>{advicer.name}</p>
                     </td>
                     <td className='whitespace-nowrap text-center  px-4 py-2 text-gray-700'>
-                      <span className='whitespace-nowrap rounded-full bg-lime-100 px-2.5 py-0.5 text-sm text-lime-700'>
+                      <span className='whitespace-nowrap rounded-full bg-[blue] px-2.5 py-0.5 text-sm text-white'>
                       {advicer.role}
                       </span>
                     </td>
                     <td className='whitespace-nowrap text-center  px-4 py-2'>
                       <Button
                         variant='contained'
+                        color="success"
                         onClick={() => handleAdviserClick(advicer)}
                       >
                         View Advisees

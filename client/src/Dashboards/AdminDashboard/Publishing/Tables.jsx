@@ -52,7 +52,7 @@ const Tables = ({ adviserName, adviserImage, students }) => {
             aria-label="basic tabs example"
             TabIndicatorProps={{ sx: { display: 'none' } }}
           >
-            <Tab label="List Manuscript" sx={tabStyles} />
+            <Tab label="New Uploads" sx={tabStyles} />
             <Tab label="Ongoing Revision" sx={tabStyles} />
             <Tab label="Ready for Defense" sx={tabStyles} />
             <Tab label="Monitoring" sx={tabStyles} />
