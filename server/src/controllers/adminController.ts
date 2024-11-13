@@ -3,7 +3,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin';
 import User from '../models/User'
-import Specialization from '../models/Specialization';
+import Specialization from '../models/Specialization';  
+import PdfDetails from "../models/pdfDetails";
 import path from 'path';
 import fs from 'fs';
 
@@ -120,6 +121,7 @@ export const editAdminProfile = async (req: Request, res: Response) => {
     const updatedAdmin = await Admin.findByIdAndUpdate(id, updateData, { new: true });
 
     res.json({ message: "Admin profile updated successfully", admin: updatedAdmin });
+    
   } catch (error) {
     console.error("Error updating admin profile:", error);
     res.status(500).json({ message: "Server error", error });
@@ -581,5 +583,22 @@ export const fetchPanelistInfoWithStudents = async (req: Request, res: Response)
   } catch (error) {
     console.error("Error fetching panelist information with students:", error);
     res.status(500).json({ success: false, message: "Failed to fetch panelist information" });
+  }
+};
+
+// Data Visualization
+
+// Controller function to get the count of PdfDetails
+export const getPdfDetailsCount = async (req: Request, res: Response) => {
+  try {
+    // Count the total number of PdfDetails documents in the collection
+    const count = await PdfDetails.countDocuments();
+    
+    // Send the count in the response
+    res.status(200).json({ count });
+  } catch (error) {
+    // Handle any errors that occur during the process
+    console.error("Error fetching PdfDetails count:", error);
+    res.status(500).json({ error: "Failed to fetch PdfDetails count" });
   }
 };

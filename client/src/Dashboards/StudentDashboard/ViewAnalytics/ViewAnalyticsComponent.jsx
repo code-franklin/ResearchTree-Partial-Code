@@ -4,29 +4,18 @@ import { PieChart } from './Piechart'
 import { Cards } from './Statistics'
 import "./Styles/viewAnalytics.css";
 
-import YearDropdown from './YearDropdown'
 
 const Chart = () => {
   return (
        <div className="h-[800px]]">
      <div className="chart-1">
-      <div className="absolute text-white text-[40px] font-bold mt-[50px] ml-[16px]">
-      <YearDropdown/>
-      </div>
-    
-     
-    
    <div className="bar-charts">
-  
         <BarChart />
-        <Cards/>
-        
+        <Cards/>        
    </div>
   
   <div className="chart-2">
-      
         <PieChart/>
-
   </div> 
      </div>
        </div>

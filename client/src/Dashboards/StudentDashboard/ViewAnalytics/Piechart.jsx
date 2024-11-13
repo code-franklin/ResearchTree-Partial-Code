@@ -117,11 +117,8 @@ export const PieChart = ({ user }) => {
     };
 
     return (
-        <div className="highcharts-container">
-            <HighchartsReact
-                highcharts={Highcharts}
-                options={options}
-            />
+        <div>
+            {/* idelete nalang dirin nagamit ito */}
         </div>
     );
 };

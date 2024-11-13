@@ -11,3 +11,18 @@
   margin-top: -255px;
 }
 
+.donut-chart-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin:110px -140px;
+}
+
+.donut-chart-title {
+  position: absolute;
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: -70px;
+}

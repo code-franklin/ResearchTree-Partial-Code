@@ -10,7 +10,7 @@
     "@ant-design/colors": "^7.1.0",
     "@ant-design/icons": "^5.5.1",
     "@ckeditor/ckeditor5-build-classic": "^43.1.0",
-    "@ckeditor/ckeditor5-build-decoupled-document": "^42.0.2",
+    "@ckeditor/ckeditor5-build-decoupled-document": "^43.3.1",
     "@ckeditor/ckeditor5-react": "^9.2.0",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
@@ -31,13 +31,13 @@
     "antd": "^5.21.4",
     "apexcharts": "^3.49.2",
     "axios": "^1.7.7",
-    "bizcharts": "^4.1.23",
-    "ckeditor5": "^42.0.2",
-    "ckeditor5-premium-features": "^42.0.2",
+    "bizcharts": "^4.1.11",
+    "ckeditor5": "^43.3.1",
+    "ckeditor5-premium-features": "^43.3.1",
     "framer-motion": "^6.2.6",
     "heroicons": "^2.1.4",
     "highcharts-react-official": "^3.2.1",
-    "node-nlp": "^4.27.0",
+    "node-nlp": "^3.10.2",
     "pdfjs-dist": "^3.4.120",
     "rc-tween-one": "^3.0.6",
     "react": "^17.0.2",
@@ -61,6 +61,6 @@
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.5",
     "tailwindcss": "^3.4.3",
-    "vite": "^2.7.2"
+    "vite": "^5.4.11"
   }
 }

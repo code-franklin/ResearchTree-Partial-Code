@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 
 import Badge from '@mui/material/Badge';
 import Tooltip from '@mui/material/Tooltip';
-import Dropdown from './YearDropdown';
+
 import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
@@ -43,7 +43,7 @@ export const Cards = () => {
                 <div className="absolute mt-[-80px]">
 
                     
-                <Dropdown />
+               
 
                 </div>
                     <span className="absolute left-[-1174px] mt-[-50px] text-[40px] font-bold">View Analytics</span>
