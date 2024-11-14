@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import mongoose, { Document, ObjectId, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import User, { IUser } from '../models/User';
+import User from '../models/User';
 import { v4 as uuidv4 } from 'uuid'; // Using UUID to generate a unique channel ID
 import path from 'path';
 import fs from 'fs';
@@ -76,6 +76,94 @@ const analyzeProposal = async (proposalTitle: string, proposalText: string, advi
 
   return topAdvisors.slice(0, 5); // Return top 5 matching advisors
 };
+
+// export const createProposal = async (req: Request, res: Response) => {
+//   const { userId, proposalTitle, proposalText } = req.body;
+
+//   if (!userId || !proposalTitle || !proposalText) {
+//     return res.status(400).json({ message: 'userId, proposalTitle and proposalText are required' });
+//   }
+
+//   try {
+//     // Ensure NLP manager is loaded
+//     await loadNlpManager();
+
+//     // Find the student by userId
+//     const student = await User.findById(userId);
+//     if (!student) {
+//       return res.status(404).json({ message: 'Student not found' });
+//     }
+
+//     // Prevent proposal submission if the advisor has already accepted
+//     if (student.advisorStatus === 'accepted') {
+//       return res.status(400).json({ message: 'Cannot submit proposal after advisor acceptance' });
+//     }
+
+//     // Generate a unique channelId
+//     const channelId = uuidv4();
+//     student.channelId = channelId;
+//     await student.save(); // Save the updated channelId to the student's record
+
+//     // Create a new proposal object
+//     const newProposal = {
+//       proposalTitle, // Add proposalTitle to the object
+//       proposalText,
+//       submittedAt: new Date()
+//     };
+
+//     // Add the new proposal to the user's proposals array
+//     student.proposals.push(newProposal);
+//     await student.save(); // Save the updated student record
+
+//     // Fetch advisors excluding those the student has declined
+//     const declinedAdvisors = student.declinedAdvisors || [];
+//     const advisors = await User.find({
+//       role: 'adviser',
+//       isApproved: true,
+//       _id: { $nin: declinedAdvisors }
+//     });
+
+//     // Analyze proposal and get top advisors based on specialization matching
+//     const topAdvisors = await analyzeProposal(proposalTitle, proposalText, advisors as IAdvisor[]);
+
+//     // Respond with the top advisors and channelId
+//     res.status(201).json({ topAdvisors, channelId });
+
+//   } catch (error) {
+//     console.error('Error creating proposal:', error);
+//     res.status(500).json({ message: 'Internal Server Error' });
+//   }
+// };
+
+// export const chooseAdvisor = async (req: Request, res: Response) => {
+//   const { userId, advisorId } = req.body;
+
+//   if (!userId || !advisorId) {
+//     return res.status(400).json({ message: 'userId and advisorId are required' });
+//   }
+
+//   try {
+//     const student = await User.findById(userId) as IStudent | null;
+//     if (student?.chosenAdvisor && student.advisorStatus !== 'declined') {
+//       return res.status(400).json({ message: 'Advisor already chosen' });
+//     }
+
+//     const topAdvisors = await getTopAdvisors();
+//     const panelists = topAdvisors.filter(advisor => advisor.id !== advisorId).slice(0, 3);
+
+//     if (student) {
+//       student.chosenAdvisor = advisorId;
+//       student.advisorStatus = 'pending';
+//       student.panelists = panelists.map(panelist => new mongoose.Types.ObjectId(panelist.id) as unknown as ObjectId);
+//       await student.save();
+//     }
+
+//     res.status(200).json({ message: 'Advisor chosen and panelists assigned successfully', student });
+//   } catch (error) {
+//     console.error('Error choosing advisor:', error);
+//     res.status(500).json({ message: 'Internal Server Error' });
+//   }
+// };
 
 // Synonym Schema
 interface ISynonym {
@@ -188,35 +276,23 @@ export const createNewProposal = async (req: Request, res: Response) => {
 };
 
 export const chooseNewAdvisor = async (req: Request, res: Response) => {
-  const { userId, advisorId } = req.body;
+// Route to get random panelists based on selected advisor
+// app.post('/api/get-panelists', async (req: Request, res: Response) => {
+  const { advisorId } = req.body;
 
-  if (!userId || !advisorId) {
-    return res.status(400).json({ message: 'Advisor ID and User ID are required.' });
+  if (!advisorId) {
+    return res.status(400).json({ message: 'Advisor ID is required.' });
   }
 
   try {
-    const student = await User.findById(userId) as IStudent | null;
-
-    // Check if the student already has an advisor that is not declined
-    if (student?.chosenAdvisor && student.advisorStatus !== 'declined') {
-      return res.status(400).json({ message: 'Advisor already chosen' });
-    }
-
-    const selectedAdvisor = await User.findById(advisorId);
+    const selectedAdvisor = await User.findById(advisorId) as Document;
     if (!selectedAdvisor) {
       return res.status(404).json({ message: 'Advisor not found.' });
     }
 
-    // Update student advisor if no advisor or declined status
-    student!.chosenAdvisor = advisorId;
-    student!.advisorStatus = 'pending';
-    await student!.save();
-
-    // Fetch all advisors and filter out the chosen advisor
-    const allAdvisors = await User.find({ role: 'advisor' }).exec() as IUser[];
+    const allAdvisors = await User.find({}).exec() as UserDocument[];
     const filteredAdvisors = allAdvisors.filter(advisor => advisor._id.toString() !== advisorId);
 
-    // Assign roles: Technical Expert, Statistician, Subject Expert
     const panelistsByRole: { [role: string]: { name: string; role: string } | null } = {
       'Technical Expert': null,
       'Statistician': null,
@@ -224,9 +300,13 @@ export const chooseNewAdvisor = async (req: Request, res: Response) => {
     };
 
     const shuffledAdvisors = filteredAdvisors.sort(() => 0.5 - Math.random());
+    
     for (const advisor of shuffledAdvisors) {
       if (panelistsByRole[advisor.design] === null) {
-        panelistsByRole[advisor.design] = { name: advisor.name, role: advisor.design };
+        panelistsByRole[advisor.design] = {
+          name: advisor.name,
+          role: advisor.design,
+        };
       }
       if (Object.values(panelistsByRole).every(panelist => panelist !== null)) {
         break;
@@ -234,14 +314,13 @@ export const chooseNewAdvisor = async (req: Request, res: Response) => {
     }
 
     const panelists = Object.values(panelistsByRole).filter(panelist => panelist !== null);
-    return res.status(200).json({ message: 'Advisor chosen and panelists assigned successfully', student, panelists });
+    return res.status(200).json({ panelists });
 
   } catch (error) {
-    console.error("Error retrieving panelists:", error);
-    res.status(500).json({ message: "Error retrieving panelists." });
+    console.error("Error getting panelists:", error);
+    res.status(500).send("Error retrieving panelists.");
   }
 };
-
 
 // app.post('synonyms', async (req, res) => {
 export const trainingProposal = async (req: Request, res: Response) => {

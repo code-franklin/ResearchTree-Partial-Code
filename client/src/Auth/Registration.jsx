@@ -4,6 +4,18 @@ import axios from 'axios';
 import Select from 'react-select';
 import { TextField, MenuItem, Button, FormControl, InputLabel, Select as MUISelect } from '@mui/material';
 
+// Define constants at the top of the file
+const courseOptions = [
+  { value: 'BSIT', label: 'BSIT' },
+  { value: 'BSCS', label: 'BSCS' },
+];
+
+const designOptions = [
+  { value: 'Subject Expert', label: 'Subject Expert' },
+  { value: 'Statistician', label: 'Statistician' },
+  { value: 'Technical Expert', label: 'Technical Expert' }
+];
+
 const LoginFunction = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -15,8 +27,8 @@ const LoginFunction = () => {
     course: '', 
     year: '', 
     handleNumber: '', 
-    groupMembers: [], 
-    design: ''
+    groupMembers: [],
+    design: designOptions[0].value // Initialize design with a default value
   });
   const [specializationsOptions, setSpecializationsOptions] = useState([]);
   const [message, setMessage] = useState('');
@@ -28,17 +40,6 @@ const LoginFunction = () => {
     value: startYear + i,
     label: startYear + i,
   }));
-
-  const courseOptions = [
-    { value: 'BSIT', label: 'BSIT' },
-    { value: 'BSCS', label: 'BSCS' },
-  ];
-
-  const designOptions = [
-    { value: 'Subject Expert', label: 'Subject Expert' },
-    { value: 'Statistician', label: 'Statistician' },
-    { value: 'Technical Expert', label: 'Technical Expert' }
-  ];
 
   useEffect(() => {
     const fetchSpecializations = async () => {

@@ -8,6 +8,8 @@ import Logout from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
 import axios from "axios";
 
+import { Snackbar, Alert } from "@mui/material";
+
 export default function AccountMenu() {
   const navigate = useNavigate();
   const [admin, setAdmin] = useState(null);
@@ -17,6 +19,11 @@ export default function AccountMenu() {
   const [newPassword, setNewPassword] = useState("");
   const [updatedProfile, setUpdatedProfile] = useState({ name: "", email: "", profileImage: null });
   
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // Options: success, error, warning, info
+
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -59,30 +66,45 @@ export default function AccountMenu() {
     if (updatedProfile.profileImage) formData.append("profileImage", updatedProfile.profileImage);
 
     try {
-      const { data } = await axios.put(`http://localhost:7000/api/admin/admin-user/${admin.id}`, formData);
+      const { data } = await axios.put(`http://localhost:7000/api/admin/admin-user/${admin._id}`, formData);
       const updatedAdmin = data.admin;
 
       // Update localStorage with new profile data
       localStorage.setItem("user", JSON.stringify(updatedAdmin));
       setAdmin(updatedAdmin);
       setIsModalOpen(false);
+
+      
+      // Refresh the page        // Show success Snackbar
+      setSnackbarMessage("Profile updated successfully!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
     } catch (error) {
-      console.error("Error updating profile:", error);
+      setSnackbarMessage("Failed to update profile");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   };
 
   const handleResetPassword = async () => {
     try {
-      await axios.put(`http://localhost:7000/api/admin/admin-user/${admin.id}/reset-password`, {
+      await axios.put(`http://localhost:7000/api/admin/admin-user/${admin._id}/reset-password`, {
         newPassword
       });
       setResetPasswordModalOpen(false);
       setNewPassword("");
-      alert("Password reset successfully.");
+      
+      setSnackbarMessage("Password reset successfully.");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
     } catch (error) {
-      console.error("Error resetting password:", error);
+      setSnackbarMessage("Failed to reset password, please contact the developer");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
-  };
+  }; 
+
+  console.log("Admin :", admin)
 
   return (
     <React.Fragment>
@@ -168,6 +190,17 @@ export default function AccountMenu() {
           <Button onClick={handleResetPassword} color="primary">Reset Password</Button>
         </DialogActions>
       </Dialog>
+
+    <Snackbar
+      open={snackbarOpen}
+      autoHideDuration={6000}
+      onClose={() => setSnackbarOpen(false)}
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+    >
+      <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
+        {snackbarMessage}
+      </Alert>
+    </Snackbar>
 
     </React.Fragment>
   );

@@ -63,7 +63,7 @@ export default function TabsPricingExample() {
   const handleStudentResponse = async (studentId, status) => {
     try {
       const response = await fetch(
-        "http://localhost:7000/api/advicer/respond-student",
+        "http://localhost:7000/api/advicer/respondTostudent",
         {
           method: "POST",
           headers: {

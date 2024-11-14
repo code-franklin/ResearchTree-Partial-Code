@@ -15,6 +15,7 @@ interface ITask extends mongoose.Types.Subdocument {
 }
 // Define interface for User document
 export interface IUser extends Document {
+  _id: mongoose.Types.ObjectId;
   name: string;
   email: string;
   password: string;

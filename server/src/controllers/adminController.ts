@@ -294,7 +294,7 @@ export const updateUserAdvicer = async (req: Request, res: Response) => {
     // Find the user by ID
     const user = await User.findById(id);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Advicer not found" });
     }
 
     // Prepare the update object conditionally

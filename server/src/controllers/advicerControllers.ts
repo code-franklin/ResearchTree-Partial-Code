@@ -5,6 +5,8 @@ import mongoose from 'mongoose';
 import User from '../models/User';
 import Admin from '../models/Admin';
 import Specialization from '../models/Specialization';
+import path from 'path';
+import fs from 'fs';
 import Grade, { IGrade } from '../models/Grade';
 import ArticlePDF from '../models/pdfDetails';
 
@@ -82,6 +84,91 @@ export const login = async (req: Request, res: Response) => {
       res.status(500).json({ message: 'Something went wrong', error: (error as Error).message });
   }
 };
+
+export const editAdvicerProfile = async (req: Request, res: Response) => {
+  const { id } = req.params; // Admin ID
+  const { name, email, handleNumber, deleteProfileImage } = req.body; // Data from request body
+
+  const specializations = Array.isArray(req.body.specializations) 
+  ? req.body.specializations 
+  : JSON.parse(req.body.specializations || "[]");
+
+  const profileImage = (req as any).file?.filename; // Get new profile image if exists
+
+  try {
+    // Find the admin by ID
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "Advicer not found" });
+    }
+
+    // Prepare the update object conditionally
+    const updateData: any = {
+      name,
+      email,
+      handleNumber,
+      specializations
+    };
+
+    if (deleteProfileImage) {
+      // Check if profile image exists before deleting it
+      if (user.profileImage) {
+        const imagePath = path.join(__dirname, "../public/uploads", user.profileImage);
+        // Remove the old image if it exists
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath); // Delete the old image file
+        }
+      }
+
+      updateData.profileImage = ""; // Remove image from database
+    }
+
+    if (profileImage) {
+      // If a new image is provided, update it
+      updateData.profileImage = profileImage;
+    }
+
+    // Find the admin and update with new details
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+
+    res.json({ message: "User profile updated successfully", user: updatedUser });
+    
+  } catch (error) {
+    console.error("Error updating User profile:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+export const resetAdvicerPassword = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { newPassword } = req.body;
+
+  if (!newPassword) {
+    return res.status(400).json({ message: "New password is required." });
+  }
+
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User Student not found" });
+    }
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // Update the password
+    user.password = hashedPassword;
+
+    // Save the updated admin
+    await user.save();
+    return res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error", error });
+  }
+  };
+
 
 /* ckeditor API */
 export const getToken = async (req: Request, res: Response) => {

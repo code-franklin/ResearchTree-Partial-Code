@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import { 
-    createProposal, 
-    chooseAdvisor,
+    createNewProposal, 
+    chooseNewAdvisor,
     getStudentInfoAndProposal,
     updateProposalTitle,
     trainModel,
@@ -10,13 +10,21 @@ import {
     getTaskProgress,
 /*     getAllArticles, */
     searchArticles,
+    editUserProfile,
+    resetUserPassword
 /*     postUploadManuscript */
 } from '../controllers/studentControllers';
 
 const router: Router = express.Router();
+import uploadProfile from '../middleware/uploadProfile';
 
-router.post('/submit-proposal', createProposal);
-router.post('/choose-advisor', chooseAdvisor);
+router.post('/submit-proposal', createNewProposal);
+router.post('/choose-advisor', chooseNewAdvisor);
+
+
+// Update Data and Reset Password
+router.put('/student-user/:id', uploadProfile.single('profileImage'),editUserProfile);
+router.put('/student-user/:id/reset-password', resetUserPassword);
 
 // Task for Advicer 
 router.get('/tasks/:userId',getTasks);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { DonutChart } from "bizcharts";
 import { SyncOutlined } from '@ant-design/icons';
-import Header from './YearDropdown'
+
 import './Styles/stats.css';
 
 export const Cards = () => {
@@ -11,6 +11,9 @@ export const Cards = () => {
     const [advisorInfo, setAdvisorInfo] = useState(null);
     const [advisorStatus, setAdvisorStatus] = useState(null);
     const [panelists, setPanelists] = useState([]);
+
+
+
 
     const [user] = useState(JSON.parse(localStorage.getItem('user')));
 
@@ -34,7 +37,7 @@ export const Cards = () => {
       
           if (data.tasks && Array.isArray(data.tasks)) {
             // Update user state and localStorage with the new tasks
-            setUser((prevUser) => ({
+            user((prevUser) => ({
               ...prevUser,
               tasks: data.tasks,
             }));

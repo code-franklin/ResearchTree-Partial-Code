@@ -1,27 +1,63 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import PersonAdd from "@mui/icons-material/PersonAdd";
-import Settings from "@mui/icons-material/Settings";
+import React, { useEffect, useState } from "react";
+import {
+  Box, Avatar, Menu, MenuItem, IconButton, Tooltip, Dialog, DialogTitle,
+  DialogContent, DialogActions, TextField, Button, Divider, ListItemIcon, Typography
+} from "@mui/material";
 import Logout from "@mui/icons-material/Logout";
-
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-
+import Settings from "@mui/icons-material/Settings";
+import Select from 'react-select';
+import axios from "axios";
+import { Snackbar, Alert } from "@mui/material";
 import "./Sidebar.css";
 
 export default function AccountMenu() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const navigate = useNavigate();
 
+  
+  const [user, setUser] = useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [resetPasswordModalOpen, setResetPasswordModalOpen] = useState(false);
+  const [confirmationOpen, setConfirmationOpen] = useState(false); // New state for confirmation dialog
+  const [newPassword, setNewPassword] = useState("");
+  const [updatedProfile, setUpdatedProfile] = useState({ name: "", email: "", profileImage: null });
+
+  const [specializationsOptions, setSpecializationsOptions] = useState([]);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // Options: success, error, warning, info
+
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchSpecializations = async () => {
+      try {
+        const response = await axios.get('http://localhost:7000/api/advicer/specializations');
+        setSpecializationsOptions(response.data.map(spec => ({ value: spec.name, label: spec.name })));
+      } catch (error) {
+        console.error('Error fetching specializations:', error);
+      }
+    };
+    fetchSpecializations();
+  }, []);
+
   const open = Boolean(anchorEl);
+
+  const openModal = () => {
+    setUpdatedProfile({ 
+      name: user.name, 
+      email: user.email,
+      handleNumber: user.handleNumber,
+      specializations: user?.specializations?.map(spec => ({ value: spec, label: spec })) || [], 
+    });
+    setIsModalOpen(true);
+  };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -30,6 +66,68 @@ export default function AccountMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleProfileChange = (e) => {
+    const { name, value, files } = e.target;
+    if (files) {
+      setUpdatedProfile((prev) => ({ ...prev, profileImage: files[0] }));
+    } else {
+      setUpdatedProfile((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const saveProfileChanges = async () => {
+    const formData = new FormData();
+    formData.append("name", updatedProfile.name);
+    formData.append("email", updatedProfile.email);
+    formData.append("handleNumber", updatedProfile.handleNumber);
+
+    const selectedSpecializations = updatedProfile.specializations.map(spec => spec.value);
+    formData.append("specializations", JSON.stringify(selectedSpecializations));
+
+    if (updatedProfile.profileImage) formData.append("profileImage", updatedProfile.profileImage);
+
+    try {
+      const { data } = await axios.put(`http://localhost:7000/api/advicer/advicer-user/${user._id}`, formData);
+      const updatedUser = data.user;
+
+      // Update localStorage with new profile data
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setUser(updatedUser);
+      setIsModalOpen(false);
+      setConfirmationOpen(false); // Close the confirmation dialog
+
+      // Refresh the page        // Show success Snackbar
+      setSnackbarMessage("Profile updated successfully!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+    } catch (error) {      
+      setSnackbarMessage("Error updating profile please contact admin to update details");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      console.error("Error updating profile:", error);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    try {
+      await axios.put(`http://localhost:7000/api/advicer/advicer-user/${user._id}/reset-password`, {
+        newPassword
+      });
+      setResetPasswordModalOpen(false);
+      setNewPassword("");
+      setSnackbarMessage("Password reset successfully.");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+    } catch (error) {      
+      setSnackbarMessage("Failed to reset password, contact admin to reset password");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      console.error("Error resetting password:", error);
+    }
+  };
+
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -92,26 +190,11 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem>
-        <Avatar sx={{ bgcolor: "#444" }} /> Profile
+        <MenuItem onClick={openModal}>
+        <Avatar sx={{ bgcolor: "#444" }} /> Profile Settings
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar sx={{ bgcolor: "#444" }} /> My account
-        </MenuItem>
-        <Divider sx={{ bgcolor: "white" }} />
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <PersonAdd fontSize='small' />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Settings fontSize='small' />
-          </ListItemIcon>
-          Settings
-          </MenuItem>        
-          <MenuItem onClick={handleLogout}>
+        <Divider sx={{ bgcolor: "white" }} />        
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout
               fontSize='small'
@@ -125,6 +208,124 @@ export default function AccountMenu() {
           {/* Set text color to red */}
         </MenuItem>
       </Menu>
+
+      {/* Edit Profile Modal */}
+      <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <DialogTitle>Edit Profile</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Name"
+            name="name"
+            value={updatedProfile.name}
+            onChange={handleProfileChange}
+            fullWidth
+            margin="dense"
+          />
+          <TextField
+            label="Email"
+            name="email"
+            value={updatedProfile.email}
+            onChange={handleProfileChange}
+            fullWidth
+            margin="dense"
+          />
+          <TextField
+            label="Handle Student"
+            name="handleNumber"
+            value={updatedProfile.handleNumber || ""}
+            onChange={handleProfileChange}
+            fullWidth
+            margin="dense"
+          />
+          <Select
+            isMulti
+            options={specializationsOptions}
+            value={updatedProfile.specializations || []}
+            onChange={(selectedOptions) =>
+              setUpdatedProfile(prev => ({
+                ...prev,
+                specializations: selectedOptions || []
+              }))
+            }
+            placeholder="Select Specializations"
+            styles={{
+              control: (base) => ({
+                ...base,
+                marginTop: "1rem",
+                borderRadius: 4,
+                borderColor: "#ccc",
+                boxShadow: "none",
+              }),
+              multiValue: (base) => ({
+                ...base,
+                backgroundColor: "#eee",
+              }),
+              multiValueLabel: (base) => ({
+                ...base,
+                color: "#333",
+              }),
+            }}
+          />
+          <input
+            accept="image/*"
+            type="file"
+            onChange={handleProfileChange}
+            style={{ marginTop: "1rem" }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
+          <Button onClick={() => setConfirmationOpen(true)} color="primary">
+            Save Changes
+          </Button>
+          <Button variant="outlined" onClick={() => setResetPasswordModalOpen(true)}>
+            Reset Password
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={confirmationOpen} onClose={() => setConfirmationOpen(false)}>
+        <DialogTitle>Confirm Save Changes</DialogTitle>
+        <DialogContent>
+          <Typography>Are you sure you want to save the changes?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmationOpen(false)} color="secondary">No</Button>
+          <Button onClick={saveProfileChanges} color="primary">Yes</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Reset Password Modal */}
+      <Dialog open={resetPasswordModalOpen} onClose={() => setResetPasswordModalOpen(false)}>
+        <DialogTitle>Reset Password</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="New Password"
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            fullWidth
+            margin="dense"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleResetPassword} color="primary">Reset Password</Button>
+        </DialogActions>
+      </Dialog>
+
+          {/* Snackbar for notifications */}
+    <Snackbar
+      open={snackbarOpen}
+      autoHideDuration={6000}
+      onClose={() => setSnackbarOpen(false)}
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+    >
+      <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
+        {snackbarMessage}
+      </Alert>
+    </Snackbar>
+        
     </React.Fragment>
   );
 }

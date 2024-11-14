@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import axios from 'axios';
 import {
   SendOutlined
 } from '@ant-design/icons';
@@ -38,10 +39,12 @@ export default function BasicModal() {
   const [proposal, setProposal] = useState("");
   const [submittedAt, setSubmittedAt] = useState(null); // Add this state for submittedAt
 
+  const [results, setResults] = useState([]);
   const [topAdvisors, setTopAdvisors] = useState([]);
   const [advisorInfo, setAdvisorInfo] = useState(null);
   const [advisorStatus, setAdvisorStatus] = useState(null);
   const [panelists, setPanelists] = useState([]);
+  const [getPanelists, setGetPanelists] = useState([]);
 
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
@@ -60,7 +63,7 @@ export default function BasicModal() {
         const data = await response.json();
         setAdvisorInfo(data.chosenAdvisor);
         setAdvisorStatus(data.advisorStatus);
-        setPanelists(data.panelists || []);
+        setGetPanelists(data.panelists || []);
         setProposal(data.proposal || {}); // Set proposal to an empty object if not found
         setSubmittedAt(data.submittedAt);
       } else {
@@ -93,9 +96,13 @@ export default function BasicModal() {
       );
 
       if (response.ok) {
-        const data = await response.json();
-        setTopAdvisors(data.topAdvisors);
-        setSubmittedAt(data.submittedAt); // Set the submittedAt date from response
+        const data = await response.json();/* 
+        setTopAdvisors(data.topAdvisors); //results */
+        
+        setTopAdvisors(data.results); // Setting top advisors from backend response=
+        setTitle('');  // Clear title field if needed
+        setProposal('');  // Clear proposal field if needed
+        
         const newChannelId = data.channelId;
         localStorage.setItem("channelId", newChannelId);
         message.success("Proposal submitted successfully");
@@ -104,11 +111,11 @@ export default function BasicModal() {
         // add the channel id if doesn't work on localStorage
 
         // Update the proposal state with the newly submitted data
-        setProposal({
-          proposalTitle: data.proposalTitle,
-          proposalText: data.proposalText,
-          submittedAt: data.submittedAt,
-        });
+        // setProposal({
+        //   proposalTitle: data.proposalTitle,
+        //   proposalText: data.proposalText,
+        //   submittedAt: data.submittedAt,
+        // });
       } else {
         const errorData = await response.json();
         console.error("Error submitting proposal:", errorData.message);
@@ -120,30 +127,57 @@ export default function BasicModal() {
     }
   };
 
+  // const chooseAdvisor = async (advisorId) => {
+  //   try {
+  //     const response = await fetch(
+  //       "http://localhost:7000/api/student/choose-advisor",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ advisorId }),
+  //       }
+  //     );
+  //     if (response.data.panelists) {
+  //       // Filter the panelists to only include Technical Expert, Statistician, and Subject Expert
+  //       const filteredPanelists = response.data.panelists.filter(panelist =>
+  //         ['Technical Expert', 'Statistician', 'Subject Expert'].includes(panelist.role)
+  //       );
+  //       setPanelists(filteredPanelists);
+  //     } else {
+  //       const errorData = await response.json();
+  //       console.error("Error choosing advisor:", errorData.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error choosing advisor:", error.message);
+  //   }
+  // };
+
   const chooseAdvisor = async (advisorId) => {
     try {
-      const response = await fetch(
-        "http://localhost:7000/api/student/choose-advisor",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId: user._id, advisorId }),
-        }
-      );
-      if (response.ok) {
-        console.log("Advisor chosen successfully!");
-        fetchStudentInfoAndProposal(); // Refresh advisor info
+      const response = await axios.post('http://localhost:7000/api/student/choose-advisor', {
+        userId: user._id,
+        advisorId: advisorId,
+      });
+  
+      if (response.status === 200) {
+        const { panelists } = response.data;
+        const filteredPanelists = panelists.filter(panelist =>
+          ['Technical Expert', 'Statistician', 'Subject Expert'].includes(panelist.role)
+        );
+        setPanelists(filteredPanelists);
+        message.success(response.data.message);
       } else {
-        const errorData = await response.json();
-        console.error("Error choosing advisor:", errorData.message);
+        console.error("Error choosing advisor:", response.data.message);
+        message.error(response.data.message);
       }
     } catch (error) {
       console.error("Error choosing advisor:", error.message);
+      message.error("An error occurred while choosing the advisor");
     }
   };
-
+  
   return (
     <div>
       <button onClick={handleOpen}>
@@ -342,7 +376,7 @@ export default function BasicModal() {
                 Your Panelists
               </h2>
               <ul className='flex ml-[150px] mt-[27px]'>
-                {panelists.map((panelist) => (
+                {getPanelists.map((panelist) => (
                   <li key={panelist._id} className=''>
                     <img
                       src={`http://localhost:7000/public/uploads/${panelist.profileImage}`}
@@ -368,10 +402,10 @@ export default function BasicModal() {
               <h2 className='font-bold ml-[266px] text-[19px] mt-[280px]'>
                 Top Advisors:
               </h2>
-              <ul className='flex ml-[150px] mt-[50px]'>
+              
+{/*               <ul className='flex ml-[150px] mt-[50px]'>
                 {" "}
-                {/* Adjusted margin for better spacing */}
-                {topAdvisors.map((advisor) => (
+                {topAdvisors.map((result) => ( 
                   <li className='' key={advisor._id}>
                     <img
                       src={`http://localhost:7000/public/uploads/${advisor.profileImage}`}
@@ -384,7 +418,42 @@ export default function BasicModal() {
                     </p>
                   </li>
                 ))}
+              </ul> */}
+
+              <ul className='flex ml-[150px] mt-[50px]'>
+              {" "}
+                {topAdvisors.map((result) => {
+                  const { advisor, matchPercentage  /* specializations */ } = result;
+                  return (
+                  <li className='' key={advisor._id}>
+                      {/* <strong>{advisor.name}</strong> - Match: {matchPercentage}% - Specializations: {specializations.join(", ")} */}
+                      <img
+                        src={`http://localhost:7000/public/uploads/${advisor.profileImage}`}
+                        alt={advisor.name}
+                        className='w-[80px] h-[80px] rounded-full mr-[53px]'
+                        onClick={() => chooseAdvisor(advisor._id)}
+                      />
+                      <p className='text-sm ml-[-17px] mt-[6px]'>
+                        {advisor.name} - Match: {matchPercentage}% {/* - Specializations: {specializations.join(", ")} */}
+                      </p>
+                    </li>
+                  );
+                })}
               </ul>
+
+              {/* Panelists Section */}
+              {panelists.length > 0 && (
+                <div style={{ marginTop: '20px', padding: '10px', backgroundColor: 'black', borderRadius: '4px' }}>
+                  <h2 style={{ fontSize: '18px', marginBottom: '10px' }}>Panelists</h2>
+                  <ul style={{ listStyleType: 'none', padding: '0' }}>
+                    {panelists.map((panelist, index) => (
+                      <li key={index} style={{ padding: '10px', backgroundColor: '#f1f1f1', borderRadius: '4px', marginBottom: '10px' }}>
+                        <strong style={{color: 'black'}}>{panelist.name}</strong> -<p style={{color: 'black'}} >Role: {panelist.role}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </section>
           )}
         </Box>

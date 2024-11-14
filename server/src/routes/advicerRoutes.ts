@@ -15,7 +15,9 @@ import {
     updateManuscriptStatus,
     getTasksProgressStudent,
     updatePanelManuscriptStatus,
-    gradePanelToStudent
+    gradePanelToStudent,
+    editAdvicerProfile,
+    resetAdvicerPassword
 } from '../controllers/advicerControllers';
 
 import { 
@@ -34,6 +36,10 @@ const router: Router = express.Router();
 
 router.post('/register', uploadProfile.single('profileImage'), registration);
 router.post('/login', login);
+
+// Edit Profile
+router.put('/advicer-user/:id', uploadProfile.single('profileImage'),editAdvicerProfile);
+router.put('/advicer-user/:id/reset-password', resetAdvicerPassword);
 
 // Add the route for CKEditor token
 router.get('/get-ckeditor-token/:userId', getToken);
@@ -66,7 +72,7 @@ router.patch('/thesis/panel/manuscript-status', updatePanelManuscriptStatus);
 
 // Get Panelist Students
 router.get('/panelist-students/:advisorId', getPanelistStudents);
-router.post('/respond-student', respondToStudent);
+router.post('/respondTostudent', respondToStudent);
 router.post('/grade-student', gradePanelToStudent);
 
 // admin

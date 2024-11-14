@@ -76,6 +76,7 @@ const ArticleList = () => {
   const handleArticleClick = (pdfUrl) => {
     setSelectedPdf(`http://localhost:7000/public/files/${pdfUrl}`);
   };
+  
 
   return (
     <div className="min-h-screen text-white p-6 ml-[300px]">
