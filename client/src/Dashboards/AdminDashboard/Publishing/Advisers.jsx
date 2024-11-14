@@ -57,13 +57,13 @@ const App = () => {
             <thead className='ltr:text-left rtl:text-right'>
               <tr>
                 <th className='whitespace-nowrap px-4 py-2  text-white font-bold text-2xl'>
-                  Name
+                
                 </th>
                 <th className='whitespace-nowrap px-4 py-2  text-white font-bold text-2xl'>
-                  Role
+                 
                 </th>
                 <th className='whitespace-nowrap px-4 py-2  text-white font-bold text-2xl'>
-                  Actions
+                 
                 </th>
               </tr>
             </thead>
@@ -73,11 +73,13 @@ const App = () => {
                 <tbody key={advicer.name} className=' divide-y divide-gray-200'>
                   <tr>
                     <td className='flex whitespace-nowrap text-center px-4 py-3 font-medium text-white '>
-                      <div className=''>
+                      <div className="transition-transform duration-300 ease-in-out transform hover:scale-110">
                         <Avatar
                           src={`http://localhost:7000/public/uploads/${
                             advicer.profileImage || "default-avatar.png"}`}
                           sx={{ width: 79, height: 79 }}
+                          className="opacity-0 transition-opacity duration-500 ease-in-out"
+                          onLoad={(e) => (e.currentTarget.style.opacity = 1)}
                         />
                       </div>
                       <p className='text-xl ml-[10px]'>{advicer.name}</p>

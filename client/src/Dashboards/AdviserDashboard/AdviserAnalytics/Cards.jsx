@@ -49,7 +49,15 @@ export const Cards = () => {
                     <span className="absolute left-[-1174px] mt-[-50px] text-[40px] font-bold">View Analytics</span>
                  
                 </div>
-
+                <div className="card">
+                    <div className="card-icon-1">
+                        <img className="" src="/src/assets/student-handle.png" />
+                    </div>
+                    <div className="card-content">
+                        <p className="card-title">Student Handle</p>
+                        <p className="card-value-1 ml-[80px]">{user.handleNumber} Groups</p>
+                    </div>
+                </div>
                 <div className="card">
                     <div className="card-icon-1">
                         <img className="" src="/src/assets/student-handle.png" />
@@ -61,7 +69,7 @@ export const Cards = () => {
                 </div>
                 <div className="card">
                     <div className="card-icon-2">
-                        <img className="" src="" />
+                    <img className='' src='/src/assets/adviserAnalytics-icon-1.png'/>
                     </div>
                     <div className="card-content">
                         <p className="card-title">New Uploads</p>
@@ -70,7 +78,7 @@ export const Cards = () => {
                 </div>
                 <div className="card">
                     <div className="card-icon-3">
-                        <img className="" src="" />
+                    <img className='' src='/src/assets/adviserAnalytics-icon-3.png' />
                     </div>
                     <div className="card-content">
                         <p className="card-title">Ongoing Revision</p>
@@ -80,14 +88,48 @@ export const Cards = () => {
                 </div>
                 <div className="card">
                     <div className="card-icon-4">
-                        <img className="" src="" />
+                    <img className='' src='/src/assets/adviserAnalytics-icon-5.png' />
                     </div>
                     <div className="card-content">
-                        <p className="card-title">Done</p>
+                        <p className="card-title">Ready for Defense</p>
                         <p className="card-value-3">300</p>
                     </div>
                 
+                
                 </div>
+
+                 <div className='flex absolute mt-[125px]'>
+                 <div className="card ">
+                    <div className="card-icon-4">
+                    <img className='' src='/src/assets/adviserAnalytics-icon-5.png' />
+                    </div>
+                    <div className="card-content">
+                        <p className="card-title">Ready for Defense</p>
+                        <p className="card-value-3">300</p>
+                    </div>
+                </div>
+
+                <div className="card ml-[18px]">
+                    <div className="card-icon-4">
+                    <img className='' src='/src/assets/adviserAnalytics-icon-5.png' />
+                    </div>
+                    <div className="card-content">
+                        <p className="card-title">Ready for Defense</p>
+                        <p className="card-value-3">300</p>
+                    </div>
+                </div>
+
+                <div className="card ml-[18px]">
+                    <div className="card-icon-4">
+                    <img className='' src='/src/assets/adviserAnalytics-icon-5.png' />
+                    </div>
+                    <div className="card-content">
+                        <p className="card-title">Ready for Defense</p>
+                        <p className="card-value-3">300</p>
+                    </div>
+                </div>
+                </div>
+              
             </div>
 
             

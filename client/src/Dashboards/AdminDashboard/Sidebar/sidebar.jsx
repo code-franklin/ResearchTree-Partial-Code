@@ -215,8 +215,8 @@ const Sidebar = ({ onSelect }) => {
           to='AdminDashboard/AdviserPending'
           className={`exploreManuscript mx-10 px-2  ${
             activeLink === "/AdminDashboard/AdviserPending"
-              ? "font-semibold ml-[4rem]  "
-              : "hover:font-medium hover:ml-[4rem] "
+              ? "font-semibold ml-[4rem] whitespace-nowrap"
+               : "hover:font-medium hover:ml-[4rem] whitespace-nowrap"
           }`}
           onClick={() => handleLinkClick("/AdminDashboard/AdviserPending")}
         >
@@ -257,7 +257,7 @@ const Sidebar = ({ onSelect }) => {
           className={`exploreManuscript mx-10 px-2 ${
             activeLink === "/AdminDashboard/StudentRegistered"
                ? "font-semibold ml-[4rem] whitespace-nowrap"
-      : "hover:font-medium hover:ml-[4rem] whitespace-nowrap"
+               : "hover:font-medium hover:ml-[4rem] whitespace-nowrap"
           }`}
           onClick={() => handleLinkClick("/AdminDashboard/StudentRegistered")}
         >

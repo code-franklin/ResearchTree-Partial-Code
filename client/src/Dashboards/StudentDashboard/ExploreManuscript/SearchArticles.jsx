@@ -8,8 +8,11 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { AutoComplete, Input, ConfigProvider, Pagination } from 'antd';
 
+import PDFUploader from './PDFUploader';
+
 const ArticleList = () => {
   const [articles, setArticles] = useState([]);
+  const [filteredArticles, setFilteredArticles] = useState([]);
   const [query, setQuery] = useState('');
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [error, setError] = useState('');
@@ -17,10 +20,14 @@ const ArticleList = () => {
 
   const handleSearch = async () => {
     if (!query) return; // Only search if there's a query
+  
     try {
-      const response = await axios.post('http://localhost:7000/api/student/search', { query });
+      // Send the search query to the backend
+      const response = await axios.post('http://localhost:7000/api/advicer/search', { query });
+
       if (response.data.status === "ok") {
         setArticles(response.data.results); // Set articles to display only search results
+        setFilteredArticles(response.data.results); // Update filtered articles as well
         const analysisResponse = await axios.post('http://localhost:7000/api/advicer/analyze', { text: query });
         if (analysisResponse.status === 200) {
           setAnalysis(analysisResponse.data);
@@ -34,8 +41,9 @@ const ArticleList = () => {
 
   const highlightText = (text, query) => {
     if (!query) return text;
+    // Case-insensitive regex to highlight matching query
     const parts = text.split(new RegExp(`(${query})`, 'gi'));
-    return parts.map((part, i) => 
+    return parts.map((part, i) =>
       part.toLowerCase() === query.toLowerCase() ? (
         <span key={i} className="bg-[#1E1E]">{part}</span>
       ) : (
@@ -44,11 +52,20 @@ const ArticleList = () => {
     );
   };
 
+  const filterArticlesByYear = (year) => {
+    const filtered = articles.filter((article) => {
+      const date = new Date(article.datePublished);
+      return date.getFullYear() === year;
+    });
+    setFilteredArticles(filtered);
+  };
+
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await axios.get('http://localhost:7000/api/advicer/articles');
+        const response = await axios.get('http://localhost:7000/api/student/articles/search');
         setArticles(response.data);
+        setFilteredArticles(response.data); // Show all articles initially
       } catch (error) {
         console.error('Error fetching articles:', error);
       }
@@ -63,7 +80,7 @@ const ArticleList = () => {
   return (
     <div className="min-h-screen text-white p-6 ml-[300px]">
       <h1 className="text-[38px] font-bold mt-[20px] ml-[0px]">Manuscript</h1>
-
+     
       <ConfigProvider
         theme={{
           components: {
@@ -104,12 +121,35 @@ const ArticleList = () => {
           />
         </AutoComplete>
       </ConfigProvider>
+      <PDFUploader />
+      <div className="w-1/4 fixed text-right p-4 ml-[1200px] mb-[50px] w-[auto]">
+        <p className="text-red-500 mr-[12.3px] mb-2 cursor-pointer">AnyTime</p>
+        <p
+        className="text-green-500 mb-2 cursor-pointer hover:text-red-500"
+        onClick={() => filterArticlesByYear(2024)}
+      >
+        Since 2024
+      </p>
+      <p
+        className="text-green-500 mb-2 cursor-pointer hover:text-red-500"
+        onClick={() => filterArticlesByYear(2023)}
+      >
+        Since 2023
+      </p>
+      <p
+        className="text-green-500 mb-2 cursor-pointer hover:text-red-500"
+        onClick={() => filterArticlesByYear(2022)}
+      >
+        Since 2022
+      </p>
+
+      </div>
 
       {error && <p className="mt-4 text-red-500">{error}</p>}
 
       <div className="articlesScroll flex mt-[100px]">
         <div className="w-3/4">
-          {articles.map((article, index) => (
+          {filteredArticles.map((article, index) => (
             <div
               key={index}
               onClick={() => handleArticleClick(article.pdf)}
@@ -125,7 +165,7 @@ const ArticleList = () => {
           ))}
         </div>
       </div>
-
+      
       {/* PDF Modal */}
       <Modal
         open={!!selectedPdf}

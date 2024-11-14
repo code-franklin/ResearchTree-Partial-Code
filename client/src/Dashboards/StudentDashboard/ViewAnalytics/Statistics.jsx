@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { DonutChart } from "bizcharts";
 import { SyncOutlined } from '@ant-design/icons';
+import Header from './YearDropdown'
 import './Styles/stats.css';
 
 export const Cards = () => {
@@ -159,6 +160,17 @@ export const Cards = () => {
        <>
         <div className="stats-container">
             <div className="box">
+            <div className='year-container'>
+          <div className='absolute mt-[-8px]'>
+            {/* 
+                <Dropdown /> */}
+          </div>
+
+          <span className='absolute left-[-1174px] mt-[-40px] text-[40px] font-bold text-white'>
+            View Analytics
+          </span>
+       
+        </div>
                 <div className="card-icon-1 absolute top-0 left-[254px]">
                     <img src="/src/assets/star.png" alt="Star icon" />
                 </div>

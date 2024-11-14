@@ -143,7 +143,7 @@ const ListManuscript = () => {
             backgroundColor: 'green', // Customize active background color
           },
         }}
-        label="List Manuscript"
+        label="New Uploads"
         {...a11yProps(0)}
       />
       
@@ -185,6 +185,7 @@ const ListManuscript = () => {
 <Tab
       
       sx={{
+        marginLeft: '5px',
         borderRadius: '20px',
         color: 'green', // Default color
         '&:hover': {

@@ -605,7 +605,7 @@ interface SearchSynonymDocument extends mongoose.Document {
 
 const Synonym = mongoose.model<SearchSynonymDocument>('SynonymSearch', searchSynonymSchema);
 
-// POST route to add new synonyms
+// POST route to add new synonyms training
 export const postSynonyms = async (req: Request, res: Response) => {
   const { searchTerm, searchSynonyms } = req.body;
 
@@ -659,7 +659,6 @@ async function expandEntitiesWithSynonyms(entities: string[]): Promise<string[]>
 
   return Array.from(expandedTerms);
 }
-
 export const postSearch = async (req: Request, res: Response) => {
   const { query } = req.body;
 
@@ -678,9 +677,11 @@ export const postSearch = async (req: Request, res: Response) => {
 
     console.log("Identified entities:", entities);
 
+    // Fetch synonyms for each entity and expand the search terms
     const expandedQueryTerms = await expandEntitiesWithSynonyms(entities);
     console.log("Expanded search terms:", expandedQueryTerms);
 
+    // Search the database for matching terms
     const searchResults = await PdfSchema.find({
       $or: [
         { keywords: { $in: expandedQueryTerms } },
@@ -690,7 +691,11 @@ export const postSearch = async (req: Request, res: Response) => {
     });
 
     if (searchResults.length > 0) {
-      return res.status(200).json({ status: "ok", results: searchResults });
+      return res.status(200).json({
+        status: "ok",
+        results: searchResults,
+        synonyms: expandedQueryTerms, // Include synonyms in the response
+      });
     } else {
       return res.status(404).json({ status: "not found", message: "No documents found." });
     }
@@ -699,7 +704,6 @@ export const postSearch = async (req: Request, res: Response) => {
     return res.status(500).send("Error analyzing or searching documents.");
   }
 };
-
 
 import PdfSchema from '../models/pdfDetails'; 
 

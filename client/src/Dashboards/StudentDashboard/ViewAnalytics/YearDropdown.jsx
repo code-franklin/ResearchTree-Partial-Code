@@ -6,7 +6,7 @@ function YearDropdown() {
     <div>
         
         <h1>View Analytics</h1>
-        <Dropdown/>
+       
     </div>
   )
 }

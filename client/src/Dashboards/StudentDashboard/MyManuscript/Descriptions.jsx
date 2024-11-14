@@ -257,7 +257,7 @@ const ResearchCard = () => {
         <button 
                 type="button" 
                 onClick={handleEditProposalTitle} 
-                /* className='absolute mt-[-59px] ml-[1220px] cursor-pointer ' */
+                className='absolute mt-[5px] ml-[-30px] cursor-pointer' 
                 >
                 <Tooltip title="Edit Title"><img src="/src/assets/edit-title-icon.png"/></Tooltip>
         </button>

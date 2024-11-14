@@ -2,8 +2,7 @@ import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import variablePie from 'highcharts/modules/variable-pie';
-import "./PieChart.css";
-import { border } from '@mui/system';
+import "tailwindcss/tailwind.css"; // Import Tailwind CSS
 
 // Initialize the variable pie module
 variablePie(Highcharts);
@@ -16,27 +15,19 @@ export const PieChart = () => {
             className: 'highcharts-custom-chart',
             backgroundColor: '#1E1E1E', // Set background color directly here
             spacingBottom: 10, // Bottom padding
-            spacingTop: 0, // Top padding
+            spacingTop: 260, // Top padding
             spacingLeft: 0, // Left padding
             spacingRight: 0, // Right padding
-            height: 685, // Set height
-            width: 450, // Set width
-            borderColor: '#4B4B4B', // Set border color
-            borderWidth: 1, // Set border width
-            
-         
+            height: 800, // Set height
+            width: 460, // Set width
+            borderColor: null, // Remove Highcharts border
+            borderWidth: 0, // Remove Highcharts border width
         },
         title: {
-            text: 'Total Manuscript',
-            className: 'highcharts-custom-title',
-            style: {
-                color: '#1E1E1E' // Set title text color to white
-            },
+            text: null // Remove title text
         },
         legend: {
-            align: 'center',
-            verticalAlign: 'bottom',
-            layout: 'horizontal',
+            enabled: true,
             itemStyle: {
                 color: '#FFFFFF' // Set legend item text color to white
             },
@@ -47,44 +38,43 @@ export const PieChart = () => {
             zMin: 0,
             showInLegend: true,
             className: 'highcharts-custom-series',
-            borderColor: 'none', // Remove border color
-            borderWidth: 0, // Remove border width
+            borderColor: null, // Remove border color for pie segments
+            borderWidth: 0, // Remove border width for pie segments
             dataLabels: {
-                className: 'highcharts-custom-data-label',
+                enabled: false // Disable data labels
             },
             data: [{
-                name: 'AI',
+                name: 'New Uploads',
                 y: 300,
                 z: 92.9,
-                color: '#FF4444' // Customize color for Spain
+                color: '#FF4444'
             }, {
-                name: 'Web App',
-                y: 50   ,
+                name: 'Student Defenders',
+                y: 50,
                 z: 118.7,
-                color: '#0BF677' // Customize color for France
+                color: '#0BF677'
             }, {
-                name: 'Business',
+                name: 'Adviser Revisions',
                 y: 20,
                 z: 124.6,
-                color: '#C70039' // Customize color for Poland
+                color: '#C70039'
             }, {
-                name: 'Cybersecurity',
+                name: 'Panelist Revisions',
                 y: 372,
                 z: 137.5,
-                color: '#272827' // Customize color for Czech Republic
+                color: '#272827'
             }, {
-                name: 'Application',
+                name: 'ReadyDefense',
                 y: 200,
                 z: 201.8,
-                color: '#0BF677' // Customize color for Italy
+                color: '#0BF677'
             }]
         }]
     };
 
     return (
-        <div className="highcharts-container ">
+        <div className="flex justify-center items-center w-[470px] mt-[130px] ml-[-75px] border border-[#4B4B4B]">
             <HighchartsReact
-              
                 highcharts={Highcharts}
                 options={options}
             />
