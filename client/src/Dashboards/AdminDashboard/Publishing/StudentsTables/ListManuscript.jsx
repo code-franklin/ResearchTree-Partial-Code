@@ -369,7 +369,7 @@ const fetchTaskProgress = async (studentId) => {
       <Select
         value={selectedAdvicerStatus}
         onChange={handleAdvicerStatusChange}
-        style={{ marginBottom: "20px", width: "200px" }}
+        style={{ backgroundColor: '#1E1E1E',marginBottom: "20px", width: "200px", marginLeft:'10px' }}
         placeholder="Select advisor status"
       >
         <Option value="">All Advisor Statuses</Option>

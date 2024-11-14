@@ -1,10 +1,10 @@
 import React from 'react';
 import { Chart, Interval, Tooltip, Axis, Legend } from 'bizcharts';
-import './BarCharts.css'; // Ensure this file contains the necessary styles
+// import './BarCharts.css'; // Ensure this file contains the necessary styles
 
 const data = [
   { category: 'AI', value: 150 },
-  { category: 'Internet of Things (IoT)', value: 150 },
+  { category: 'Internet', value: 150 },
   { category: 'Mobile App', value: 50 },
   { category: 'Web Application', value: 250 },
   { category: 'Machine Learning', value: 120 },
@@ -30,11 +30,11 @@ export const BarChart = () => {
   }
 
   return (
-    <div className="p-5 mr-[90px] mt-[130px] rounded-lg shadow-custom-shadow bg-[#1E1E1E] border border-[#4B4B4B]">
+    <div className="p-5 mr-[90px] mt-[130px] rounded-lg shadow-custom-shadow bg-[#1E1E1E] border border-[#4B4B4B] w-[864px]">
       <h2 className="text-[#0BF677] text-xl mb-4">Trending Manuscript</h2>
       <Chart 
             height={300} 
-            width={900} 
+            width={820} 
             autoFit data={sortedData} 
             interactions={['active-region']} >
             

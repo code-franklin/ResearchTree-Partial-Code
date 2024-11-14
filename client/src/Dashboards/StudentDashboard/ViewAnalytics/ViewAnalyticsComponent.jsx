@@ -7,15 +7,16 @@ import "./Styles/viewAnalytics.css";
 
 const Chart = () => {
   return (
-       <div className="h-[800px]]">
+       <div className="h-[800px]">
      <div className="chart-1">
    <div className="bar-charts">
         <BarChart />
-        <Cards/>        
+        <Cards/>    
+        <PieChart/>    
    </div>
   
   <div className="chart-2">
-        <PieChart/>
+        
   </div> 
      </div>
        </div>

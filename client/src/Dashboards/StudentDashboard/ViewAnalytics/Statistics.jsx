@@ -205,45 +205,43 @@ export const Cards = () => {
                 </div>
             </div>
         
-            <div className='absolute  mt-100px] ml-[80%]'>
-            <h3 className="donut-chart-title mt-[450px] ml-[16%] w-[100%]" color={["white"]}>Manuscript Task</h3>
-                <DonutChart
-                    data={[
-                        { type: "Completed", value: progress || 0 },
-                        { type: "Task", value: 100 - (progress || 0) }
-                    ]}
-                    autoFit
-                    key={progress || 0}
-                    legend={false}
-                    width={250}
-                    height={600}
-                    radius={0.9}
-                    innerRadius={0.7}
-                    padding="auto"
-                    angleField="value"
-                    colorField="type"
-                    color={["#0BF677", "#353535"]}
-                    pieStyle={{
-          
-                        stroke: "", 
-                        lineWidth: 1, 
-                        lineCap: "round",
-                        shadowBlur: 10,
-                        shadowColor: "rgba(0, 0, 0, 0.6)",
-                        shadowOffsetX: 3,
-                        shadowOffsetY: 3,
-                      }}
-                    statistic={{
-                      title: {
-                        content: "Progress",
-                        style: { color: "white", fontSize: 15 },
-                      },
-                      content: {
-                        style: { color: "#0BF677", fontSize: 20 },
-                        formatter: () => `${progress || 0}%`, // Display the progress value or 0 if undefined
-                      },
-                    }}
-                />
+            <div className='absolute mt-[128px] ml-[1020px] border border-[#4B4B4B]'>
+            <h3 className="donut-chart-title mt-[18px] ml-[104px] w-[100%]" color={["white"]}>Manuscript Task</h3>
+            <DonutChart
+  data={[
+    { type: "Completed", value: progress || 0 },
+    { type: "Task", value: 100 - (progress || 0) },
+  ]}
+  autoFit
+  key={progress || 0}
+  legend={false}
+  width={400}
+  height={420}
+  radius={0.9}
+  innerRadius={0.7}
+  padding={[50, 20, 170, 20]}  // Top, Right, Bottom, Left padding
+  angleField="value"
+  colorField="type"
+  color={["#0BF677", "#353535"]}
+  pieStyle={{
+    lineWidth: 2,
+    lineCap: "round",
+    shadowBlur: 10,
+    shadowColor: "rgba(0, 0, 0, 0.6)",
+    shadowOffsetX: 3,
+    shadowOffsetY: 3,
+  }}
+  statistic={{
+    title: {
+      content: "Progress",
+      style: { color: "white", fontSize: 15 },
+    },
+    content: {
+      style: { color: "#0BF677", fontSize: 20 },
+      formatter: () => `${progress || 0}%`, // Display the progress value or 0 if undefined
+    },
+  }}
+/>
             </div>
             
 {/*             <div className='absolute  mt-[-310px] ml-[60%]'>

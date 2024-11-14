@@ -93,13 +93,7 @@ const ListManuscript = () => {
             </div>
            
 
-            <Input
-                placeholder="Search articles..."
-                /* value={searchText}
-                onChange={(e) => handleSearch(e.target.value)} */
-                style={{  position: 'fixed',top: '194px', right: '770px', width: '35%', height: '50px', borderRadius: '20px', paddingLeft: '60px'  }}
-            />
-            <SearchOutlined style={{ position: 'absolute', marginTop: '6px', marginLeft: '60px', color: 'grey', fontSize: '28px' }} />
+           
           </div>
 
         </ConfigProvider>
@@ -123,7 +117,7 @@ const ListManuscript = () => {
     }}
   >
     <Tabs 
-      style={{borderRadius: '20px', background: '#222222'}}
+      style={{borderRadius: '20px', background: '#222222', width: '410px'}}
       value={value} 
       onChange={handleChange} 
       aria-label="basic tabs example"
@@ -143,7 +137,7 @@ const ListManuscript = () => {
             backgroundColor: 'green', // Customize active background color
           },
         }}
-        label="Defense"
+        label="Defenders"
         {...a11yProps(0)}
       />
       <Tab

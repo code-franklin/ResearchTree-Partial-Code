@@ -23,13 +23,13 @@ const Sidebar = ({ onSelect }) => {
         <img className="absolute mt-[480px] ml-[20px]" src="/src/assets/panelist-side.png" alt="Logo" />
       </div>
 
-      <div className="flex ml-[9px] ">
-        <div className="myName ml-[50px] mt-[20px] p-4 text-center">
+      
+        <div className="max-w-xs mx-auto p-4 flex flex-col items-center mt-5">
           <UserAvatar />
-          <span className="text-[21px] font-semibold">{user.name}</span>
-          <p className="font-light text-[#4B4B4B]">{user.role}</p>
+          <span className="myName text-[21px] font-bold text-white text-center">{user.name}</span>
+          <p className="text-gray-600 text-center">{user.role}</p>
         </div>
-      </div>
+      
 
      
 

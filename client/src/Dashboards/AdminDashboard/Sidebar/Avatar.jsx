@@ -88,7 +88,7 @@ export default function AccountMenu() {
     <React.Fragment>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
         <Tooltip title="Account settings">
-          <IconButton onClick={handleClick} size="small" sx={{ ml: 5 }}>
+          <IconButton onClick={handleClick} size="small" sx={{ ml: 0 }}>
             {admin && admin.profileImage ? (
               <Avatar src={`http://localhost:7000/public/uploads/${admin.profileImage}`} sx={{ width: 79, height: 79 }} />
             ) : (

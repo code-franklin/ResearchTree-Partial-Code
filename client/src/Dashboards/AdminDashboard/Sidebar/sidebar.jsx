@@ -97,25 +97,25 @@ const Sidebar = ({ onSelect }) => {
         />
       </div>
 
-      <div className='flex ml-[9px] '>
-        <div className='myName ml-[50px] mt-[20px] p-4 text-center'>
+     
+        <div className="max-w-xs mx-auto p-4 flex flex-col items-center mt-5">
           <UserAvatar />
           {/* <span className="text-[21px] font-semibold">{user.name}</span>   I Comment muna pansamantala
           <p className="font-light text-[#4B4B4B]">{user.role}</p> */}
 
           {admin && (
             <>
-              <span className='text-[21px] ml-6 font-semibold'>
+              <span className="myName text-[21px] font-bold text-white text-center">
                 {admin.name}
               </span>
-              <p className='font-light ml-5 text-[#4B4B4B]'>Admin</p>
+              <p className="text-gray-600 text-center">Admin</p>
             </>
           )}
           {/*               <p className="text-xl mb-2">Welcome, {admin.name}</p>
       {admin.profileImage && <p><img className="w-32 h-32 rounded-full" src={`http://localhost:7000${admin.profileImage}`} alt="Profile" /></p>}
       <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onClick={handleLogout}>Logout</button> */}
         </div>
-      </div>
+      
 
       <div className='mr-5 mt-[30px] space-y-2 text-[20px] '>
         {/* View Analytics */}

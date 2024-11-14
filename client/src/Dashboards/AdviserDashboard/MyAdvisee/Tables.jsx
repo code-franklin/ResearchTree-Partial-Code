@@ -16,11 +16,6 @@ import OngoingReviseAdviser from './ReviseAdviser';
 import OnPanelist from './OnPanelist'
 import Monitoring from './Monitoring'
 
-
-
-
-
-
 const ListManuscript = () => {
 
   const [value, setValue] = useState(0); // Set to 0 (index of the first tab)
@@ -92,14 +87,6 @@ const ListManuscript = () => {
             <TextHeader/>
             </div>
            
-
-            <Input
-                placeholder="Search articles..."
-                /* value={searchText}
-                onChange={(e) => handleSearch(e.target.value)} */
-                style={{  position: 'fixed',top: '194px', right: '770px', width: '35%', height: '50px', borderRadius: '20px', paddingLeft: '60px'  }}
-            />
-            <SearchOutlined style={{ position: 'absolute', marginTop: '6px', marginLeft: '60px', color: 'grey', fontSize: '28px' }} />
           </div>
 
         </ConfigProvider>

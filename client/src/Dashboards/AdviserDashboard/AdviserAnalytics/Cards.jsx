@@ -33,17 +33,11 @@ export const Cards = () => {
     return (
         <div>
 
-
             <div className="cards-container">
                 
-         
-                   
                 <div className="year-container"> 
                     
                 <div className="absolute mt-[-80px]">
-
-                    
-               
 
                 </div>
                     <span className="absolute left-[-1174px] mt-[-50px] text-[40px] font-bold">View Analytics</span>
@@ -51,10 +45,10 @@ export const Cards = () => {
                 </div>
                 <div className="card">
                     <div className="card-icon-1">
-                        <img className="" src="/src/assets/student-handle.png" />
+                        <img className="ml-[290px]" src="/src/assets/student-handle.png" />
                     </div>
                     <div className="card-content">
-                        <p className="card-title">Student Handle</p>
+                        <p className="card-title">Total Manuscripts</p>
                         <p className="card-value-1 ml-[80px]">{user.handleNumber} Groups</p>
                     </div>
                 </div>
@@ -69,7 +63,7 @@ export const Cards = () => {
                 </div>
                 <div className="card">
                     <div className="card-icon-2">
-                    <img className='' src='/src/assets/adviserAnalytics-icon-1.png'/>
+                    <img className='ml-[295px]' src='/src/assets/adviserAnalytics-icon-1.png'/>
                     </div>
                     <div className="card-content">
                         <p className="card-title">New Uploads</p>
@@ -78,7 +72,7 @@ export const Cards = () => {
                 </div>
                 <div className="card">
                     <div className="card-icon-3">
-                    <img className='' src='/src/assets/adviserAnalytics-icon-3.png' />
+                    <img className='ml-[290px]' src='/src/assets/adviserAnalytics-icon-3.png' />
                     </div>
                     <div className="card-content">
                         <p className="card-title">Ongoing Revision</p>
@@ -88,7 +82,7 @@ export const Cards = () => {
                 </div>
                 <div className="card">
                     <div className="card-icon-4">
-                    <img className='' src='/src/assets/adviserAnalytics-icon-5.png' />
+                    <img className='ml-[290px]' src='/src/assets/adviserAnalytics-icon-5.png' />
                     </div>
                     <div className="card-content">
                         <p className="card-title">Ready for Defense</p>
@@ -101,10 +95,10 @@ export const Cards = () => {
                  <div className='flex absolute mt-[125px]'>
                  <div className="card ">
                     <div className="card-icon-4">
-                    <img className='' src='/src/assets/adviserAnalytics-icon-5.png' />
+                    <img className='mt-[-20px]' src='/src/assets/adviserAnalytics-icon-5.png' />
                     </div>
                     <div className="card-content">
-                        <p className="card-title">Ready for Defense</p>
+                        <p className="card-title">Defenders</p>
                         <p className="card-value-3">300</p>
                     </div>
                 </div>
@@ -114,7 +108,7 @@ export const Cards = () => {
                     <img className='' src='/src/assets/adviserAnalytics-icon-5.png' />
                     </div>
                     <div className="card-content">
-                        <p className="card-title">Ready for Defense</p>
+                        <p className="card-title">Defender's Revision</p>
                         <p className="card-value-3">300</p>
                     </div>
                 </div>
@@ -124,7 +118,7 @@ export const Cards = () => {
                     <img className='' src='/src/assets/adviserAnalytics-icon-5.png' />
                     </div>
                     <div className="card-content">
-                        <p className="card-title">Ready for Defense</p>
+                        <p className="card-title">Approved</p>
                         <p className="card-value-3">300</p>
                     </div>
                 </div>
