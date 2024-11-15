@@ -191,57 +191,64 @@ export const chooseNewAdvisor = async (req: Request, res: Response) => {
   const { userId, advisorId } = req.body;
 
   if (!userId || !advisorId) {
-    return res.status(400).json({ message: 'Advisor ID and User ID are required.' });
+    return res.status(400).json({ message: 'userId and advisorId are required.' });
   }
 
   try {
+    // Find the student by ID
     const student = await User.findById(userId) as IStudent | null;
-
-    // Check if the student already has an advisor that is not declined
-    if (student?.chosenAdvisor && student.advisorStatus !== 'declined') {
-      return res.status(400).json({ message: 'Advisor already chosen' });
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found.' });
     }
 
-    const selectedAdvisor = await User.findById(advisorId);
+    // Check if the student already has an advisor and the advisor status is not 'declined'
+    if (student.chosenAdvisor && student.advisorStatus !== 'declined') {
+      return res.status(400).json({ message: 'Advisor already chosen.' });
+    }
+
+    // Find the selected advisor by ID
+    const selectedAdvisor = await User.findById(advisorId) as IUser | null;
     if (!selectedAdvisor) {
       return res.status(404).json({ message: 'Advisor not found.' });
     }
 
-    // Update student advisor if no advisor or declined status
-    student!.chosenAdvisor = advisorId;
-    student!.advisorStatus = 'pending';
-    await student!.save();
-
-    // Fetch all advisors and filter out the chosen advisor
-    const allAdvisors = await User.find({ role: 'advisor' }).exec() as IUser[];
+    // Retrieve all advisors except the chosen one
+    const allAdvisors = await User.find({}).exec() as IUser[];
     const filteredAdvisors = allAdvisors.filter(advisor => advisor._id.toString() !== advisorId);
 
-    // Assign roles: Technical Expert, Statistician, Subject Expert
-    const panelistsByRole: { [role: string]: { name: string; role: string } | null } = {
+    // Initialize panelists by role
+    const panelistsByRole: { [role: string]: IUser | null } = {
       'Technical Expert': null,
       'Statistician': null,
       'Subject Expert': null,
     };
 
+    // Shuffle advisors and assign panelists to required roles
     const shuffledAdvisors = filteredAdvisors.sort(() => 0.5 - Math.random());
     for (const advisor of shuffledAdvisors) {
       if (panelistsByRole[advisor.design] === null) {
-        panelistsByRole[advisor.design] = { name: advisor.name, role: advisor.design };
+        panelistsByRole[advisor.design] = advisor;
       }
       if (Object.values(panelistsByRole).every(panelist => panelist !== null)) {
         break;
       }
     }
 
-    const panelists = Object.values(panelistsByRole).filter(panelist => panelist !== null);
-    return res.status(200).json({ message: 'Advisor chosen and panelists assigned successfully', student, panelists });
+    // Collect selected panelists
+    const panelists = Object.values(panelistsByRole).filter(panelist => panelist !== null) as IUser[];
 
+    // Update student's chosen advisor and panelists
+    student.chosenAdvisor = advisorId;
+    student.advisorStatus = 'pending';
+    student.panelists = panelists.map(panelist => new mongoose.Types.ObjectId(panelist._id) as unknown as ObjectId);
+    await student.save();
+
+    res.status(200).json({ message: 'Advisor chosen and panelists assigned successfully', student });
   } catch (error) {
-    console.error("Error retrieving panelists:", error);
-    res.status(500).json({ message: "Error retrieving panelists." });
+    console.error("Error choosing new advisor:", error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
-
 
 // app.post('synonyms', async (req, res) => {
 export const trainingProposal = async (req: Request, res: Response) => {

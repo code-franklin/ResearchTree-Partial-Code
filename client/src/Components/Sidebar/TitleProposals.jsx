@@ -154,30 +154,32 @@ export default function BasicModal() {
   //   }
   // };
 
-  const chooseAdvisor = async (advisorId) => {
-    try {
-      const response = await axios.post('http://localhost:7000/api/student/choose-advisor', {
-        userId: user._id,
-        advisorId: advisorId,
-      });
-  
-      if (response.status === 200) {
-        const { panelists } = response.data;
-        const filteredPanelists = panelists.filter(panelist =>
-          ['Technical Expert', 'Statistician', 'Subject Expert'].includes(panelist.role)
-        );
-        setPanelists(filteredPanelists);
-        message.success(response.data.message);
-      } else {
-        console.error("Error choosing advisor:", response.data.message);
-        message.error(response.data.message);
-      }
-    } catch (error) {
-      console.error("Error choosing advisor:", error.message);
-      message.error("An error occurred while choosing the advisor");
+// Function to choose an advisor and display panelists
+const chooseAdvisor = async (advisorId) => {
+  try {
+    // Make a request to select the advisor
+    const response = await axios.post('http://localhost:7000/api/student/choose-advisor', { 
+      userId: user._id,
+      advisorId,
+    });
+
+    if (response.data.student && response.data.student.panelists) {
+      // Extract panelists with specific roles
+      const filteredPanelists = response.data.student.panelists.filter(panelist =>
+        ['Technical Expert', 'Statistician', 'Subject Expert'].includes(panelist.role)
+      );
+      fetchStudentInfoAndProposal();
+      setPanelists(filteredPanelists);
+      message.success("Advisor chosen and panelists assigned successfully");
+    } else {
+      console.error("Error: No panelists found in the response.");
     }
-  };
-  
+  } catch (err) {
+    console.error("Error choosing advisor:", err.message);
+  }
+};
+
+
   return (
     <div>
       <button onClick={handleOpen}>
@@ -441,7 +443,7 @@ export default function BasicModal() {
                 })}
               </ul>
 
-              {/* Panelists Section */}
+{/* {              Panelists Section
               {panelists.length > 0 && (
                 <div style={{ marginTop: '20px', padding: '10px', backgroundColor: 'black', borderRadius: '4px' }}>
                   <h2 style={{ fontSize: '18px', marginBottom: '10px' }}>Panelists</h2>
@@ -453,7 +455,8 @@ export default function BasicModal() {
                     ))}
                   </ul>
                 </div>
-              )}
+              )}} */}
+              
             </section>
           )}
         </Box>

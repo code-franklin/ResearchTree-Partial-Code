@@ -85,8 +85,6 @@ export default function TabsPricingExample() {
           // Optionally clear the panelist students list if necessary
           window.location.reload();
         }
-
-        fetchStudents(); // Refresh the list of students
       } else {
         const errorData = await response.json();
         console.error("Error responding to student:", errorData.message);
