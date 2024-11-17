@@ -22,6 +22,7 @@ const ResearchCard = () => {
   
   const [proposal, setProposal] = useState('');
   const [channelId, setChannelId] = useState('');
+  const [manuscriptStatus, setManuscriptStatus] = useState('');
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
   const [isTaskVisible, setIsTaskVisible] = useState(false);
@@ -57,8 +58,10 @@ const ResearchCard = () => {
         setAdvisorInfo(data.chosenAdvisor);
         setAdvisorStatus(data.advisorStatus);
         setPanelists(data.panelists || []);
-        setChannelId(data.channelId || '');
-        setProposal(data.proposal || {}); 
+        setChannelId(data.channelId);
+        setManuscriptStatus(data.manuscriptStatus);
+        setProposal(data.proposal || {});
+
 
         // Fetch tasks after getting advisor info
         fetchUpdatedTasks();
@@ -320,7 +323,7 @@ const ResearchCard = () => {
               Submit your Title Proposals
             </h1>
             <p className="text-gray-500 font-bold mb-4">Authors: 
-             <span className='font-normal'> {user.groupMembers
+             <span className='font-normal'> {user?.groupMembers
                 .map(member => member.replace(/([a-z])([A-Z])/g, '$1 $2')) // Insert space between lowercase and uppercase letters
                 .join(', ')}</span> 
             </p>
@@ -386,7 +389,9 @@ const ResearchCard = () => {
         
         <div className="text-gray-400 mb-4">
         <span><span className="font-bold text-white">Date of Uploaded:</span> <span className="mr-5">{proposal?.submittedAt && new Date(proposal?.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span></span>
+        <span><span className="font-bold text-white">Manuscript Status : </span> <span className="mr-5">{manuscriptStatus || "N/A"}</span></span>
 
+        
           {/* <br />
           {user.channelId} */}
         </div>
@@ -411,7 +416,7 @@ const ResearchCard = () => {
       <Dialog open={isEditorOpen} onClose={closeEditorModal} fullWidth maxWidth="xxl">
         <DialogContent sx={{ height: '1000px' }}>
           {user && (
-            <CkEditorDocuments userId={user._id} channelId={user.channelId} />
+            <CkEditorDocuments userId={user._id} channelId={channelId} />
           )}
         </DialogContent>
         <DialogActions>

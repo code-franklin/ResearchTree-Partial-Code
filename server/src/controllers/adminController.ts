@@ -406,43 +406,43 @@ export const deleteSpecialization = async (req: Request, res: Response) => {
 
 export const countReadyToDefenseManuscripts = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Query to count documents with manuscriptStatus set to 'readyToDefense'
-    const count = await User.countDocuments({ manuscriptStatus: 'readyToDefense' });
+    // Query to count documents with manuscriptStatus set to 'ready to defense'
+    const count = await User.countDocuments({ manuscriptStatus: 'Ready to Defense' });
     res.status(200).json({ totalReadyToDefense: count });
   } catch (error) {
-    console.error('Error counting readyToDefense manuscripts:', error);
+    console.error('Error counting Ready to Defense manuscripts:', error);
     res.status(500).json({ message: 'Server error while counting manuscripts' });
   }
 };
 export const countReviseOnAdvicerManuscripts = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Query to count documents with manuscriptStatus set to 'readyToDefense'
-    const count = await User.countDocuments({ manuscriptStatus: 'reviseOnAdvicer' });
+    // Query to count documents with manuscriptStatus set to 'revise on advicer'
+    const count = await User.countDocuments({ manuscriptStatus: 'Revise On Advicer' });
     res.status(200).json({ totalReviseOnAdvicer: count });
   } catch (error) {
-    console.error('Error counting readyToDefense manuscripts:', error);
+    console.error('Error counting Revise on Advicer manuscripts:', error);
     res.status(500).json({ message: 'Server error while counting manuscripts' });
   }
 };
 
 export const countReviseOnAPanelManuscripts = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Query to count documents with manuscriptStatus set to 'readyToDefense'
-    const count = await User.countDocuments({ manuscriptStatus: 'reviseOnPanelist' });
+    // Query to count documents with manuscriptStatus set to 'revise on panel'
+    const count = await User.countDocuments({ manuscriptStatus: 'Revise on Panelist' });
     res.status(200).json({ totalReviseOnPanel: count });
   } catch (error) {
-    console.error('Error counting readyToDefense manuscripts:', error);
+    console.error('Error counting Ready on Panelist manuscripts:', error);
     res.status(500).json({ message: 'Server error while counting manuscripts' });
   }
 };
 
 export const countApprovedOnPanelManuscripts = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Query to count documents with manuscriptStatus set to 'readyToDefense'
-    const count = await User.countDocuments({ manuscriptStatus: 'approvedOnPanel' });
+    // Query to count documents with manuscriptStatus set to 'Ready to Defense'
+    const count = await User.countDocuments({ manuscriptStatus: 'Approved on Panel' });
     res.status(200).json({ totalApprovedOnPanel: count });
   } catch (error) {
-    console.error('Error counting readyToDefense manuscripts:', error);
+    console.error('Error counting Approved on Panel manuscripts:', error);
     res.status(500).json({ message: 'Server error while counting manuscripts' });
   }
 };

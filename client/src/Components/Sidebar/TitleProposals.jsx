@@ -170,6 +170,7 @@ const chooseAdvisor = async (advisorId) => {
       );
       fetchStudentInfoAndProposal();
       setPanelists(filteredPanelists);
+      console.log("List Panelist : ", panelists)
       message.success("Advisor chosen and panelists assigned successfully");
     } else {
       console.error("Error: No panelists found in the response.");
@@ -455,7 +456,7 @@ const chooseAdvisor = async (advisorId) => {
                     ))}
                   </ul>
                 </div>
-              )}} */}
+              )} */}
               
             </section>
           )}

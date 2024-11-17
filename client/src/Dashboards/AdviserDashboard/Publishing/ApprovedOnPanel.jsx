@@ -203,7 +203,7 @@ export default function NewTables() {
       <List
         grid={{ gutter: 16, column: 1 }}
         dataSource={filteredStudents.filter(
-          (student) => student.manuscriptStatus === "approvedOnPanel"
+          (student) => student.manuscriptStatus === "Approved on Panel"
         )}
         renderItem={(student) => (
           <List.Item key={student._id}>
@@ -254,13 +254,13 @@ export default function NewTables() {
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Manuscript Status:</span>{" "}
-                  {student.manuscriptStatus}
+                  <span className='font-bold'>Manuscript Status : </span>{" "}
+                  {student.manuscriptStatus || "N/A"}
                 </Text>
-                {/*                 <br /><br />
-                <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
-                <p style={{ color: "#ffffff" }}>USer: {student.name}</p>
-                <br /> */}
+                <br />
+                <br />
+                <p style={{ color: "#ffffff" }}>Course : {student.course}</p>
+                <p style={{ color: "#ffffff" }}>Name : {student.name}</p>
               </div>
               <div
                 style={{
@@ -277,12 +277,12 @@ export default function NewTables() {
                 /> */}
                 {/*                 <Button
                   icon={<LoadingOutlined />}  
-                  onClick={() => updateManuscriptStatus(student._id, 'reviseOnPanelist')}
+                  onClick={() => updateManuscriptStatus(student._id, 'Revise on Panelist')}
                   style={{ marginBottom: "20px", width: "100px" }}
                 />
                 <Button
                   icon={<CheckOutlined />}
-                  onClick={() => updateManuscriptStatus(student._id, 'approvedOnPanel')}
+                  onClick={() => updateManuscriptStatus(student._id, 'Approved on Panel')}
                   style={{ marginBottom: "20px", width: "100px" }}
                 /> */}
                 <Button

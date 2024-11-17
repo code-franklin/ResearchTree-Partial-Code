@@ -243,13 +243,13 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Manuscript Status:</span>{" "}
-                  {student.manuscriptStatus}
+                  <span className='font-bold'>Manuscript Status :</span>{" "}
+                  {student.manuscriptStatus || "N/A"}
                 </Text>
                 <br />
                 <br />
-                <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
-                <p style={{ color: "#ffffff" }}>User: {student.name}</p>
+                <p style={{ color: "#ffffff" }}>Course : {student.course}</p>
+                <p style={{ color: "#ffffff" }}>Name : {student.name}</p>
               </div>
 
               <div style={{

@@ -181,6 +181,40 @@ export default function NewTables() {
     }
   };
 
+  const updatePanelManuscriptStatus = async (channelId, newStatus, userId) => {
+    try {
+      const response = await axios.patch(
+        "http://localhost:7000/api/advicer/thesis/panel/manuscript-status",
+        { channelId, manuscriptStatus: newStatus, userId }
+      );
+
+      const { remainingVotes, message: successMessage } = response.data;
+
+      message.success(successMessage);
+
+      // Display remaining votes if status is `Approved on Panel` or `Revise on Panelist` and there are pending votes
+      if (
+        (newStatus === "Revise on Panelist" || newStatus === "Approved on Panel") &&
+        remainingVotes > 0
+      ) {
+        message.info(
+          `Only ${remainingVotes} more vote(s) needed to proceed with the manuscript`
+        );
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        message.error(
+          `Error: ${error.response.data.message || "Failed to update status"}`
+        );
+      } else {
+        console.error("Error:", error.message);
+        message.error("Error updating status");
+      }
+    }
+  };
+
+
   const deleteTask = async (studentId, taskId) => {
     try {
       const response = await fetch(
@@ -296,7 +330,7 @@ export default function NewTables() {
       <List
         grid={{ gutter: 16, column: 1 }}
         dataSource={filteredStudents.filter(
-          (student) => student.manuscriptStatus === "readyToDefense"
+          (student) => student.manuscriptStatus === "Ready to Defense"
         )}
         renderItem={(student) => (
           <List.Item key={student._id}>
@@ -347,13 +381,13 @@ export default function NewTables() {
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Manuscript Status:</span>{" "}
-                  {student.manuscriptStatus}
+                  <span className='font-bold'>Manuscript Status : </span>{" "}
+                  {student.manuscriptStatus || "N/A"}
                 </Text>
-                {/*                 <br /><br />
-                <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
-                <p style={{ color: "#ffffff" }}>USer: {student.name}</p>
-                <br /> */}
+                <br />
+                <br />
+                <p style={{ color: "#ffffff" }}>Course : {student.course}</p>
+                <p style={{ color: "#ffffff" }}>Name : {student.name}</p>
               </div>
 
               <div
@@ -388,14 +422,14 @@ export default function NewTables() {
                 />
                 {/*                 <Button
                   icon={<LoadingOutlined />}  
-                  onClick={() => updateManuscriptStatus(student._id, 'reviseOnAdvicer')}
-                  style={{ marginBottom: "20px", width: "100px" }}
-                />
-                <Button
-                  icon={<CheckOutlined />}
-                  onClick={() => updateManuscriptStatus(student._id, 'readyToDefense')}
+                  onClick={() => updateManuscriptStatus(student._id, 'Revise On Advicer')}
                   style={{ marginBottom: "20px", width: "100px" }}
                 /> */}
+                <Button
+                  icon={<CheckOutlined />}
+                  onClick={() => updatePanelManuscriptStatus(student._id, 'Approved on Panel')}
+                  style={{ marginBottom: "20px", width: "100px" }}
+                /> 
                 <Button
                   type='primary'
                   onClick={() => openTaskModal(student)}

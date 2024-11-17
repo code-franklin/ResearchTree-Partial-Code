@@ -22,7 +22,7 @@ export interface IUser extends Document {
   role: 'student' | 'adviser';
   profileImage: string;
   specializations: string[];
-  manuscriptStatus: 'reviseOnAdvicer' | 'readyToDefense' | 'reviseOnPanelist' | 'approvedOnPanel' | null;
+  manuscriptStatus: 'Revise On Advicer' | 'Ready to Defense' | 'Revise on Panelist' | 'Approved on Panel' | null;
   panelistVotes: string[]; // Define as an array of strings
   publishingVotes: string[]; // Define as an array of strings
   course?: string;
@@ -49,7 +49,7 @@ const userSchema: Schema = new Schema<IUser>({
   specializations: { type: [String], required: function() { return this.role === 'adviser'; } },
   manuscriptStatus: {
     type: String,
-    enum: ['reviseOnAdvicer', 'readyToDefense', 'reviseOnPanelist', 'approvedOnPanel', null],
+    enum: ['Revise On Advicer', 'Ready to Defense', 'Revise on Panelist', 'Approved on Panel', null],
     default: null,
   },
   panelistVotes: {

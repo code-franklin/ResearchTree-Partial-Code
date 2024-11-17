@@ -103,9 +103,10 @@ async function expandEntitiesWithSynonyms(entities: string[]): Promise<string[]>
   return Array.from(expandedTerms); // Convert Set to array to remove duplicates
 }
 
-// Proposal submit
+// Proposal submission
 export const createNewProposal = async (req: Request, res: Response) => {
   const { userId, proposalTitle, proposalText } = req.body;
+
   if (!userId || !proposalTitle || !proposalText) {
     return res.status(400).send("userId, proposalTitle, and proposalText are required.");
   }
@@ -117,10 +118,10 @@ export const createNewProposal = async (req: Request, res: Response) => {
     }
 
     if (student.advisorStatus === "accepted") {
-      return res.status(404).json({ message: 'Cannot submit proposal after advisor acceptance' });
+      return res.status(400).json({ message: 'Cannot submit proposal after advisor acceptance' });
     }
     if (student.advisorStatus === 'pending') {
-      return res.status(400).json({ message: 'Cannot submit proposal, please wait for approval on advisor' });
+      return res.status(400).json({ message: 'Cannot submit proposal, please wait for approval on advisor.' });
     }
 
     const channelId = uuidv4();
@@ -130,25 +131,24 @@ export const createNewProposal = async (req: Request, res: Response) => {
     const newProposal = {
       proposalTitle,
       proposalText,
-      submittedAt: new Date()
+      submittedAt: new Date(),
     };
 
     student.proposals.push(newProposal);
     await student.save();
 
-
-    const escapeRegex = (text: string): string => text.replace(/[.*+?^=!:${}()|\[\]\/\\]/g, "\\$&");
+    // Expand keywords and search advisors
     const expandedQueryTerms = await expandEntitiesWithSynonyms([proposalTitle, proposalText]);
-    console.log('Expanded Query Terms:', expandedQueryTerms);
-
-    const escapedQueryTerms = expandedQueryTerms.map(term => escapeRegex(term));
+    const escapedQueryTerms = expandedQueryTerms.map(term =>
+      term.replace(/[.*+?^=!:${}()|\[\]\/\\]/g, "\\$&")
+    );
 
     const declinedAdvisors = student.declinedAdvisors || [];
     const advisors = await User.find({
       role: 'adviser',
       isApproved: true,
       specializations: { $in: escapedQueryTerms.map(term => new RegExp(term, 'i')) },
-      _id: { $nin: declinedAdvisors }
+      _id: { $nin: declinedAdvisors },
     });
 
     if (advisors.length === 0) {
@@ -156,16 +156,12 @@ export const createNewProposal = async (req: Request, res: Response) => {
     }
 
     const advisorsWithMatchPercentage = advisors.map(advisor => {
-      if (!advisor.specializations || !Array.isArray(advisor.specializations)) {
-        return { advisor, matchPercentage: 0 };
-      }
-
       const matchedSpecializations = advisor.specializations.filter(specialization =>
         escapedQueryTerms.some(term => new RegExp(term, 'i').test(specialization))
       );
 
       const matchPercentage = (matchedSpecializations.length / escapedQueryTerms.length) * 100;
-      return { advisor, matchPercentage, specializations: advisor.specializations };
+      return { advisor, matchPercentage };
     });
 
     advisorsWithMatchPercentage.sort((a, b) => b.matchPercentage - a.matchPercentage);
@@ -176,17 +172,18 @@ export const createNewProposal = async (req: Request, res: Response) => {
       results: top5Advisors.map(item => ({
         advisor: item.advisor,
         matchPercentage: item.matchPercentage.toFixed(2),
-        specializations: item.specializations,
-        channelId: item.advisor.channelId
-      }))
+        specializations: item.advisor.specializations,
+        channelId: item.advisor.channelId,
+      })),
     });
 
   } catch (error) {
-    console.error("Error searching advisors:", error);
-    return res.status(500).send("Error analyzing or searching advisors.");
+    console.error("Error submitting proposal:", error);
+    return res.status(500).send("Internal server error.");
   }
 };
 
+// Advisor selection
 export const chooseNewAdvisor = async (req: Request, res: Response) => {
   const { userId, advisorId } = req.body;
 
@@ -195,80 +192,115 @@ export const chooseNewAdvisor = async (req: Request, res: Response) => {
   }
 
   try {
-    // Find the student by ID
     const student = await User.findById(userId) as IStudent | null;
     if (!student) {
       return res.status(404).json({ message: 'Student not found.' });
     }
 
-    // Check if the student already has an advisor and the advisor status is not 'declined'
     if (student.chosenAdvisor && student.advisorStatus !== 'declined') {
       return res.status(400).json({ message: 'Advisor already chosen.' });
     }
 
-    // Find the selected advisor by ID
     const selectedAdvisor = await User.findById(advisorId) as IUser | null;
     if (!selectedAdvisor) {
       return res.status(404).json({ message: 'Advisor not found.' });
     }
 
-    // Retrieve all advisors except the chosen one
-    const allAdvisors = await User.find({}).exec() as IUser[];
-    const filteredAdvisors = allAdvisors.filter(advisor => advisor._id.toString() !== advisorId);
+    // Get the top 5 advisors from the student's proposal
+    const expandedQueryTerms = await expandEntitiesWithSynonyms(student.proposals.slice(-1)[0]?.proposalText || "");
+    const escapedQueryTerms = expandedQueryTerms.map(term =>
+      term.replace(/[.*+?^=!:${}()|\[\]\/\\]/g, "\\$&")
+    );
 
-    // Initialize panelists by role
+    const advisors = await User.find({
+      role: 'adviser',
+      isApproved: true,
+      specializations: { $in: escapedQueryTerms.map(term => new RegExp(term, 'i')) },
+    });
+
+    const advisorsWithMatchPercentage = advisors.map(advisor => {
+      const matchedSpecializations = advisor.specializations.filter(specialization =>
+        escapedQueryTerms.some(term => new RegExp(term, 'i').test(specialization))
+      );
+
+      const matchPercentage = (matchedSpecializations.length / escapedQueryTerms.length) * 100;
+      return { advisor, matchPercentage };
+    });
+
+    advisorsWithMatchPercentage.sort((a, b) => b.matchPercentage - a.matchPercentage);
+    const top5Advisors = advisorsWithMatchPercentage.slice(0, 5);
+
+    // Exclude the chosen advisor and assign panelists
+    const panelists = top5Advisors
+      .filter(item => item.advisor._id.toString() !== advisorId)
+      .map(item => item.advisor);
+
     const panelistsByRole: { [role: string]: IUser | null } = {
       'Technical Expert': null,
       'Statistician': null,
       'Subject Expert': null,
     };
 
-    // Shuffle advisors and assign panelists to required roles
-    const shuffledAdvisors = filteredAdvisors.sort(() => 0.5 - Math.random());
-    for (const advisor of shuffledAdvisors) {
-      if (panelistsByRole[advisor.design] === null) {
-        panelistsByRole[advisor.design] = advisor;
-      }
-      if (Object.values(panelistsByRole).every(panelist => panelist !== null)) {
-        break;
+    for (const panelist of panelists) {
+      if (panelistsByRole[panelist.design] === null) {
+        panelistsByRole[panelist.design] = panelist;
       }
     }
 
-    // Collect selected panelists
-    const panelists = Object.values(panelistsByRole).filter(panelist => panelist !== null) as IUser[];
-
-    // Update student's chosen advisor and panelists
+    // Save the selected advisor and panelists
     student.chosenAdvisor = advisorId;
     student.advisorStatus = 'pending';
-    student.panelists = panelists.map(panelist => new mongoose.Types.ObjectId(panelist._id) as unknown as ObjectId);
+    student.panelists = Object.values(panelistsByRole).filter(p => p !== null).map(panelist =>
+      new mongoose.Types.ObjectId(panelist!._id) as unknown as ObjectId
+    );
+
     await student.save();
 
-    res.status(200).json({ message: 'Advisor chosen and panelists assigned successfully', student });
+    return res.status(200).json({
+      message: 'Advisor chosen and panelists assigned successfully.',
+      student,
+    });
+
   } catch (error) {
-    console.error("Error choosing new advisor:", error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error choosing advisor:", error);
+    return res.status(500).json({ message: 'Internal server error.' });
   }
 };
 
-// app.post('synonyms', async (req, res) => {
 export const trainingProposal = async (req: Request, res: Response) => {
-  const { term, synonyms } = req.body;
-  if (!term || !synonyms) return res.status(400).json({ message: 'Both term and synonyms are required.' });
+  const { terms } = req.body;
+  if (!terms || !Array.isArray(terms)) {
+    return res.status(400).json({ message: 'A list of terms with synonyms is required.' });
+  }
 
   try {
-    let synonymEntry = await Synonym.findOne({ term });
-    if (synonymEntry) {
-      synonymEntry.synonyms = Array.from(new Set([...synonymEntry.synonyms, ...synonyms]));
-      await synonymEntry.save();
-    } else {
-      synonymEntry = new Synonym({ term, synonyms });
-      await synonymEntry.save();
-    }
-    res.status(201).json({ message: 'Synonyms added successfully', data: synonymEntry });
+    const promises = terms.map(async (entry: { term: string; synonyms: string[] }) => {
+      const { term, synonyms } = entry;
+
+      if (!term || !synonyms || !Array.isArray(synonyms)) {
+        throw new Error(`Invalid entry: ${JSON.stringify(entry)}`);
+      }
+
+      let synonymEntry = await Synonym.findOne({ term });
+      if (synonymEntry) {
+        synonymEntry.synonyms = Array.from(new Set([...synonymEntry.synonyms, ...synonyms]));
+        await synonymEntry.save();
+      } else {
+        synonymEntry = new Synonym({ term, synonyms });
+        await synonymEntry.save();
+      }
+
+      return synonymEntry;
+    });
+
+    const results = await Promise.all(promises);
+    res.status(201).json({ message: 'Synonyms added successfully', data: results });
   } catch (error) {
+    console.error('Error training proposal:', error);
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
 
 export const editUserProfile = async (req: Request, res: Response) => {
   const { id } = req.params; // Admin ID
@@ -370,6 +402,8 @@ export const getStudentInfoAndProposal = async (req: Request, res: Response) => 
       chosenAdvisor: user.chosenAdvisor,
       advisorStatus: user.advisorStatus,
       panelists: user.panelists,
+      channelId: user.channelId,
+      manuscriptStatus: user.manuscriptStatus,
       proposal: proposal ? {
         proposalTitle: proposal.proposalTitle,
         proposalText: proposal.proposalText,

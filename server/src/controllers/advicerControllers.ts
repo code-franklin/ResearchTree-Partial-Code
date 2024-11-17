@@ -560,7 +560,7 @@ export const updatePanelManuscriptStatus = async (req: Request, res: Response) =
 
     let remainingVotes;
 
-    if (manuscriptStatus === 'reviseOnPanelist') {
+    if (manuscriptStatus === 'Revise on Panelist') {
       // Check if user has already voted in panelistVotes
       if (student.panelistVotes.includes(userId)) {
         return res.status(400).json({ message: 'You have already voted for revise on panelist' });
@@ -570,12 +570,12 @@ export const updatePanelManuscriptStatus = async (req: Request, res: Response) =
       student.panelistVotes.push(userId);
       remainingVotes = 4 - student.panelistVotes.length;
 
-      // Update status if 3 unique panelists have voted for 'reviseOnPanelist'
+      // Update status if 3 unique panelists have voted for 'Revise on Panelist'
       if (student.panelistVotes.length === 4) {
-        student.manuscriptStatus = 'reviseOnPanelist';
+        student.manuscriptStatus = 'Revise on Panelist';
       }
 
-    } else if (manuscriptStatus === 'approvedOnPanel') {
+    } else if (manuscriptStatus === 'Approved on Panel') {
       // Check if user has already voted in publishingVotes
       if (student.publishingVotes.includes(userId)) {
         return res.status(400).json({ message: 'You have already voted for approval on panel' });
@@ -585,9 +585,9 @@ export const updatePanelManuscriptStatus = async (req: Request, res: Response) =
       student.publishingVotes.push(userId);
       remainingVotes = 5 - student.publishingVotes.length;
 
-      // Update status if 4 unique panelists have voted for 'approvedOnPanel'
+      // Update status if 4 unique panelists have voted for 'Approved on Panel'
       if (student.publishingVotes.length === 5) {
-        student.manuscriptStatus = 'approvedOnPanel';
+        student.manuscriptStatus = 'Approved on Panel';
       }
 
     } else {

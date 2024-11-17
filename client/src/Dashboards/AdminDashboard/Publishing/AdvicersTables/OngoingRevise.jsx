@@ -200,7 +200,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
 
       <List
         grid={{ gutter: 16, column: 1 }}
-        dataSource={filteredStudents.filter((student) => student.manuscriptStatus === "reviseOnAdvicer")}
+        dataSource={filteredStudents.filter((student) => student.manuscriptStatus === "Revise On Advicer")}
         renderItem={(student) => (
           <List.Item key={student._id}>
             <div style={{
@@ -227,12 +227,11 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className="font-bold">Date Published:</span> {student.datePublished || "N/A"}
+                  <span className="font-bold">Manuscript Status : </span>{" "}{student.manuscriptStatus || "N/A"}
                 </Text>
                 <br />
-                <Text style={{ color: "#ffffff" }}>Course: {student.course}</Text>
-                <Text style={{ color: "#ffffff" }}>Name: {student.name}</Text>
-                <Text style={{ color: "#ffffff" }}>Manuscript Status: {student.manuscriptStatus}</Text>
+                <Text style={{ color: "#ffffff" }}>Course : {student.course}</Text>
+                <Text style={{ color: "#ffffff" }}>Name : {student.name}</Text>
               </div>
 
               <div style={{

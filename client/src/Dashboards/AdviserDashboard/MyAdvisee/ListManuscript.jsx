@@ -348,13 +348,13 @@ export default function NewTables() {
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Manuscript Status:</span>{" "}
-                  {student.manuscriptStatus}
+                  <span className='font-bold'>Manuscript Status : </span>{" "}
+                  {student.manuscriptStatus || "N/A"}
                 </Text>
                 <br />
                 <br />
-                <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
-                <p style={{ color: "#ffffff" }}>USer: {student.name}</p>
+                <p style={{ color: "#ffffff" }}>Course : {student.course}</p>
+                <p style={{ color: "#ffffff" }}>Name : {student.name}</p>
               </div>
 
               <div
@@ -390,14 +390,14 @@ export default function NewTables() {
                 <Button
                   icon={<LoadingOutlined />}
                   onClick={() =>
-                    updateManuscriptStatus(student._id, "reviseOnAdvicer")
+                    updateManuscriptStatus(student._id, "Revise On Advicer")
                   }
                   style={{ marginBottom: "20px", width: "100px" }}
                 />
                 <Button
                   icon={<CheckOutlined />}
                   onClick={() =>
-                    updateManuscriptStatus(student._id, "readyToDefense")
+                    updateManuscriptStatus(student._id, "Ready to Defense")
                   }
                   style={{ marginBottom: "20px", width: "100px" }}
                 />

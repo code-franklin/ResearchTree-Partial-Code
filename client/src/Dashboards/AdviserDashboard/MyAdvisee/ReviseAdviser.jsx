@@ -295,7 +295,7 @@ export default function NewTables() {
       <List
         grid={{ gutter: 16, column: 1 }}
         dataSource={filteredStudents.filter(
-          (student) => student.manuscriptStatus === "reviseOnAdvicer"
+          (student) => student.manuscriptStatus === "Revise On Advicer"
         )}
         renderItem={(student) => (
           <List.Item key={student._id}>
@@ -346,14 +346,13 @@ export default function NewTables() {
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Manuscript Status:</span>{" "}
-                  {student.manuscriptStatus}
+                  <span className='font-bold'>Manuscript Status :</span>{" "}
+                  {student.manuscriptStatus || "N/A"}
                 </Text>
-                {/*                 <br /><br />
-                <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
-                <p style={{ color: "#ffffff" }}>USer: {student.name}</p>
                 <br />
- */}
+                <br />
+                <p style={{ color: "#ffffff" }}>Course : {student.course}</p>
+                <p style={{ color: "#ffffff" }}>Name : {student.name}</p>
               </div>
 
               <div
@@ -387,13 +386,13 @@ export default function NewTables() {
                 />
                 {/*                 <Button
                   icon={<LoadingOutlined />}  
-                  onClick={() => updateManuscriptStatus(student._id, 'reviseOnAdvicer')}
+                  onClick={() => updateManuscriptStatus(student._id, 'Revise On Advicer')}
                   style={{ marginBottom: "20px", width: "100px" }}
                 /> */}
                 <Button
                   icon={<CheckOutlined />}
                   onClick={() =>
-                    updateManuscriptStatus(student._id, "readyToDefense")
+                    updateManuscriptStatus(student._id, "Ready to Defense")
                   }
                   style={{ marginBottom: "20px", width: "100px" }}
                 />

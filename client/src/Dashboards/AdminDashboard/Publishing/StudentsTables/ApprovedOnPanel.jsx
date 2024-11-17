@@ -102,9 +102,9 @@ export default function ListManuscript({ studentData  }) {
 
       message.success(successMessage);
 
-      // Display remaining votes if status is `approvedOnPanel` or `reviseOnPanelist` and there are pending votes
+      // Display remaining votes if status is `Approved on Panel` or `Revise on Panelist` and there are pending votes
       if (
-        (newStatus === "reviseOnPanelist" || newStatus === "approvedOnPanel") &&
+        (newStatus === "Revise on Panelist" || newStatus === "Approved on Panel") &&
         remainingVotes > 0
       ) {
         message.info(
@@ -344,7 +344,7 @@ const fetchTaskProgress = async (studentId) => {
 
       <List
         grid={{ gutter: 16, column: 1 }}
-        dataSource={filteredStudents.filter((student) => student.manuscriptStatus === "approvedOnPanel")}
+        dataSource={filteredStudents.filter((student) => student.manuscriptStatus === "Approved on Panel")}
         renderItem={(student) => (
           <List.Item key={student._id}>
             <div style={{
@@ -387,13 +387,13 @@ const fetchTaskProgress = async (studentId) => {
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Manuscript Status:</span>{" "}
-                  {student.manuscriptStatus}
+                  <span className='font-bold'>Manuscript Status : </span>{" "}
+                  {student.manuscriptStatus || "N/A"}
                 </Text>
                 <br />
                 <br />
-                <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
-                <p style={{ color: "#ffffff" }}>User: {student.name}</p>
+                <p style={{ color: "#ffffff" }}>Course : {student.course}</p>
+                <p style={{ color: "#ffffff" }}>Name : {student.name}</p>
               </div>
 
               <div style={{
@@ -428,7 +428,7 @@ const fetchTaskProgress = async (studentId) => {
                   onClick={() =>
                     updatePanelManuscriptStatus(
                       student._id,
-                      "reviseOnPanelist",
+                      "Revise on Panelist",
                       admin.id
                     )
                   }
@@ -444,7 +444,7 @@ const fetchTaskProgress = async (studentId) => {
                   onClick={() =>
                     updatePanelManuscriptStatus(
                       student._id,
-                      "approvedOnPanel",
+                      "Approved on Panel",
                       admin.id
                     )
                   }

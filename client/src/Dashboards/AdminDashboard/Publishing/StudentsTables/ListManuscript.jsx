@@ -73,8 +73,30 @@ export default function ListManuscript({ studentData  }) {
     }
   }, []);
 
-// Function to add a task and update the task list and progress
-const addTask = async (studentId, taskTitle) => {
+  const fetchTasks = async (studentId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:7000/api/advicer/tasks/${studentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setTasks(data.tasks); // Set fetched tasks
+      } else {
+        const errorData = await response.json();
+        console.error("Error fetching tasks:", errorData.message);
+      }
+    } catch (error) {
+      console.error("Error fetching tasks:", error.message);
+    }
+  };
+
+ // Function to add a task and update the task list and progress
+ const addTask = async (studentId, taskTitle) => {
   try {
     const response = await fetch(
       `http://localhost:7000/api/advicer/add-task/${studentId}`,
@@ -161,27 +183,6 @@ const fetchTaskProgress = async (studentId) => {
 };
 
 
-  const fetchTasks = async (studentId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:7000/api/advicer/tasks/${studentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setTasks(data.tasks); // Set fetched tasks
-      } else {
-        const errorData = await response.json();
-        console.error("Error fetching tasks:", errorData.message);
-      }
-    } catch (error) {
-      console.error("Error fetching tasks:", error.message);
-    }
-  };
 
   const updatePanelManuscriptStatus = async (channelId, newStatus, userId) => {
     try {
@@ -194,9 +195,9 @@ const fetchTaskProgress = async (studentId) => {
 
       message.success(successMessage);
 
-      // Display remaining votes if status is `approvedOnPanel` or `reviseOnPanelist` and there are pending votes
+      // Display remaining votes if status is `Approved on Panel` or `Revise on Panelist` and there are pending votes
       if (
-        (newStatus === "reviseOnPanelist" || newStatus === "approvedOnPanel") &&
+        (newStatus === "Revise on Panelist" || newStatus === "Approved on Panel") &&
         remainingVotes > 0
       ) {
         message.info(
@@ -221,6 +222,7 @@ const fetchTaskProgress = async (studentId) => {
       fetchTaskProgress(student._id);
     });
   }, [filteredStudents]);
+  
 
 
   useEffect(() => {
@@ -242,7 +244,7 @@ const fetchTaskProgress = async (studentId) => {
 
   const openTaskModal = (student) => {
     setCurrentTaskStudent(student);
-    setIsModalTaskVisible(true);  
+    setIsModalVisible(true);
     fetchTasks(student._id); // Fetch tasks when opening modal
   };
 
@@ -429,18 +431,19 @@ const fetchTaskProgress = async (studentId) => {
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Manuscript Status:</span>{" "}
-                  {student.manuscriptStatus}
+                  <span className='font-bold'>Manuscript Status : </span>{" "}
+                  {student.manuscriptStatus || "N/A"}
                 </Text>
                 <br />
                 <br />
-                <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
-                <p style={{ color: "#ffffff" }}>User: {student.name}</p>
+                <p style={{ color: "#ffffff" }}>Course : {student.course}</p>
+                <p style={{ color: "#ffffff" }}>Name : {student.name}</p>
               </div>
 
               <div style={{
                 display: "flex", flexDirection: "column",
-                alignItems: "center", marginRight: "10px"
+                alignItems: "center", 
+                marginRight: "10px", gap: "10px",
               }}>
 
                 <Progress
@@ -458,12 +461,23 @@ const fetchTaskProgress = async (studentId) => {
                   }}
                 />
 
-                <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)} style={{ marginBottom: "20px", width: "100px" }} />
-{/*                 <Button icon={<LoadingOutlined />} style={{ marginBottom: "20px", width: "100px" }} />
-                <Button icon={<CheckOutlined />} style={{ marginBottom: "20px", width: "100px" }} /> */}
-                <Button type="primary" onClick={() => openTaskModal(student)} style={{ width: "100px" }}>
-                  View Task
-                </Button>
+                <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)}                   style={{
+                    width: "50px",
+                    backgroundColor: "#1890ff", // Blue for 'edit'
+                    color: "#fff", // White text
+                  }} 
+                />
+
+                <Button
+                  icon={<PlusOutlined />}
+                  type='primary'
+                  onClick={() => openTaskModal(student)}
+                  style={{
+                    width: "50px",
+                    backgroundColor: "#f5222d", // Red for 'add task'
+                    color: "#fff", // White text
+                  }}
+                />
               </div>
             </div>
           </List.Item>
@@ -504,19 +518,27 @@ const fetchTaskProgress = async (studentId) => {
       <Modal
           visible={isModalVisible}
           onCancel={() => setIsModalVisible(false)} // Ensures modal can close
+          closable={true}
           footer={[
-            <Button key='close' onClick={() => setIsModalVisible(false)}>
-              Close
-            </Button>,
-/*             <Button key='add' type='primary' onClick={handleAddTask}>
-              Add Task
-            </Button>, */
+
+            <Button key='add' type='primary' onClick={handleAddTask}>
+            Add Task
+          </Button>,
           ]}
         >
 
           <Text strong style={{ fontSize: "18px", color: "#000000" }}>
             {currentTaskStudent?.proposalTitle || "Proposal Title"}
           </Text>
+
+          <Input
+            placeholder='Enter a task'
+            value={taskInput}
+            onChange={handleTaskInputChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleAddTask();
+            }}
+          />
           <br />
           <br />
           <List
@@ -526,21 +548,18 @@ const fetchTaskProgress = async (studentId) => {
               <List.Item
                 key={task._id}
                 actions={[
-/*                   <Checkbox
-                    checked={task.isCompleted}
-                    onChange={() => handleCompleteTask(task._id)}
-                  >
-                    {task.isCompleted ? "Completed" : "Pending"}
-                  </Checkbox>, */
 
-                  <Text style={{ fontWeight: "bold", color: task.isCompleted ? "green" : "red" }}>
+
+                   <Text style={{ fontWeight: "bold", color: task.isCompleted ? "green" : "red" }}>
                     {task.isCompleted ? "Completed" : "Not Done"}
-                  </Text>
-/*                   <Button
+                  </Text>,
+
+                  <Button
                     type='link'
                     icon={<DeleteOutlined />}
                     onClick={() => deleteTask(currentTaskStudent._id, task._id)} // Pass studentId and taskId
-                  />, */
+                  />,
+                  
                 ]}
               >
                 <Text delete={task.isCompleted}>{task.taskTitle}</Text>

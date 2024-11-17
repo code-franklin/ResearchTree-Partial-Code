@@ -212,8 +212,8 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
       <List
         grid={{ gutter: 16, column: 1 }}
         dataSource={filteredStudents.filter((student) => 
-            student.manuscriptStatus === "reviseOnPanelist" ||
-            student.manuscriptStatus === "approvedOnPanel"
+            student.manuscriptStatus === "Revise on Panelist" ||
+            student.manuscriptStatus === "Approved on Panel"
         )}
         renderItem={(student) => (
           <List.Item key={student._id}>
@@ -241,12 +241,11 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className="font-bold">Date Published:</span> {student.datePublished || "N/A"}
+                  <span className="font-bold">Manuscript Status : </span>{" "}{student.manuscriptStatus || "N/A"}
                 </Text>
                 <br />
-                <Text style={{ color: "#ffffff" }}>Course: {student.course}</Text>
-                <Text style={{ color: "#ffffff" }}>Name: {student.name}</Text>
-                <Text style={{ color: "#ffffff" }}>Manuscript Status: {student.manuscriptStatus}</Text>
+                <Text style={{ color: "#ffffff" }}>Course : {student.course}</Text>
+                <Text style={{ color: "#ffffff" }}>Name : {student.name}</Text>
               </div>
 
               <div style={{
@@ -269,7 +268,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                   }}
                 />
 
-                {student.manuscriptStatus === "reviseOnPanelist" ? (
+                {student.manuscriptStatus === "Revise on Panelist" ? (
                   <>
                     <Button
                       icon={<EditOutlined />}
@@ -292,7 +291,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
 {/*                     <Button
                       icon={<CheckOutlined />}
                       onClick={() =>
-                        updateManuscriptStatus(student._id, "readyToDefense")
+                        updateManuscriptStatus(student._id, "Ready to Defense")
                       }
                       style={{ marginBottom: "10px" }}
                     >

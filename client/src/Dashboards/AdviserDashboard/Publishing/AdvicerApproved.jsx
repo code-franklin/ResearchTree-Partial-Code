@@ -183,7 +183,7 @@ export default function NewTables() {
       );
 
       if (
-        newStatus === "reviseOnPanelist" &&
+        newStatus === "Revise on Panelist" &&
         response.data.remainingVotes > 0
       ) {
         message.info(
@@ -216,9 +216,9 @@ export default function NewTables() {
 
       message.success(successMessage);
 
-      // Display remaining votes if status is `approvedOnPanel` or `reviseOnPanelist` and there are pending votes
+      // Display remaining votes if status is `Approved on Panel` or `Revise on Panelist` and there are pending votes
       if (
-        (newStatus === "reviseOnPanelist" || newStatus === "approvedOnPanel") &&
+        (newStatus === "Revise on Panelist" || newStatus === "Approved on Panel") &&
         remainingVotes > 0
       ) {
         message.info(
@@ -402,7 +402,7 @@ export default function NewTables() {
       <List
         grid={{ gutter: 16, column: 1 }}
         dataSource={filteredStudents.filter(
-          (student) => student.manuscriptStatus === "readyToDefense"
+          (student) => student.manuscriptStatus === "Ready to Defense"
         )}
         renderItem={(student) => (
           <List.Item key={student._id}>
@@ -453,13 +453,13 @@ export default function NewTables() {
                   </Text>
                 )}
                 <Text style={{ color: "#ffffff" }}>
-                  <span className='font-bold'>Manuscript Status:</span>{" "}
-                  {student.manuscriptStatus}
+                  <span className='font-bold'>Manuscript Status : </span>{" "}
+                  {student.manuscriptStatus || "N/A"}
                 </Text>
                 <br />
                 <br />
-                <p style={{ color: "#ffffff" }}>Course: {student.course}</p>
-                <p style={{ color: "#ffffff" }}>USer: {student.name}</p>
+                <p style={{ color: "#ffffff" }}>Course : {student.course}</p>
+                <p style={{ color: "#ffffff" }}>Name : {student.name}</p>
               </div>
 
               <div
@@ -503,7 +503,7 @@ export default function NewTables() {
                   onClick={() =>
                     updatePanelManuscriptStatus(
                       student._id,
-                      "reviseOnPanelist",
+                      "Revise on Panelist",
                       user._id
                     )
                   }
@@ -519,7 +519,7 @@ export default function NewTables() {
                   onClick={() =>
                     updatePanelManuscriptStatus(
                       student._id,
-                      "approvedOnPanel",
+                      "Approved on Panel",
                       user._id
                     )
                   }

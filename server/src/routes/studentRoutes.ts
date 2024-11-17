@@ -4,7 +4,7 @@ import {
     chooseNewAdvisor,
     getStudentInfoAndProposal,
     updateProposalTitle,
-    trainModel,
+    trainingProposal,
     markTaskAsCompleted,
     getTasks, 
     getTaskProgress,
@@ -33,7 +33,7 @@ router.get('/tasks/progress/:userId', getTaskProgress);
 
 router.get('/advisor-info-StudProposal/:userId', getStudentInfoAndProposal);
 router.put('/update-proposal-title/:userId', updateProposalTitle);
-router.post('/train-model', trainModel);
+router.post('/train-model', trainingProposal);
 
 
 /* router.get('/articles', getAllArticles); */
