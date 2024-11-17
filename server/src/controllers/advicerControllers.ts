@@ -640,11 +640,11 @@ export const gradePanelToStudent = async (req: Request, res: Response): Promise<
   try {
     const { studentId, panelistId, gradingRubric } = req.body;
 
-    // Create new grade entry in the database
-    const grade: IGrade = new Grade({
+    // Ensure that the rubric contains the full set of grading criteria
+    const grade = new Grade({
       studentId,
       panelistId,
-      rubric: gradingRubric,
+      grades: gradingRubric, // gradingRubric should contain research, presentation, content, etc.
       dateGraded: new Date(),
     });
 
@@ -655,6 +655,8 @@ export const gradePanelToStudent = async (req: Request, res: Response): Promise<
     res.status(500).json({ message: 'Failed to submit grading' });
   }
 };
+
+
 dotenv.config(); // This loads the variables from your .env file
 
 const client = new LanguageServiceClient({

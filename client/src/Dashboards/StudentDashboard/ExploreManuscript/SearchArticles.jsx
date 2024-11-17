@@ -80,7 +80,7 @@ const ArticleList = () => {
 
   return (
     <div className="min-h-screen text-white p-6 ml-[300px]">
-      <h1 className="text-[38px] font-bold mt-[20px] ml-[0px]">Manuscript</h1>
+      <h1 className="text-[38px] font-bold mt-[20px] ml-[55px]">Manuscripts</h1>
      
       <ConfigProvider
         theme={{
@@ -90,6 +90,7 @@ const ArticleList = () => {
               algorithm: true,
             },
             Input: {
+              
               colorPrimary: '#222222',
               colorBgBase: '#222222',
               colorTextBase: 'white',
@@ -113,6 +114,14 @@ const ArticleList = () => {
           size="xxl"
         >
           <Input
+            style={{
+              marginLeft: '50px',
+              position: 'absolute',
+              top: '20px',
+            
+            
+            
+            }}
             size="large"
             placeholder="Search"
             onPressEnter={handleSearch}
@@ -122,7 +131,12 @@ const ArticleList = () => {
           />
         </AutoComplete>
       </ConfigProvider>
+
+
       <PDFUploader />
+
+
+
       <div className="w-1/4 fixed text-right p-4 ml-[1200px] mb-[50px] w-[auto]">
         <p className="text-red-500 mr-[12.3px] mb-2 cursor-pointer">AnyTime</p>
         <p
@@ -148,7 +162,7 @@ const ArticleList = () => {
 
       {error && <p className="mt-4 text-red-500">{error}</p>}
 
-      <div className="articlesScroll flex mt-[100px]">
+      <div className="p-[50px] flex mt-[30px]">
         <div className="w-3/4">
           {filteredArticles.map((article, index) => (
             <div
@@ -178,7 +192,7 @@ const ArticleList = () => {
             width: '80%',
             height: '80%',
             backgroundColor: 'background.paper',
-            borderRadius: '8px',
+            borderRadius: '15px',
             boxShadow: 24,
             overflow: 'hidden',
           }}

@@ -12,16 +12,14 @@ import "./ViewAnalytics.css";
 
 const Chart = () => {
   return (
-   <div className="h-[2000px]">
+   <div className="h-[auto]">
     
    <div className="chart-1">
-   < Cards />
-   <div className="bar-charts">
+ 
+   < Cards/>
 
-            <BarChart />
-     
-     
-         
+   <div className="bar-charts">
+   <BarChart />
    </div>
 
   <div className="chart-2">

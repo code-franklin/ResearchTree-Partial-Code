@@ -193,6 +193,7 @@ const App = () => {
           </Button>
 
           <Button
+          style={{marginLeft: '5px'}}
             type="primary"
             danger
             onClick={() => handleDeleteUser(student._id)}
@@ -215,6 +216,8 @@ const App = () => {
             marginLeft: "600px",
             textAlign: "center",
             position: "absolute",
+            background: '#222222',
+            
           }}
           columns={columns}
           dataSource={allUsers}

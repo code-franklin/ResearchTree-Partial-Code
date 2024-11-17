@@ -73,6 +73,7 @@ router.patch('/thesis/panel/manuscript-status', updatePanelManuscriptStatus);
 // Get Panelist Students
 router.get('/panelist-students/:advisorId', getPanelistStudents);
 router.post('/respondTostudent', respondToStudent);
+// grading
 router.post('/grade-student', gradePanelToStudent);
 
 // admin

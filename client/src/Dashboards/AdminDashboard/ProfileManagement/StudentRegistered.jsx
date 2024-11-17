@@ -170,6 +170,7 @@ const App = () => {
           </Button>
 
           <Button
+           style={{marginLeft: '5px'}}
             type="primary"
             danger
             onClick={() => handleDeleteUser(student._id)}

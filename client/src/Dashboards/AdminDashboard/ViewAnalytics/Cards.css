@@ -4,7 +4,7 @@
 }
 .year-container {
     position: absolute;
-    display: flex;
+
     bottom: 178px;
     left: 1174px;
     width: 14%;
@@ -88,4 +88,9 @@
     display: flex;
     margin-left: 60px;
     font-weight: 700;
+}
+
+
+.bsitColor {
+    color: #08F677;
 }

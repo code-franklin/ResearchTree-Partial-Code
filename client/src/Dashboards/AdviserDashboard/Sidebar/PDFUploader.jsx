@@ -89,10 +89,20 @@ function App() {
   };
 
   return (
-    <div className="container mx-auto w-[500px] px-4 py-4 font-sans text-[#222222] fixed mt-[20px] ml-[100px]">
-      <Button variant="solid" style={{background: '#0BF677'}} onClick={() => setOpen(true)}>
-        Upload Manuscript <span className="ml-2 "><PictureAsPdfIcon/></span>
-      </Button>
+    <div className="container mx-auto w-[500px] px-4 py-4 font-sans text-[#222222] fixed mt-[180px] ml-[30px]">
+     <Button 
+  variant="solid" 
+  sx={{ 
+    background: '#4B4B4B', 
+    height: '50px', 
+    width: '200px', 
+    '&:hover': { backgroundColor: '#0BF677' }
+  }} 
+  onClick={() => setOpen(true)}
+>
+  Upload Manuscript <span className="ml-2"><PictureAsPdfIcon/></span>
+</Button>
+
 
       <Modal open={open} onClose={() => setOpen(false)}>
         <Box sx={{
@@ -141,9 +151,21 @@ function App() {
               onChange={(e) => setFile(e.target.files[0])}
               className="w-full p-1 text-sm text-[#222222] border border-gray-300 rounded text-white"
             />
-            <Button type="submit" fullWidth variant="solid" color="primary">
-              Submit
-            </Button>
+           <Button 
+  type="submit" 
+  fullWidth 
+  variant="solid"
+  sx={{
+    background: '#0BF677',
+    '&:hover': {
+      backgroundColor: '#04A45C', // Slightly darker green for hover
+    },
+    transition: 'background-color 0.3s ease', // Smooth transition effect
+  }}
+>
+  Submit
+</Button>
+
           </form>
         </Box>
       </Modal>

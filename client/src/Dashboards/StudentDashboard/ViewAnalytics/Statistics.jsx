@@ -125,13 +125,13 @@ export const Cards = () => {
             } else if (advisorStatus === 'pending') {
             return (
                 <span style={{ color: 'orange' }}>
-                Waiting <SyncOutlined spin />
+                Pending <SyncOutlined spin />
                 </span>
             );
             } else if (advisorStatus === 'declined') {
             return (
                 <span style={{ color: 'red' }}>
-                Your advisor declined. Please choose another advisor.
+                Your Advisor Declined. 
                 </span>
             );
             } else if (!advisorInfo) {
@@ -162,104 +162,70 @@ export const Cards = () => {
     return (
        <>
         <div className="stats-container">
-            <div className="box">
-            <div className='year-container'>
-          <div className='absolute mt-[-8px]'>
-            {/* 
-                <Dropdown /> */}
-          </div>
-
-          <span className='absolute left-[-1174px] mt-[-40px] text-[40px] font-bold text-white'>
-            View Analytics
-          </span>
+           
+        <div className='absolute'>
        
+       <div className="mt-[-100px] ml-[900px]">
+        <p className="absolute text-white text-[42px] font-bold ml-[-900px] mt-[-10px]">View Analytics</p>
+       <img className="inline-block mb-1 ml-[200px]" src="/src/assets/BSIT.png"/>
+       <span className='bsitColor'>200</span>
+       <img className="inline-block mb-1" src="/src/assets/BSCS.png"/>
+       <span className='bsitColor'>2500</span>
+
+       </div>
+        
         </div>
-                <div className="card-icon-1 absolute top-0 left-[254px]">
-                    <img src="/src/assets/star.png" alt="Star icon" />
+        <div className="bg-[#1E1E1E] p-[20px] rounded-[8px] border border-[#4B4B4B] w-[340px] h-[110px]">
+                    <div className="card-icon-2">
+                 
+                    </div>
+                    <div className="card-content">
+                        <p className="card-title">Top Searches</p>
+                        <p className="card-value-2 text-white"></p>
+                    </div>
                 </div>
+        
+                <div className="bg-[#1E1E1E] p-[20px] rounded-[8px] border border-[#4B4B4B] w-[340px] h-[110px]">
+                    <div className="card-icon-2">
+
+                    </div>
+                    <div className="card-content">
+                        <p className="card-title">New Uploads</p>
+                        <p className="card-value-2 text-white ml-[60px]">{pdfCount} Manuscripts</p>
+                    </div>
+                </div>
+                
+                <div className="bg-[#1E1E1E] p-[20px] rounded-[8px] border border-[#4B4B4B] w-[340px] h-[110px]">
                 <div className="card-content">
-                    <p className="card-title">Most Searchable</p>
-                    <p className="card-value-1 text-white">Machine Learning</p>
+                    <p className="card-title ">Advicer</p>
+                    <p className="text-white whitespace-nowrap">{getStatusMessage(advisorStatus, advisorInfo)}</p>
                 </div>
             </div>
-            <div className="box">
-                <div className="card-icon-2 left-[600px]">
-                    <img src="/src/assets/Check.png" alt="Check icon" />
-                </div>
-                <div className="card-content">
-                    <p className="card-title">Explore Manuscript</p>
-                    <p className="card-value-2 text-white">{pdfCount}</p>
-                </div>
-            </div>
-            <div className="box">
-                <div className="card-content">
-                    <p className="card-title">Advicer</p>
-                    <p className="card-title text-white ml-[10px]">{getStatusMessage(advisorStatus, advisorInfo)}</p>
-                </div>
-            </div>
-            <div className="box">
+            <div className="bg-[#1E1E1E] p-[20px] rounded-[8px] border border-[#4B4B4B] w-[340px] h-[110px]">
                 <div className="card-content">
                     <p className="card-title">Panelist</p>
-                    <p className="card-title text-white">
+                    <p className="card-title text-white ">
                         {advisorStatus === 'accepted' && <PanelistList panelists={panelists} />}</p>
-                        {advisorStatus === 'declined' && (<p style={{ color: 'red' }} className="card-title text-white">Submit another title proposal...</p>)}
-                        {advisorStatus === 'pending' && (<p style={{ color: 'orange' }} className="card-title text-white">Waiting...</p>)}
-                        {!advisorStatus && (<p style={{ color: 'lightblue' }} className="card-title text-white">Required to submit proposals</p>)}
+                        {advisorStatus === 'declined' && (<p style={{ color: 'red' }} className="">Submit another title proposal...</p>)}
+                        {advisorStatus === 'pending' && (<p style={{ color: 'orange'}} className="">Pending <SyncOutlined spin /></p>)}
+                        {!advisorStatus && (<p style={{ color: 'lightblue' }} className="">Required to submit proposals</p>)}
                 </div>
             </div>
         
-            <div className='absolute mt-[128px] ml-[1020px] border border-[#4B4B4B]'>
-            <h3 className="donut-chart-title mt-[18px] ml-[104px] w-[100%]" color={["white"]}>Manuscript Task</h3>
-            <DonutChart
-  data={[
-    { type: "Completed", value: progress || 0 },
-    { type: "Task", value: 100 - (progress || 0) },
-  ]}
-  autoFit
-  key={progress || 0}
-  legend={false}
-  width={400}
-  height={420}
-  radius={0.9}
-  innerRadius={0.7}
-  padding={[50, 20, 170, 20]}  // Top, Right, Bottom, Left padding
-  angleField="value"
-  colorField="type"
-  color={["#0BF677", "#353535"]}
-  pieStyle={{
-    lineWidth: 2,
-    lineCap: "round",
-    shadowBlur: 10,
-    shadowColor: "rgba(0, 0, 0, 0.6)",
-    shadowOffsetX: 3,
-    shadowOffsetY: 3,
-  }}
-  statistic={{
-    title: {
-      content: "Progress",
-      style: { color: "white", fontSize: 15 },
-    },
-    content: {
-      style: { color: "#0BF677", fontSize: 20 },
-      formatter: () => `${progress || 0}%`, // Display the progress value or 0 if undefined
-    },
-  }}
-/>
-            </div>
             
-{/*             <div className='absolute  mt-[-310px] ml-[60%]'>
-            <h3 className="donut-chart-title" color={["white"]}>Manuscript Task Progress</h3>
+            <div className='absolute mt-[128px] ml-[1020px] border border-[#4B4B4B]'>
+         
       <DonutChart
-    
+  
         data={[
           { type: "Progress", value: progress || 0 },
           { type: "Task", value: 100 - (progress || 0) }
         ]}
         autoFit
         key={progress || 0}
-        legend={false}
-        width={250}
-        height={600}
+        legend={true}
+        width={386}
+        height={420}
         radius={0.9}
         innerRadius={0.7}
         padding="auto"
@@ -288,7 +254,7 @@ export const Cards = () => {
         }}
       />
 
-    </div> */}
+    </div> 
         </div>
        </>
     );

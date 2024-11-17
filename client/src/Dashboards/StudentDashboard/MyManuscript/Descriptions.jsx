@@ -328,7 +328,7 @@ const ResearchCard = () => {
         )}
 
         
-    <div className='absolute  mt-[-360px] ml-[60%]'>
+    <div className='absolute  mt-[-310px] ml-[60%]'>
       <DonutChart
     
         data={[
@@ -373,7 +373,7 @@ const ResearchCard = () => {
 {/* <p><strong>Text:</strong> {proposal?.proposalText}</p>  */}
         {/* Advisor */}
         <p className="text-gray-400 mb-2">
-          <span className="font-bold text-white">Advisor: {getStatusMessage(advisorStatus, advisorInfo)}</span>
+          <span className="font-bold text-white">Advisor: </span> <span className='font-normal text-gray-400'> {getStatusMessage(advisorStatus, advisorInfo)} </span>
           {advisorStatus === 'accepted' && <PanelistList panelists={panelists} />}
         </p>
 

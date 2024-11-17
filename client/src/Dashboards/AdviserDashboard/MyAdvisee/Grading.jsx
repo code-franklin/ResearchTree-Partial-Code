@@ -131,7 +131,7 @@ export default function GradingTable() {
     <div className="p-4 w-[1600px] h-[600px] ml-[320px] mt-[20px]">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-white text-[40px] font-bold">Grading</h1>
-        <RubricButton />
+      
         <button
           onClick={handleToggleEdit}
           className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 transition"

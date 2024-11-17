@@ -49,7 +49,8 @@ const LoginFunction = () => {
         src='./src/assets/gif.gif'
         alt='Background'
       />
-      <h1 className='logintext'>Administrator</h1>
+      <h1 className='logintext ml-[60px]'>Admin</h1>
+      <h1 className='logintext2'>Explore more manuscripts</h1>
       <img
         className='logorstree'
         src='./src/assets/LogoResearchTree.png'

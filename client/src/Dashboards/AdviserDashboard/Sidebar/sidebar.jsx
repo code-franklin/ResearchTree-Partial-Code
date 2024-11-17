@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import UserAvatar from './Avatar';
+import PDFUploader from './PDFUploader'
 import './Sidebar.css';
 
 const Sidebar = ({ onSelect }) => {
@@ -124,6 +125,7 @@ const Sidebar = ({ onSelect }) => {
           My Defendee
         </Link>
 
+            <PDFUploader/>
           </div>
     </div>
   );

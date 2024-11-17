@@ -55,10 +55,15 @@ export default function NewTables() {
   // Grading modal states
   const [isGradingModalVisible, setIsGradingModalVisible] = useState(false);
   const [gradingRubric, setGradingRubric] = useState({
-    criteria1: 0,
-    criteria2: 0,
-    criteria3: 0,
+    research: { 4: "", 3: "", 2: "", 1: "" },
+    presentation: { 4: "", 3: "", 2: "", 1: "" },
+    content: { 4: "", 3: "", 2: "", 1: "" },
+    design: { 4: "", 3: "", 2: "", 1: "" },
+    function: { 4: "", 3: "", 2: "", 1: "" },
   });
+
+  
+  
   const [gradingData, setGradingData] = useState([]);
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -333,10 +338,13 @@ export default function NewTables() {
     setIsGradingModalVisible(true);
   };
 
-  const handleRubricChange = (criteria, value) => {
-    setGradingRubric((prev) => ({
-      ...prev,
-      [criteria]: value,
+  const handleRubricChange = (criteria, rating, value) => {
+    setGradingRubric(prevState => ({
+      ...prevState,
+      [criteria]: {
+        ...prevState[criteria],
+        [rating]: value,
+      }
     }));
   };
 
@@ -358,13 +366,20 @@ export default function NewTables() {
       if (response.status === 200) {
         message.success("Grading submitted successfully.");
         setIsGradingModalVisible(false);
-        setGradingRubric({ criteria1: 0, criteria2: 0, criteria3: 0 });
+        setGradingRubric({
+          research: { 4: "", 3: "", 2: "", 1: "" },
+          presentation: { 4: "", 3: "", 2: "", 1: "" },
+          content: { 4: "", 3: "", 2: "", 1: "" },
+          design: { 4: "", 3: "", 2: "", 1: "" },
+          function: { 4: "", 3: "", 2: "", 1: "" },
+        });
       }
     } catch (error) {
       console.error("Error submitting grading:", error);
       message.error("Failed to submit grading.");
     }
   };
+  
 
   return (
     <div
@@ -572,43 +587,30 @@ export default function NewTables() {
       </Dialog>
 
       <Modal
-        title='Grading Rubric'
-        visible={isGradingModalVisible}
-        onOk={submitGrading}
-        onCancel={() => setIsGradingModalVisible(false)}
-        okText='Submit'
-      >
-        <div>
-          <Text>Criteria 1</Text>
-          <Input
-            type='number'
-            min={0}
-            max={100}
-            value={gradingRubric.criteria1}
-            onChange={(e) => handleRubricChange("criteria1", e.target.value)}
-          />
-        </div>
-        <div>
-          <Text>Criteria 2</Text>
-          <Input
-            type='number'
-            min={0}
-            max={100}
-            value={gradingRubric.criteria2}
-            onChange={(e) => handleRubricChange("criteria2", e.target.value)}
-          />
-        </div>
-        <div>
-          <Text>Criteria 3</Text>
-          <Input
-            type='number'
-            min={0}
-            max={100}
-            value={gradingRubric.criteria3}
-            onChange={(e) => handleRubricChange("criteria3", e.target.value)}
-          />
-        </div>
+              title='Grading Rubric'
+              visible={isGradingModalVisible}
+              onOk={submitGrading}
+              onCancel={() => setIsGradingModalVisible(false)}
+              okText='Submit'
+            >
+              {['research', 'presentation', 'content', 'design', 'function'].map((criteria) => (
+                <div key={criteria}>
+                  <Text>{`${criteria.charAt(0).toUpperCase() + criteria.slice(1)}`}</Text>
+                  {[4, 3, 2, 1].map((rating) => (
+                    <div key={`${criteria}-${rating}`}>
+                      <Text>{`Rating ${rating}`}</Text>
+                      <Input
+                        type="text"
+                        value={gradingRubric[criteria][rating]}
+                        onChange={(e) => handleRubricChange(criteria, rating, e.target.value)}
+                        placeholder={`Enter feedback for ${criteria} rating ${rating}`}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
       </Modal>
+
 
       <ConfigProvider theme={{ components: { Modal: { algorithm: true } } }}>
       <Modal

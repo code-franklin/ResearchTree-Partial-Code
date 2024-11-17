@@ -1,13 +1,16 @@
+// models/Grade.ts
 import mongoose, { Document, Schema } from 'mongoose';
 
 // Interface for the Grade document
 export interface IGrade extends Document {
   studentId: mongoose.Schema.Types.ObjectId;
   panelistId: mongoose.Schema.Types.ObjectId;
-  rubric: {
-    criteria1: number;
-    criteria2: number;
-    criteria3: number;
+  grades: {
+    research: Record<'4' | '3' | '2' | '1', string>;
+    presentation: Record<'4' | '3' | '2' | '1', string>;
+    content: Record<'4' | '3' | '2' | '1', string>;
+    design: Record<'4' | '3' | '2' | '1', string>;
+    function: Record<'4' | '3' | '2' | '1', string>;
   };
   dateGraded: Date;
 }
@@ -23,10 +26,12 @@ const gradeSchema = new Schema<IGrade>({
     ref: 'User',
     required: true,
   },
-  rubric: {
-    criteria1: { type: Number, required: true },
-    criteria2: { type: Number, required: true },
-    criteria3: { type: Number, required: true },
+  grades: {
+    research: { 4: { type: String, default: '' }, 3: { type: String, default: '' }, 2: { type: String, default: '' }, 1: { type: String, default: '' } },
+    presentation: { 4: { type: String, default: '' }, 3: { type: String, default: '' }, 2: { type: String, default: '' }, 1: { type: String, default: '' } },
+    content: { 4: { type: String, default: '' }, 3: { type: String, default: '' }, 2: { type: String, default: '' }, 1: { type: String, default: '' } },
+    design: { 4: { type: String, default: '' }, 3: { type: String, default: '' }, 2: { type: String, default: '' }, 1: { type: String, default: '' } },
+    function: { 4: { type: String, default: '' }, 3: { type: String, default: '' }, 2: { type: String, default: '' }, 1: { type: String, default: '' } },
   },
   dateGraded: {
     type: Date,

@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
+import ITCS from './IT&CS' 
 import axios from "axios"; // Import axios
 
 export const Cards = () => {
@@ -91,19 +92,22 @@ export const Cards = () => {
   return (
     <div>
       <div className='cards-container'>
-        <div className='year-container'>
-          <div className='absolute mt-[-8px]'>
-            {/* 
-                <Dropdown /> */}
+     
+          <div className='absolute'>
+        
+        <div className="mt-[-100px] ml-[900px]">
+          <p className="absolute text-[42px] font-bold ml-[-900px] mt-[-10px]">View Analytics</p>
+        <img className="inline-block mb-1 ml-[200px]" src="/src/assets/BSIT.png"/>
+        <span className='bsitColor'>200</span>
+        <img className="inline-block mb-1" src="/src/assets/BSCS.png"/>
+        <span className='bsitColor'>2200</span>
+
+        </div>
+          
           </div>
 
-          <span className='absolute left-[-1174px] mt-[-40px] text-[40px] font-bold'>
-            View Analytics
-          </span>
-       
-        </div>
-
         <div className='card'>
+          
           <div className='card-icon-1'>
             <img className='' src='/src/assets/adviserAnalytics-icon-1.png'/>
           </div>
