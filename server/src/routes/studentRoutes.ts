@@ -15,6 +15,12 @@ import {
 /*     postUploadManuscript */
 } from '../controllers/studentControllers';
 
+import { 
+    fetchRubrics,
+    fetchGrades,
+    fetchFinalGrade
+} from '../controllers/studentControllers';
+
 const router: Router = express.Router();
 import uploadProfile from '../middleware/uploadProfile';
 
@@ -34,6 +40,11 @@ router.get('/tasks/progress/:userId', getTaskProgress);
 router.get('/advisor-info-StudProposal/:userId', getStudentInfoAndProposal);
 router.put('/update-proposal-title/:userId', updateProposalTitle);
 router.post('/train-model', trainingProposal);
+
+// Grading
+router.get("/fetch-rubrics", fetchRubrics);
+router.get('/fetch-student/grades/:userId', fetchGrades);
+router.get('/fetch-student/FinalGrades/:userId', fetchFinalGrade);
 
 
 /* router.get('/articles', getAllArticles); */

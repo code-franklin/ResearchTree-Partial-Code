@@ -15,9 +15,17 @@ import {
     updateManuscriptStatus,
     getTasksProgressStudent,
     updatePanelManuscriptStatus,
-    gradePanelToStudent,
+    // gradePanelToStudent,
     editAdvicerProfile,
     resetAdvicerPassword
+} from '../controllers/advicerControllers';
+
+// Grading
+import { 
+  fetchRubrics,
+  submitGrades,
+  fetchGrades,
+  // fetchFinalStudentGrades
 } from '../controllers/advicerControllers';
 
 import { 
@@ -73,8 +81,15 @@ router.patch('/thesis/panel/manuscript-status', updatePanelManuscriptStatus);
 // Get Panelist Students
 router.get('/panelist-students/:advisorId', getPanelistStudents);
 router.post('/respondTostudent', respondToStudent);
-// grading
-router.post('/grade-student', gradePanelToStudent);
+
+// Grading for student
+router.get("/fetch-rubrics", fetchRubrics);
+router.post('/submit-student/grade', submitGrades);
+router.get('/fetch/adviser-student/grades/:studentId', fetchGrades);
+// router.get('/fetch/adviser-FinalGrades/grades/:studentId', fetchFinalStudentGrades);
+
+// old grade
+// router.post('/grade-student', gradePanelToStudent);
 
 // admin
 router.get('/students-manage/:advisorId', listStudentsManage);

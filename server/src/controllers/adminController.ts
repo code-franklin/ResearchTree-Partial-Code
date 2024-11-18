@@ -5,11 +5,290 @@ import Admin from '../models/Admin';
 import User from '../models/User'
 import Specialization from '../models/Specialization';  
 import PdfDetails from "../models/pdfDetails";
+import Rubric from "../models/Rubric";
 import path from 'path';
 import fs from 'fs';
+import Grading from '../models/Grading';
 
 
 const JWT_SECRET = 'your_jwt_secret';
+
+export const fetchGrades = async (req: Request, res: Response) => {
+  const { studentId } = req.params; // Fetch studentId from route params
+
+  try {
+    // Check if the student exists
+    const student = await User.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found.' });
+    }
+
+    // Fetch all grades for the student, graded by different panelists
+    const grading = await Grading.find({ studentId }) // Query grades for the student
+      .populate('studentId', 'name email profileImage') // Populate student details
+      .populate('panelistId', 'name email profileImage') // Populate panelist/adviser details
+      .populate('rubricId', 'rubricName criteria') // Populate rubric details
+      .exec();
+
+    // If no grades are found
+    if (grading.length === 0) {
+      return res.status(404).json({ message: 'No grades found for this student.' });
+    }
+
+    // Compute total grades and overall grade labels for each grade record
+    const enrichedGrades = grading.map((grade) => {
+      const totalGradeValue = grade.grades.reduce(
+        (sum: number, g: { gradeValue: number }) => sum + g.gradeValue,
+        0
+      );
+
+      let overallGradeLabel = '';
+      if (totalGradeValue >= 16 && totalGradeValue <= 20) {
+        overallGradeLabel = 'Excellent';
+      } else if (totalGradeValue >= 11 && totalGradeValue <= 15) {
+        overallGradeLabel = 'Good';
+      } else if (totalGradeValue >= 6 && totalGradeValue <= 10) {
+        overallGradeLabel = 'Satisfactory';
+      } else if (totalGradeValue >= 1 && totalGradeValue <= 5) {
+        overallGradeLabel = 'Needs Improvement';
+      }
+
+      return {
+        ...grade.toObject(),
+        totalGradeValue,
+        overallGradeLabel,
+      };
+    });
+
+    // Return enriched grades with all panelist contributions
+    res.status(200).json(enrichedGrades);
+  } catch (error) {
+    console.error('Error fetching grades:', error);
+    res.status(500).json({ error: 'Failed to fetch grades.' });
+  }
+};
+
+// Backup for Adviser view student grade
+export const fetchAdviseStudentGrades = async (req: Request, res: Response) => {
+  const { panelistId } = req.params; // Fetch adviserId from route params
+
+  try {
+    // Check if the adviser exists
+    const adviser = await User.findById(panelistId);
+    if (!adviser) {
+      return res.status(404).json({ message: 'Panel not found.' });
+    }
+
+    // Fetch grades for students graded by this adviser
+    const grading = await Grading.find({ panelistId: panelistId }) // Query based on adviserId
+      .populate('studentId', 'name email profileImage') // Populate student details
+      .populate('panelistId', 'name email profileImage') // Populate adviser details
+      .populate('rubricId', 'rubricName criteria')
+      .exec();
+
+    // If no grades are found
+    if (grading.length === 0) {
+      return res.status(404).json({ message: 'No grades found for this panel.' });
+    }
+
+    // Compute total grades and overall grade labels
+    const enrichedGrades = grading.map((grade) => {
+      const totalGradeValue = grade.grades.reduce(
+        (sum: number, g: { gradeValue: number }) => sum + g.gradeValue,
+        0
+      );
+
+      let overallGradeLabel = '';
+      if (totalGradeValue >= 16 && totalGradeValue <= 20) {
+        overallGradeLabel = 'Excellent';
+      } else if (totalGradeValue >= 11 && totalGradeValue <= 15) {
+        overallGradeLabel = 'Good';
+      } else if (totalGradeValue >= 6 && totalGradeValue <= 10) {
+        overallGradeLabel = 'Satisfactory';
+      } else if (totalGradeValue >= 1 && totalGradeValue <= 5) {
+        overallGradeLabel = 'Needs Improvement';
+      }
+
+      return {
+        ...grade.toObject(),
+        totalGradeValue,
+        overallGradeLabel,
+      };
+    });
+
+    // Return enriched grades
+    res.status(200).json(enrichedGrades);
+  } catch (error) {
+    console.error('Error fetching grades:', error);
+    res.status(500).json({ error: 'Failed to fetch grades.' });
+  }
+};
+
+export const fetchAllGrades = async (req: Request, res: Response) => {
+  try {
+    // Fetch all grades from the database
+    const grades = await Grading.find()
+      .populate('studentId', 'name email profileImage') // Populate student details
+      .populate('panelistId', 'name email profileImage') // Populate panelist details
+      .populate('rubricId', 'rubricName criteria') // Populate rubric details
+      .exec();
+
+    // Check if no grades were found
+    if (grades.length === 0) {
+      return res.status(404).json({ message: 'No grades found.' });
+    }
+
+    // Enrich grades with computed fields (if required)
+    const enrichedGrades = grades.map((grade) => {
+      const totalGradeValue = grade.grades.reduce(
+        (sum: number, g: { gradeValue: number }) => sum + g.gradeValue,
+        0
+      );
+
+      let overallGradeLabel = '';
+      if (totalGradeValue >= 16 && totalGradeValue <= 20) {
+        overallGradeLabel = 'Excellent';
+      } else if (totalGradeValue >= 11 && totalGradeValue <= 15) {
+        overallGradeLabel = 'Good';
+      } else if (totalGradeValue >= 6 && totalGradeValue <= 10) {
+        overallGradeLabel = 'Satisfactory';
+      } else if (totalGradeValue >= 1 && totalGradeValue <= 5) {
+        overallGradeLabel = 'Needs Improvement';
+      }
+
+      return {
+        ...grade.toObject(),
+        totalGradeValue,
+        overallGradeLabel,
+      };
+    });
+
+    // Respond with all grades
+    res.status(200).json(enrichedGrades);
+  } catch (error) {
+    console.error('Error fetching all grades:', error);
+    res.status(500).json({ error: 'Failed to fetch all grades.' });
+  }
+};
+
+/* export const postAdminGrades = async (req: Request, res: Response) => {
+  const { adminId, studentId, rubricId, grades } = req.body;
+
+  try {
+    // Validate admin existence
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return res.status(403).json({ error: 'Only admins can post grades' });
+    }
+
+    // Validate student existence
+    const student = await User.findById(studentId);
+    if (!student || student.role !== 'student') {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    // Validate rubric existence
+    const rubric = await Rubric.findById(rubricId);
+    if (!rubric) {
+      return res.status(404).json({ error: 'Rubric not found' });
+    }
+
+    // Check if grades already exist for the student and rubric
+    const existingGrade = await Grading.findOne({ studentId, rubricId });
+    if (existingGrade) {
+      return res.status(400).json({ error: 'Grades have already been submitted for this student with this rubric.' });
+    }
+
+    // Create new grade entry
+    const newGrade = new Grading({
+      studentId,
+      adminId,
+      rubricId,
+      grades,
+    });
+
+    await newGrade.save();
+    return res.status(201).json({ message: 'Grades submitted successfully', grading: newGrade });
+  } catch (error) {
+    console.error('Error posting grades:', error);
+    res.status(500).json({ error: 'Failed to post grades' });
+  }
+}; */
+
+// Get all rubrics
+export const getRubrics = async (req: Request, res: Response) => {
+  try {
+    const rubrics = await Rubric.find();
+    res.status(200).json(rubrics);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch rubrics", error });
+  }
+};
+
+// Create a new rubric
+export const createRubric = async (req: Request, res: Response) => {
+  try {
+    const { title, criteria } = req.body;
+
+    // Ensure numeric scores are not editable
+    criteria.forEach((item: any) => {
+      item.excellentScore = 4;
+      item.goodScore = 3;
+      item.satisfactoryScore = 2;
+      item.needsImprovementScore = 1;
+    });
+
+    const newRubric = new Rubric({ title, criteria });
+    await newRubric.save();
+
+    res.status(201).json(newRubric);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to create rubric", error });
+  }
+};
+
+// Update a rubric (only string labels and category are editable)
+export const updateRubric = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { title, criteria } = req.body;
+
+    const rubric = await Rubric.findById(id);
+    if (!rubric) return res.status(404).json({ message: "Rubric not found" });
+
+    // Prevent numeric score editing
+    criteria.forEach((item: any) => {
+      item.excellentScore = 4;
+      item.goodScore = 3;
+      item.satisfactoryScore = 2;
+      item.needsImprovementScore = 1;
+    });
+
+    rubric.title = title;
+    rubric.criteria = criteria;
+    const updatedRubric = await rubric.save();
+
+    res.status(200).json(updatedRubric);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update rubric", error });
+  }
+};
+
+// Delete a rubric
+export const deleteRubric = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const deletedRubric = await Rubric.findByIdAndDelete(id);
+
+    if (!deletedRubric) {
+      return res.status(404).json({ message: "Rubric not found" });
+    }
+
+    res.status(200).json({ message: "Rubric deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete rubric", error });
+  }
+};
 
 export const registerAdmin = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;

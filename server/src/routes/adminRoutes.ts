@@ -47,6 +47,19 @@ import {
     fetchPanelistInfoWithStudents
 } from '../controllers/adminController';
 
+// Grading Management
+import {
+    getRubrics,
+    createRubric,
+    updateRubric,
+    deleteRubric,
+
+// Can Grade
+    fetchGrades,
+    fetchAllGrades 
+  } from "../controllers/adminController";
+  
+
 import uploadProfile from '../middleware/uploadProfile';
 const router: Router = express.Router();
 
@@ -91,6 +104,17 @@ router.get('/manuscripts/approvedOnPanel/count', countApprovedOnPanelManuscripts
 router.get('/list-student/manuscript', fetchAllStudentManuscript);
 router.get('/advicer/handle/manuscript', fetchAdviserInfoWithStudents);
 router.get('/panelist/handle/manuscript', fetchPanelistInfoWithStudents);
+
+// Grading Management
+router.get("/rubrics", getRubrics);
+router.post("/rubrics", createRubric);
+router.put("/rubrics/:id", updateRubric);
+router.delete("/rubrics/:id", deleteRubric);
+
+// Admin routes grading
+router.get('/grades/student/:studentId', fetchGrades);
+router.get('/rubrics/grades', fetchAllGrades);
+
 
 
 export default router;

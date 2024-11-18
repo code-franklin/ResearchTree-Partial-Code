@@ -4,6 +4,8 @@ import bcrypt from 'bcryptjs';
 import User, { IUser } from '../models/User';
 import { v4 as uuidv4 } from 'uuid'; // Using UUID to generate a unique channel ID
 import path from 'path';
+import Rubric from "../models/Rubric";
+import Grading from '../models/Grading';
 import fs from 'fs';
 
 interface IAdvisor {
@@ -31,6 +33,146 @@ const loadNlpManager = async () => {
 
 // Load NlpManager at the start
 loadNlpManager().catch(err => console.error('Failed to load NlpManager:', err));
+
+// Get all rubrics
+export const fetchRubrics  = async (req: Request, res: Response) => {
+  try {
+    const rubrics = await Rubric.find();
+    res.status(200).json(rubrics);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch rubrics", error });
+  }
+};
+
+export const fetchFinalGrade = async (req: Request, res: Response) => {
+  const { userId } = req.params; // Use req.params to get student ID
+
+  try {
+    // Check if the student exists
+    const student = await User.findById(userId);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found.' });
+    }
+
+    // Fetch grades for the student
+    const grades = await Grading.find({ studentId: userId })
+      .populate('studentId', 'name email profileImage') // Populate student details
+      .populate('panelistId', 'name email profileImage') // Populate panelist details
+      .populate('rubricId', 'rubricName criteria') // Populate rubric details
+      .exec();
+
+    // If no grades are found
+    if (grades.length === 0) {
+      return res.status(404).json({ message: 'No grades found for this student.' });
+    }
+
+    // Organize grades by criterion and compute totals
+    const criteriaScores: Record<string, { total: number; count: number }> = {};
+
+    grades.forEach((grade) => {
+      grade.grades.forEach((gradeItem) => {
+        if (!criteriaScores[gradeItem.criterion]) {
+          criteriaScores[gradeItem.criterion] = { total: 0, count: 0 };
+        }
+        criteriaScores[gradeItem.criterion].total += gradeItem.gradeValue;
+        criteriaScores[gradeItem.criterion].count += 1;
+      });
+    });
+
+    // Compute average grades for each criterion and calculate totalGradeValue
+    let totalGradeValue = 0;
+    const finalGrades = Object.entries(criteriaScores).map(([criterion, data]) => {
+      const averageGrade = data.total / data.count;
+      totalGradeValue += averageGrade;
+      return { criterion, averageGrade };
+    });
+
+    // Determine overallGradeLabel based on totalGradeValue
+    let overallGradeLabel = '';
+    if (totalGradeValue >= 16 && totalGradeValue <= 20) {
+      overallGradeLabel = 'Excellent';
+    } else if (totalGradeValue >= 11 && totalGradeValue <= 15) {
+      overallGradeLabel = 'Good';
+    } else if (totalGradeValue >= 6 && totalGradeValue <= 10) {
+      overallGradeLabel = 'Satisfactory';
+    } else if (totalGradeValue >= 1 && totalGradeValue <= 5) {
+      overallGradeLabel = 'Needs Improvement';
+    }
+
+    // Format the response
+    const response = {
+      student: grades[0].studentId, // Details of the student
+      panelists: grades.map((g) => g.panelistId), // Details of the panelists
+      rubric: grades[0].rubricId, // Rubric details
+      finalGrades, // Final grades for each criterion
+      totalGradeValue, // Sum of averaged criterion scores
+      overallGradeLabel, // Grade label based on totalGradeValue
+    };
+
+    // Respond with the computed final grades
+    res.status(200).json(response);
+  } catch (error) {
+    console.error('Error fetching final grade:', error);
+    res.status(500).json({ error: 'Failed to fetch final grade.' });
+  }
+};
+
+
+export const fetchGrades = async (req: Request, res: Response) => {
+  const { userId } = req.params; // Use req.params for route parameter
+
+  try {
+    // Check if the student exists
+    const student = await User.findById(userId);
+    if (!student) {
+      return res.status(404).json({ message: "Student not found." });
+    }
+
+    // Fetch grades for the student
+    const grading = await Grading.find({ studentId: userId }) // Query using studentId
+      .populate('studentId', 'name email profileImage') // Populate student details
+      .populate('panelistId', 'name email profileImage') // Populate adviser details
+      .populate('rubricId', 'rubricName criteria')
+      .exec();
+
+    // If no grades are found
+    if (grading.length === 0) {
+      return res.status(404).json({ message: 'No grades found for this student.' });
+    }
+
+    // Compute total grades and overall grade labels
+    const enrichedGrades = grading.map((grade) => {
+      const totalGradeValue = grade.grades.reduce(
+        (sum: number, g: { gradeValue: number }) => sum + g.gradeValue,
+        0
+      );
+
+      let overallGradeLabel = '';
+      if (totalGradeValue >= 16 && totalGradeValue <= 20) {
+        overallGradeLabel = 'Excellent';
+      } else if (totalGradeValue >= 11 && totalGradeValue <= 15) {
+        overallGradeLabel = 'Good';
+      } else if (totalGradeValue >= 6 && totalGradeValue <= 10) {
+        overallGradeLabel = 'Satisfactory';
+      } else if (totalGradeValue >= 1 && totalGradeValue <= 5) {
+        overallGradeLabel = 'Needs Improvement';
+      }
+
+      return {
+        ...grade.toObject(),
+        totalGradeValue,
+        overallGradeLabel,
+      };
+    });
+
+    // Return enriched grades
+    res.status(200).json(enrichedGrades);
+  } catch (error) {
+    console.error('Error fetching grades:', error);
+    res.status(500).json({ error: 'Failed to fetch grades.' });
+  }
+};
+
 
 const getTopAdvisors = async (): Promise<IAdvisor[]> => {
   const advisors = await User.find({ role: 'adviser', isApproved: true }).limit(5);
@@ -486,8 +628,6 @@ export const markTaskAsCompleted = async (req: Request, res: Response) => {
 
 export const getTasks = async (req: Request, res: Response) => {
   const { userId } = req.params; // Use studentId instead of taskId
-
-  console.log('Received studentId:', userId); // Log the received studentId
 
   try {
     // Find the student and populate tasks
