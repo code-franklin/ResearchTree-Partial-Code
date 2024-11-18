@@ -56,7 +56,8 @@ import {
 
 // Can Grade
     fetchGrades,
-    fetchAllGrades 
+    fetchAllGrades,
+    fetchFinalStudentGrades
   } from "../controllers/adminController";
   
 
@@ -113,6 +114,7 @@ router.delete("/rubrics/:id", deleteRubric);
 
 // Admin routes grading
 router.get('/grades/student/:studentId', fetchGrades);
+router.get('/fetch/admin-FinalGrades/grades/:studentId', fetchFinalStudentGrades);
 router.get('/rubrics/grades', fetchAllGrades);
 
 

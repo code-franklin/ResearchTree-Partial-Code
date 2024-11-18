@@ -25,7 +25,7 @@ import {
   fetchRubrics,
   submitGrades,
   fetchGrades,
-  // fetchFinalStudentGrades
+  fetchFinalStudentGrades
 } from '../controllers/advicerControllers';
 
 import { 
@@ -86,8 +86,7 @@ router.post('/respondTostudent', respondToStudent);
 router.get("/fetch-rubrics", fetchRubrics);
 router.post('/submit-student/grade', submitGrades);
 router.get('/fetch/adviser-student/grades/:studentId', fetchGrades);
-// router.get('/fetch/adviser-FinalGrades/grades/:studentId', fetchFinalStudentGrades);
-
+router.get('/fetch/adviser-FinalGrades/grades/:studentId', fetchFinalStudentGrades);
 // old grade
 // router.post('/grade-student', gradePanelToStudent);
 

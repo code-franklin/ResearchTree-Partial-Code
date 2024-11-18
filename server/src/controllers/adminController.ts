@@ -124,6 +124,79 @@ export const fetchAdviseStudentGrades = async (req: Request, res: Response) => {
   }
 };
 
+export const fetchFinalStudentGrades = async (req: Request, res: Response) => {
+  const { studentId } = req.params;
+
+  try {
+    // Check if the student exists
+    const student = await User.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found.' });
+    }
+
+    // Fetch all grades for the student, graded by different panelists
+    const grades = await Grading.find({ studentId })
+      .populate('studentId', 'name email profileImage')
+      .populate('panelistId', 'name email profileImage')
+      .populate('rubricId', 'rubricName criteria') // Assuming rubric details with criteria are populated here
+      .exec();
+
+    // If no grades are found
+    if (grades.length === 0) {
+      return res.status(404).json({ message: 'No grades found for this student.' });
+    }
+
+    // Organize grades by criterion and compute totals
+    const criteriaScores: Record<string, { total: number; count: number }> = {};
+
+    grades.forEach((grade) => {
+      grade.grades.forEach((gradeItem) => {
+        if (!criteriaScores[gradeItem.criterion]) {
+          criteriaScores[gradeItem.criterion] = { total: 0, count: 0 };
+        }
+        criteriaScores[gradeItem.criterion].total += gradeItem.gradeValue;
+        criteriaScores[gradeItem.criterion].count += 1;
+      });
+    });
+
+    // Compute average grades for each criterion and calculate totalGradeValue
+    let totalGradeValue = 0;
+    const finalGrades = Object.entries(criteriaScores).map(([criterion, data]) => {
+      const averageGrade = data.total / data.count;
+      totalGradeValue += averageGrade;
+      return { criterion, averageGrade };
+    });
+
+    // Determine overallGradeLabel based on totalGradeValue
+    let overallGradeLabel = '';
+    if (totalGradeValue >= 16 && totalGradeValue <= 20) {
+      overallGradeLabel = 'Excellent';
+    } else if (totalGradeValue >= 11 && totalGradeValue <= 15) {
+      overallGradeLabel = 'Good';
+    } else if (totalGradeValue >= 6 && totalGradeValue <= 10) {
+      overallGradeLabel = 'Satisfactory';
+    } else if (totalGradeValue >= 1 && totalGradeValue <= 5) {
+      overallGradeLabel = 'Needs Improvement';
+    }
+
+    // Format the response
+    const response = {
+      student: grades[0].studentId, // Details of the student
+      panelists: grades.map((g) => g.panelistId), // Details of the panelists
+      rubric: grades[0].rubricId, // Rubric details
+      finalGrades, // Final grades for each criterion
+      totalGradeValue, // Sum of averaged criterion scores
+      overallGradeLabel, // Grade label based on totalGradeValue
+    };
+
+    // Respond with the computed final grades
+    res.status(200).json(response);
+  } catch (error) {
+    console.error('Error fetching final grade:', error);
+    res.status(500).json({ error: 'Failed to fetch final grade.' });
+  }
+};
+
 export const fetchAllGrades = async (req: Request, res: Response) => {
   try {
     // Fetch all grades from the database
