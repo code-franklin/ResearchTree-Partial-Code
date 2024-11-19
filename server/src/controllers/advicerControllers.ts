@@ -862,28 +862,46 @@ export const updatePanelManuscriptStatus = async (req: Request, res: Response) =
 };
 
 
-/* accepted opr declined the student */
-
 export const respondToStudent = async (req: Request, res: Response) => {
-  const { studentId, advisorId, status } = req.body;
-
-  if (!studentId || !advisorId || !status) {
-    return res.status(400).json({ message: 'studentId, advisorId, and status are required' });
-  }
+  const { advisorId, studentId, status } = req.body;
 
   try {
-    const student = await User.findById(studentId);
-    if (!student || !student.chosenAdvisor || student.chosenAdvisor.toString() !== advisorId) {
-      return res.status(404).json({ message: 'Student not found or advisor mismatch' });
+    const advisor = await User.findById(advisorId);
+    if (!advisor) {
+      return res.status(404).json({ message: 'Advisor not found.' });
     }
-    
-    student.advisorStatus = status;
+
+    const student = await User.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found.' });
+    }
+
+    if (status === 'accepted') {
+      if (advisor.acceptedStudents.length >= (advisor.handleNumber || 0)) {
+        return res.status(400).json({
+          message: `Advisor cannot accept more than ${advisor.handleNumber} students.`,
+        });
+      }
+
+      if (!advisor.acceptedStudents.includes(studentId)) {
+        advisor.acceptedStudents.push(studentId);
+        student.advisorStatus = 'accepted';
+        student.chosenAdvisor = advisorId;
+      }
+    } else if (status === 'declined') {
+      if (!advisor.declinedAdvisors.includes(studentId)) {
+        advisor.declinedAdvisors.push(studentId);
+        student.advisorStatus = 'declined';
+      }
+    }
+
+    await advisor.save();
     await student.save();
-    
-    res.status(200).json({ message: `Student ${status} successfully` });
+
+    res.status(200).json({ message: `Student ${status} successfully.` });
   } catch (error) {
     console.error('Error responding to student:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: 'Internal server error.' });
   }
 };
 

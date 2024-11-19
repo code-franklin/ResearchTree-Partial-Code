@@ -28,6 +28,7 @@ export interface IUser extends Document {
   course?: string;
   year?: number;
   handleNumber?: number;
+  acceptedStudents: Schema.Types.ObjectId[]
   isApproved: boolean;
   chosenAdvisor: Schema.Types.ObjectId | null;
   advisorStatus: 'accepted' | 'declined' | 'pending' | null;
@@ -63,6 +64,7 @@ const userSchema: Schema = new Schema<IUser>({
   course: { type: String },
   year: { type: Number },
   handleNumber: { type: Number },
+  acceptedStudents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // list of accepted students
   isApproved: { type: Boolean, default: false },
   chosenAdvisor: { type: Schema.Types.ObjectId, ref: 'User', default: null },
   advisorStatus: { type: String, enum: ['accepted', 'declined', 'pending', null] },
