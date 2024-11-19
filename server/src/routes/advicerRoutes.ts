@@ -37,6 +37,11 @@ import {
     postAnalyze
   } from '../controllers/advicerControllers';
 
+  // Data Analytics
+  import { 
+    // getStudentCourseCountsByAdvisor
+  } from '../controllers/advicerControllers';
+
 import uploadProfile from '../middleware/uploadProfile';
 import uploadPdf from '../middleware/uploadPdf';
 
@@ -53,6 +58,9 @@ router.put('/advicer-user/:id/reset-password', resetAdvicerPassword);
 router.get('/get-ckeditor-token/:userId', getToken);
 
 router.get('/specializations', getSpecializations);
+
+// Data Analytics
+// router.get('/:userId/student-course-counts', getStudentCourseCountsByAdvisor);
 
 /* Adviser routes */
 router.get('/advisor-students/:advisorId', getAdviserStudents);

@@ -6,6 +6,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Modal from '@mui/material/Modal';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import ErrorIcon from '@mui/icons-material/Error';
 import { AutoComplete, Input, ConfigProvider, Pagination } from 'antd';
 import 'ldrs/trefoil'
 
@@ -39,7 +40,7 @@ const ArticleList = () => {
         }
       }
     } catch (err) {
-      setError('Error searching PDF files');
+      setError('No Manuscript Found');
       console.error("Error searching PDF files:", err);
     } finally {
       setLoading(false); // End loading
@@ -167,7 +168,7 @@ const ArticleList = () => {
 
       </div>
 
-      {error && <p className="mt-4 text-red-500">{error}</p>}
+      {error && <p className="absolute mt-[4px] ml-[900px] text-red-500"><span className='mt-5'><ErrorIcon/></span>{error}</p>}
 
      {/* Loading Spinner */}
      {loading ? (

@@ -84,6 +84,8 @@ export const Cards = () => {
         fetchPdfCount();
     }, []);
 
+    
+
     const fetchTaskProgress = async (userId) => {
         try {
           const response = await fetch(`http://localhost:7000/api/student/tasks/progress/${userId}`, {
@@ -190,7 +192,7 @@ export const Cards = () => {
 
                     </div>
                     <div className="card-content">
-                        <p className="card-title">New Uploads</p>
+                        <p className="card-title">Total Manuscript</p>
                         <p className="card-value-2 text-white ml-[60px]">{pdfCount} Manuscripts</p>
                     </div>
                 </div>

@@ -200,7 +200,7 @@ const chooseAdvisor = async (advisorId) => {
       >
         <Box sx={style}>
           <img
-            className='mt-2 ml-[277px]'
+            className='mt-2 ml-[290px]'
             src='/src/assets/title-proposals-logo.png'
             alt='Logo'
           />
@@ -209,7 +209,7 @@ const chooseAdvisor = async (advisorId) => {
           <Typography
             sx={{
               position: "absolute",
-              marginLeft: "243px",
+              marginLeft: "293px",
               top: "111px",
               fontWeight: "bold",
             }}
@@ -312,36 +312,38 @@ const chooseAdvisor = async (advisorId) => {
           {/* pending output frontend */}
 
           {advisorInfo && advisorStatus === "pending" && (
-            <div>
-              <div className="absolute mt-[-90px] ml-[177px] text-[260px]  text-[orange]">
-              <SyncOutlined spin />
-              </div>
-             
-              <h1 className="absolute mt-[-70px] ml-[270px] text-[15px] font-bold mb-2 text-[orange]">
-              in progress <SyncOutlined spin />
-            </h1>
-
-              <img
-                src={`http://localhost:7000/public/uploads/${advisorInfo.profileImage}`}
-                className='mt-[88px] ml-[200px] w-[230px] h-[230px] rounded-full '
-                alt={advisorInfo.name}
-              />
-              <p className='text-[20px] font-bold ml-[20px] mt-[10px] '>
-                {advisorInfo.name}
-              </p>
-
-              <Flex
-                style={{ marginLeft: "132px", marginTop: "10px" }}
-                gap='4px 0'
-                wrap
-              >
-                {advisorInfo.specializations.map((specialization) => (
-                  <Tag key={specialization} color='#4E4E4E'>
-                    {specialization}
-                  </Tag>
-                ))}
-              </Flex>
-            </div>
+           <div className="flex flex-col items-center justify-center relative mt-[60px]">
+          
+           <div className="absolute top-[-90px] text-[260px] text-[orange]">
+             <SyncOutlined spin />
+           </div>
+           
+         
+           {/* Profile Image */}
+           <img
+             src={`http://localhost:7000/public/uploads/${advisorInfo.profileImage}`}
+             className="w-[230px] h-[230px] rounded-full"
+             alt={advisorInfo.name}
+           />
+         
+           {/* Advisor Name */}
+           <p className="text-[20px] font-bold mt-4 text-center">{advisorInfo.name}</p>
+         
+           {/* Specializations Tags */}
+           <Flex
+             style={{ marginTop: "10px" }}
+             gap="4px 0"
+             wrap
+             className="justify-center"
+           >
+             {advisorInfo.specializations.map((specialization) => (
+               <Tag key={specialization} color="#4E4E4E">
+                 {specialization}
+               </Tag>
+             ))}
+           </Flex>
+         </div>
+         
           )}
 
           {advisorInfo && advisorStatus === "accepted" && (
@@ -399,7 +401,7 @@ const chooseAdvisor = async (advisorId) => {
           {(!advisorInfo || advisorStatus === "declined") && (
             
             <section className='top-advisors'>
-              <h2 className='absolute font-bold ml-[250px] text-[19px] mt-[-310px]'>
+              <h2 className='absolute font-bold ml-[260px] text-[19px] mt-[-310px]'>
                 Title Proposals
               </h2>
               <h2 className='font-bold ml-[266px] text-[19px] mt-[280px]'>
@@ -423,28 +425,46 @@ const chooseAdvisor = async (advisorId) => {
                 ))}
               </ul> */}
 
-              <ul className='flex ml-[150px] mt-[50px]'>
-              {" "}
-                {topAdvisors.map((result) => {
-                  const { advisor, matchPercentage  /* specializations */ } = result;
-                  return (
-                  <li className='' key={advisor._id}>
-                      {/* <strong>{advisor.name}</strong> - Match: {matchPercentage}% - Specializations: {specializations.join(", ")} */}
-                      <img
-                        src={`http://localhost:7000/public/uploads/${advisor.profileImage}`}
-                        alt={advisor.name}
-                        className='w-[80px] h-[80px] rounded-full mr-[53px]'
-                        onClick={() => chooseAdvisor(advisor._id)}
-                      />
-                      <p className='text-sm ml-[-17px] mt-[6px]'>
-                        {advisor.name} - Match: {matchPercentage}% {/* - Specializations: {specializations.join(", ")} */}
-                      </p>
-                    </li>
-                  );
-                })}
-              </ul>
+              
+<ul className="flex justify-center items-center mt-[50px] ">
+  {topAdvisors.map((result) => {
+    const { advisor, matchPercentage } = result;
 
-{/* {              Panelists Section
+    // Conditional color based on the match percentage
+    const matchColor =
+      matchPercentage < 30
+        ? 'text-white' // Below 30% (Red)
+        : matchPercentage >= 80
+        ? 'text-[#33FF00]' // 80% and above (Green)
+        : matchPercentage >= 50
+        ? 'text-[#A0FF88]' // 50% to 79% (Yellow)
+        : 'text-[#FF8000]'; // 30% to 49% (Orange)
+
+    return (
+      <li key={advisor._id} className="text-center ml-[20px]">
+        <img
+          src={`http://localhost:7000/public/uploads/${advisor.profileImage}`}
+          alt={advisor.name}
+          className="w-[80px] h-[80px] rounded-full mb-2 mx-auto"
+          onClick={() => chooseAdvisor(advisor._id)}
+        />
+        
+        <p className={`text-sm mt-2 ${matchColor}`}>
+        <span className="whitespace-nowrap text-white font-bold">{advisor.name}</span> 
+        <span className="inline-block whitespace-nowrap">Match: {matchPercentage}%</span>
+        </p>
+       
+      </li>
+    );
+  })}
+</ul>
+
+
+
+              {
+
+
+/* {              Panelists Section
               {panelists.length > 0 && (
                 <div style={{ marginTop: '20px', padding: '10px', backgroundColor: 'black', borderRadius: '4px' }}>
                   <h2 style={{ fontSize: '18px', marginBottom: '10px' }}>Panelists</h2>

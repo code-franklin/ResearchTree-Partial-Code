@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Routes, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-import ExploreManuscript from '../Dashboards/AdminDashboard/ExploreManuscript/ArticleList'
+import ExploreManuscript from '../Dashboards/AdminDashboard/ExploreManuscript/SearchArticles'
 import ViewAnalytics from '../Dashboards/AdminDashboard/ViewAnalytics/Chart'
 
 import StudentManuscript from '../Dashboards/AdminDashboard/Publishing/TablesStudent'
@@ -50,6 +50,9 @@ function AdviserRoutes() {
                 <Route path="AdminDashboard/AdviserPending" element={<AdviserPending/>} />
                 <Route path="AdminDashboard/StudentRegistered" element={<StudentRegistered/>} />
                 <Route path="AdminDashboard/StudentPending" element={<StudentPending/>} />
+
+           
+
               </Routes>
           
     </>

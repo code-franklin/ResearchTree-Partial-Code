@@ -6,7 +6,7 @@ import TitleProposal from '../Dashboards/AdviserDashboard/Sidebar/TitleProposals
 import Grading from '../Dashboards/AdviserDashboard/MyAdvisee/Grading'
 import MyAdvisee from '../Dashboards/AdviserDashboard/MyAdvisee/Tables'
 import Publishing from '../Dashboards/AdviserDashboard/Publishing/Tables'
-import ExploreManuscript from '../Dashboards/AdviserDashboard/ExploreManuscript/ArticleList'
+import ExploreManuscript from '../Dashboards/AdviserDashboard/ExploreManuscript/SearchArticles'
 import ViewAnalytics from '../Dashboards/AdviserDashboard/AdviserAnalytics/Chart'
 import PanelistAnalytics from '../Dashboards/AdviserDashboard/PanelistAnalytics/PanelistMain'
 import UnauthorizedAccess from './UnauthorizedAccess'; // Import the UnauthorizedAccess component
@@ -37,9 +37,6 @@ function AdviserRoutes() {
                 <Route path="AdviserDashboard/Publishing" element={<Publishing/>} />
                 <Route path="AdviserDashboard/ExploreManuscript" element={<ExploreManuscript/>} />
                 <Route path="AdviserDashboard/ViewAnalytics" element={<ViewAnalytics/>} />
-
-               
-
 
                 <Route path="AdviserDashboard/PanelistAnalytics" element={<PanelistAnalytics/>} />
               </Routes>

@@ -37,6 +37,7 @@
     "framer-motion": "^6.2.6",
     "heroicons": "^2.1.4",
     "highcharts-react-official": "^3.2.1",
+    "ldrs": "^1.0.2",
     "node-nlp": "^3.10.2",
     "pdfjs-dist": "^3.4.120",
     "rc-tween-one": "^3.0.6",

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import variablePie from 'highcharts/modules/variable-pie';
+import axios from 'axios';  // Make sure axios is imported
 import "tailwindcss/tailwind.css"; // Import Tailwind CSS
 
 // Initialize the variable pie module
@@ -9,6 +10,40 @@ variablePie(Highcharts);
 
 // Define the VariablePieChart component
 export const PieChart = () => {
+    // const [readyToDefenseCount, setReadyToDefenseCount] = useState(0);  // Fixed useState initialization
+    // const [reviseOnAdviserCount, setReviseOnAdviserCount] = useState(0);  // Declare the state for reviseOnAdviser
+    const [error, setError] = useState(null);  // State for error handling
+
+    // // Fetch the 'reviseOnAdviser' count
+    // useEffect(() => {
+    //     const fetchReviseOnAdviser = async () => {
+    //         try {
+    //             const response = await axios.get('http://localhost:7000/api/admin/manuscripts/reviseOnAdvicer/count');
+    //             setReviseOnAdviserCount(response.data.totalReviseOn); // Set the reviseOnAdviser count to state
+    //         } catch (error) {
+    //             console.error('Error fetching reviseOnAdviser manuscript count:', error);
+    //             setError('Failed to fetch reviseOnAdviser manuscript count');
+    //         }
+    //     };
+
+    //     fetchReviseOnAdviser();
+    // }, []);
+
+    // // Fetch the 'ready to defense' count
+    // useEffect(() => {
+    //     const fetchReadyToDefenseCount = async () => {
+    //         try {
+    //             const response = await axios.get('http://localhost:7000/api/admin/manuscripts/readyToDefense/count');
+    //             setReadyToDefenseCount(response.data.totalReadyToDefense); // Set the count to state
+    //         } catch (error) {
+    //             console.error('Error fetching ready to defense manuscript count:', error);
+    //             setError('Failed to fetch ready to defense manuscript count');
+    //         }
+    //     };
+
+    //     fetchReadyToDefenseCount();
+    // }, []); // Empty dependency array ensures this effect runs only once after the initial render
+
     const options = {
         chart: {
             type: 'variablepie',
@@ -55,7 +90,7 @@ export const PieChart = () => {
                 color: '#0BF677'
             }, {
                 name: 'Adviser Revisions',
-                y: 20,
+                y: 200,
                 z: 124.6,
                 color: '#C70039'
             }, {
@@ -68,16 +103,29 @@ export const PieChart = () => {
                 y: 200,
                 z: 201.8,
                 color: '#0BF677'
-            }]
+            }, 
+            
+            // {
+            //     name: 'ReviseOnAdviser',
+            //     y: reviseOnAdviserCount,  // Use reviseOnAdviserCount here
+            //     z: 50,
+            //     color: '#FFD700'
+            // }
+        
+        ]
         }]
     };
 
     return (
         <div className="flex justify-center items-center w-[566px] mt-[130px] ml-[-180px] border-t border-[#4B4B4B] rounded-t">
-            <HighchartsReact
-                highcharts={Highcharts}
-                options={options}
-            />
+            {error ? (
+                <div className="text-white">{error}</div>  // Display error message if there's an issue
+            ) : (
+                <HighchartsReact
+                    highcharts={Highcharts}
+                    options={options}
+                />
+            )}
         </div>
     );
 };

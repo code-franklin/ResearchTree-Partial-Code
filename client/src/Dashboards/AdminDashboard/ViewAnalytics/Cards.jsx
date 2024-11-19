@@ -20,6 +20,8 @@ export const Cards = () => {
   const [reviseOnAdvicerCount, setReviseOnAdvicerCount] = useState(0);
   const [reviseOnPanelCount, setReviseOnPanelCount] = useState(0);
   const [ApprovedOnPanelCount, setApprovedOnPanelCount] = useState(0);
+  const [pdfCount, setPdfCount] = useState(0); // State for storing PDF count
+
 
   useEffect(() => {
     // Fetch stored user data from localStorage and set it to the admin state
@@ -75,6 +77,16 @@ export const Cards = () => {
       }
     };
 
+    const fetchPdfCount = async () => {
+      try {
+        const response = await axios.get('http://localhost:7000/api/admin/pdfdetails/count');
+        setPdfCount(response.data.count); // Set the count in state
+      } catch (error) {
+        console.error("Error fetching PDF count:", error);
+      }
+    };
+
+    fetchPdfCount();
     fetchDefenseCount();
     fetchReviseOnAdvicerCount();
     fetchReviseOnPanelCount();
@@ -107,6 +119,16 @@ export const Cards = () => {
           </div>
 
         <div className='card'>
+
+        <div className="card">
+          <div className="card-icon-1">
+            <img className="ml-[290px]" src="/src/assets/student-handle.png" />
+          </div>
+          <div className="card-content">
+            <p className="card-title">Total Manuscripts</p>
+            <p className="card-value-1 ml-[80px]">{pdfCount}</p>
+          </div>
+        </div>
           
           <div className='card-icon-1'>
             <img className='' src='/src/assets/adviserAnalytics-icon-1.png'/>

@@ -5,6 +5,7 @@ import {
     getPdfDetailsCount
 } from '../controllers/adminController';
 
+
 // Profile Management
 import { 
     registerAdmin, 
@@ -34,7 +35,7 @@ import {
 
 // View Analytics
 import { 
-    countReadyToDefenseManuscripts, 
+    countReadyToDefenseManuscripts , 
     countReviseOnAdvicerManuscripts, 
     countReviseOnAPanelManuscripts,
     countApprovedOnPanelManuscripts
@@ -96,7 +97,8 @@ router.put('/specializations/:id', updateSpecialization);
 router.delete('/specializations/:id', deleteSpecialization);
 
 // View Analytics
-router.get('/manuscripts/readyToDefense/count', countReadyToDefenseManuscripts);
+
+router.get('/manuscripts/readyToDefense/:userId/count', countReadyToDefenseManuscripts);
 router.get('/manuscripts/reviseOnAdvicer/count', countReviseOnAdvicerManuscripts);
 router.get('/manuscripts/reviseOnPanel/count', countReviseOnAPanelManuscripts);
 router.get('/manuscripts/approvedOnPanel/count', countApprovedOnPanelManuscripts);
