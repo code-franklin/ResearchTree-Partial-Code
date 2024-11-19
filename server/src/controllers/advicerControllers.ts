@@ -42,10 +42,10 @@ export const submitGrades = async (req: Request, res: Response) => {
       return res.status(403).json({ error: 'Only panels can grade students' });
     }
 
-    // Check for existing grades by the same adviser
-    const existingGrade = await Grading.findOne({ studentId, panelistId });
+    // Check for existing grades by the same panelist for the same rubric
+    const existingGrade = await Grading.findOne({ studentId, panelistId, rubricId });
     if (existingGrade) {
-      return res.status(400).json({ error: 'Grades already submitted for this student by you' });
+      return res.status(400).json({ error: 'Grades already submitted for this rubric by you' });
     }
 
     // Compute total grade value
@@ -208,7 +208,7 @@ export const fetchFinalStudentGrades = async (req: Request, res: Response) => {
     const grades = await Grading.find({ studentId })
       .populate('studentId', 'name email profileImage')
       .populate('panelistId', 'name email profileImage')
-      .populate('rubricId', 'rubricName criteria') // Assuming rubric details with criteria are populated here
+      .populate('rubricId', 'title criteria') // Assuming rubric details with criteria are populated here
       .exec();
 
     // If no grades are found

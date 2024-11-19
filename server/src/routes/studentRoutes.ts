@@ -44,8 +44,7 @@ router.post('/train-model', trainingProposal);
 // Grading
 router.get("/fetch-rubrics", fetchRubrics);
 router.get('/fetch-student/grades/:userId', fetchGrades);
-router.get('/fetch-student/FinalGrades/:userId', fetchFinalGrade);
-
+router.get('/fetch-student/FinalGrades/:userId/:rubricId', fetchFinalGrade);
 
 /* router.get('/articles', getAllArticles); */
 router.get('/articles/search', searchArticles);

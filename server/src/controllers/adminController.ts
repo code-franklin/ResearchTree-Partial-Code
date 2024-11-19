@@ -83,7 +83,7 @@ export const fetchAdviseStudentGrades = async (req: Request, res: Response) => {
     const grading = await Grading.find({ panelistId: panelistId }) // Query based on adviserId
       .populate('studentId', 'name email profileImage') // Populate student details
       .populate('panelistId', 'name email profileImage') // Populate adviser details
-      .populate('rubricId', 'rubricName criteria')
+      .populate('rubricId', 'title criteria')
       .exec();
 
     // If no grades are found
@@ -138,7 +138,7 @@ export const fetchFinalStudentGrades = async (req: Request, res: Response) => {
     const grades = await Grading.find({ studentId })
       .populate('studentId', 'name email profileImage')
       .populate('panelistId', 'name email profileImage')
-      .populate('rubricId', 'rubricName criteria') // Assuming rubric details with criteria are populated here
+      .populate('rubricId', 'title criteria') // Assuming rubric details with criteria are populated here
       .exec();
 
     // If no grades are found
