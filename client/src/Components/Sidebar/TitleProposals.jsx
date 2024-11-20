@@ -15,6 +15,7 @@ import {
 import { Tag, Flex, message } from "antd";
 
 import Textarea from "@mui/joy/Textarea";
+import { borderRadius } from "@mui/system";
 
 const style = {
   position: "absolute",
@@ -28,6 +29,7 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+  borderRadius: 4,
 };
 
 export default function BasicModal() {
@@ -192,16 +194,17 @@ const chooseAdvisor = async (advisorId) => {
         ></img>{" "}
       </button>
       <Modal
-        sx={{ border: "none" }}
+        sx={{ border: "none"}}
         open={open}
         onClose={handleClose}
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
+  
       >
         <Box sx={style}>
           <img
-            className='mt-2 ml-[290px]'
-            src='/src/assets/title-proposals-logo.png'
+            className='mt-2 ml-[270px]'
+            src='/src/assets/title-proposals-logo2.png'
             alt='Logo'
           />
 
@@ -230,7 +233,7 @@ const chooseAdvisor = async (advisorId) => {
                 style={{
                   position: "absolute",
                   marginLeft: "100px",
-                  marginTop: "50px",
+                  marginTop: "40px",
                 }}
                 icon={<CloseCircleOutlined />}
                 color='blue'
@@ -250,11 +253,11 @@ const chooseAdvisor = async (advisorId) => {
                     position: "absolute",
                     top: "200px",
                     left: "117px",
-                    borderRadius: "20px",
+                    borderRadius: "10px",
                     backgroundColor: "#1E1E1E",
                     borderColor: "#585050",
                     width: "495px",
-                    height: "92px",
+                    height: "52px",
                     paddingLeft: "20px",
                     paddingTop: "10px",
                   }}
@@ -273,13 +276,14 @@ const chooseAdvisor = async (advisorId) => {
                     position: "absolute",
                     top: "310px",
                     left: "117px",
-                    borderRadius: "20px",
+                    borderRadius: "10px",
                     backgroundColor: "#1E1E1E",
                     borderColor: "#585050",
                     width: "495px",
-                    height: "92px",
+                    height: "152px",
                     paddingLeft: "20px",
                     paddingTop: "10px",
+                    marginTop: '-45px',
                   }}
                   color='success'
                   minRows={2}
@@ -300,7 +304,7 @@ const chooseAdvisor = async (advisorId) => {
                   width: '104px', 
                   height: '30px', 
                   borderRadius: '16px', 
-                  marginTop: '240px', 
+                  marginTop: '245px', 
                   marginLeft: '465px'}}>
 
                   Submit <SendOutlined />
@@ -401,9 +405,9 @@ const chooseAdvisor = async (advisorId) => {
           {(!advisorInfo || advisorStatus === "declined") && (
             
             <section className='top-advisors'>
-              <h2 className='absolute font-bold ml-[260px] text-[19px] mt-[-310px]'>
+              {/* <h2 className='absolute font-bold ml-[260px] text-[19px] mt-[-310px]'>
                 Title Proposals
-              </h2>
+              </h2> */}
               <h2 className='font-bold ml-[266px] text-[19px] mt-[280px]'>
                 Top Advisors:
               </h2>

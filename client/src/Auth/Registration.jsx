@@ -100,11 +100,24 @@ const LoginFunction = () => {
 
   return (
     <form onSubmit={handleSubmit} encType="multipart/form-data" className="flex justify-center items-center bg-[#1E1E1E]">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-[670px] h-[950px]">l
-        <div className="text-center mb-6">
+      <div className="bg-white p-8 shadow-lg w-[500px] h-[790px] mt-[100px] ml-[-680px] rounded-tl-[20px] rounded-bl-[20px]">
+
+      <img
+        className="absolute ml-[469px] h-[789px] w-[700px] mt-[-31px] rounded-tr-[20px] rounded-br-[20px]"
+        src="./src/assets/registration.gif"
+        alt="Background"
+      />
+
+          {/* <img
+            className="absolute ml-[470px]rounded-tr-[20px] rounded-br-[20px]"
+            src="./src/assets/student-register.png"
+            alt="Background"
+          /> */}
+
+        {/* <div className="text-center mb-6">
           <img src="/src/assets/Researchtree-logo.png" alt="ResearchTree Logo" className="mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900">Welcome to ResearchTree</h1>
-        </div>
+        </div> */}
 
         <TextField
           label="Name"
@@ -115,6 +128,7 @@ const LoginFunction = () => {
           margin="normal"
           required
           className="mb-4"
+          style={{marginTop: '30px'}}
         />
 
         <TextField
@@ -156,6 +170,7 @@ const LoginFunction = () => {
 
         {formData.role === 'student' && (
           <>
+        
             <TextField
               label="Group Members (comma-separated)"
               name="groupMembers"
@@ -182,7 +197,7 @@ const LoginFunction = () => {
               </MUISelect>
             </FormControl>
 
-            <FormControl fullWidth margin="normal" className="mb-4">
+            {/* <FormControl fullWidth margin="normal" className="mb-4">
               <InputLabel>Year</InputLabel>
               <MUISelect
                 name="year"
@@ -194,19 +209,41 @@ const LoginFunction = () => {
                   <MenuItem key={year.value} value={year.value}>{year.label}</MenuItem>
                 ))}
               </MUISelect>
-            </FormControl>
+            </FormControl> */}
           </>
         )}
 
         {formData.role === 'adviser' && (
+
           <>
-            <label className=" mb-2 text-gray-700">Specializations:</label>
+             {/* <img
+            className="absolute ml-[470px]rounded-tr-[20px] rounded-br-[20px]"
+            src="./src/assets/student-register.png"
+            alt="Background"
+          /> */}
+            <label className=" mb-12 text-gray-700">Specializations:</label>
             <Select
               isMulti
               name="specializations"
               options={specializationsOptions}
               onChange={handleSpecializationsChange}
-              className="mb-4"
+              styles={{
+              
+                control: (provided) => ({
+                  ...provided,
+                  backgroundColor: 'white',  // Set the background color here
+                  color: 'white',  // Optional: set text color to white
+                }),
+                option: (provided) => ({
+                  ...provided,
+                  backgroundColor: '#222222', // Set background color for options as well
+                  color: 'white', // Optional: set text color for options
+                }),
+                menu: (provided) => ({
+                  ...provided,
+                  backgroundColor: 'white', // Set background color for the dropdown menu
+                }),
+              }}
             />
             <TextField
               label="Handle Number (No. of Advisees)"

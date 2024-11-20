@@ -119,7 +119,7 @@ export const Cards = () => {
 
         <div className="card">
           <div className="card-icon-1">
-            <img className="ml-[290px]" src="/src/assets/student-handle.png" />
+          <img className="ml-[0px]" src="/src/assets/totalManuscript-icon.png"  />
           </div>
           <div className="card-content">
             <p className="card-title">Total Manuscripts</p>
@@ -129,7 +129,7 @@ export const Cards = () => {
 
         <div className="card">
           <div className="card-icon-1">
-            <img className="" src="/src/assets/student-handle.png" />
+          <img className="ml-[290px]" src="/src/assets/adviserAnalytics-icon-2.png" />
           </div>
           <div className="card-content">
             <p className="card-title">Student Handle</p>
@@ -170,8 +170,8 @@ export const Cards = () => {
 
         <div className="flex absolute mt-[125px]">
           <div className="card">
-            <div className="card-icon-4">
-              <img className="mt-[-20px]" src="/src/assets/adviserAnalytics-icon-5.png" />
+            <div className="absolute ml-[204px] bottom-[56px]">
+              <img className="mt-[-20px]" src="/src/assets/adviserAnalytics-icon-6.png" />
             </div>
             <div className="card-content">
               <p className="card-title">Defenders</p>
@@ -180,8 +180,8 @@ export const Cards = () => {
           </div>
 
           <div className="card ml-[18px]">
-            <div className="card-icon-4">
-              <img className="" src="/src/assets/adviserAnalytics-icon-5.png" />
+            <div className="absolute ml-[204px] bottom-[56px]">
+              <img className="" src="/src/assets/adviserAnalytics-icon-7.png" />
             </div>
             <div className="card-content">
               <p className="card-title">Defender's Revision</p>
@@ -190,8 +190,8 @@ export const Cards = () => {
           </div>
 
           <div className="card ml-[18px]">
-            <div className="card-icon-4">
-              <img className="" src="/src/assets/adviserAnalytics-icon-5.png" />
+            <div className="absolute ml-[204px] bottom-[56px]">
+              <img className="" src="/src/assets/adviserAnalytics-icon-Approved.png" />
             </div>
             <div className="card-content">
               <p className="card-title">Approved</p>

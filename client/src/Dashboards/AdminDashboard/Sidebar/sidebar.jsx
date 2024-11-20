@@ -11,6 +11,7 @@ const Sidebar = ({ onSelect }) => {
   const location = useLocation();
   const [admin, setAdmin] = useState(null);
   const [isSpecializationModalOpen, setIsSpecializationModalOpen] = useState(false);
+  const [isGradeModalOpen, setIsGradeModalOpen] = useState(false);
   const [specializations, setSpecializations] = useState([]);
   const [newSpecialization, setNewSpecialization] = useState("");
   const [editingId, setEditingId] = useState(null);
@@ -75,6 +76,12 @@ const Sidebar = ({ onSelect }) => {
       fetchSpecializations();
     };
 
+    const openGradeModal = () => {
+      setIsGradeModalOpen(true);
+ 
+    };
+
+
     const startEditing = (id, name) => {
       setEditingId(id);
       setEditingName(name);
@@ -86,12 +93,12 @@ const Sidebar = ({ onSelect }) => {
         <img src='/src/assets/rstreelogo.png' alt='Logo' />
 
         <img
-          className='absolute mt-[610px] ml-[30px]'
+          className='absolute mt-[570px] ml-[30px]'
           src='/src/assets/ListStudent.png'
           alt='Logo'
         />
         <img
-          className='absolute mt-[460px] ml-[35px]'
+          className='absolute mt-[425px] ml-[35px]'
           src='/src/assets/profile-management.png'
           alt='Logo'
         />
@@ -166,7 +173,7 @@ const Sidebar = ({ onSelect }) => {
         >
           <img
             className='inline-block mr-2 mb-1'
-            src='/src/assets/my-manuscript.png'
+            src='/src/assets/student-manuscript.png'
             alt='My Manuscript'
           />
           Student Manuscript
@@ -184,7 +191,7 @@ const Sidebar = ({ onSelect }) => {
         >
           <img
             className='inline-block mr-2 mb-1'
-            src='/src/assets/my-manuscript.png'
+            src='/src/assets/adviser-manuscript.png'
             alt='My Manuscript'
           />
           Adviser Manuscript
@@ -201,7 +208,7 @@ const Sidebar = ({ onSelect }) => {
         >
           <img
             className='inline-block mr-2 mb-1'
-            src='/src/assets/my-manuscript.png'
+            src='/src/assets/panelist-manuscript.png'
             alt='My Manuscript'
           />
           Panelist Manuscript
@@ -210,7 +217,7 @@ const Sidebar = ({ onSelect }) => {
         
       </div>
       {/* Panelist Mode */}
-      <div className='mt-[125px]  ml-[80px] '>
+      <div className='mt-[85px]  ml-[80px] '>
         <Link
           to='AdminDashboard/AdviserPending'
           className={`exploreManuscript mx-10 px-2  ${
@@ -267,33 +274,84 @@ const Sidebar = ({ onSelect }) => {
       </div>
 
 
-
       <Button
         variant="outlined"
         color=""
         sx={{
           color: 'white',
-          background: '#0BF677',
-          top: "40px",
-          left: "30px",
-          width: "250px",
+          background: '#222222',
+          top: "60px",
+          left: "60px",
+          width: "180px",
           fontSize: "18px",
           fontWeight: "bold",
           textTransform: "none",
           borderRadius: "8px",
           transition: "all 0.3s ease", // Smooth transition effect for all properties
           '&:hover': {
-            background: '#08D667', // Slightly darker shade
+            background: '#4B4B4B', // Slightly darker shade
             transform: 'scale(1.05)', // Slightly enlarge the button
             boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.3)', // Add a shadow effect
           },
         }}
         
-        
         onClick={openSpecializationModal}
       >
-     <DeploymentUnitOutlined />  <span className="ml-2"> Manage Specialization </span> 
+        
+        <img className='inline-block ' src='/src/assets/admin-special.png' alt='My Manuscript'/> <span className="ml-2"> Specialization </span> 
+       </Button>
+
+      <Button
+        variant="outlined"
+        color=""
+        sx={{
+          color: 'white',
+          background: '#222222',
+          top: "70px",
+          left: "60px",
+          width: "185px",
+          fontSize: "18px",
+          fontWeight: "bold",
+          textTransform: "none",
+          borderRadius: "8px",
+          transition: "all 0.3s ease", // Smooth transition effect for all properties
+          '&:hover': {
+            background: '#4B4B4B', // Slightly darker shade
+            transform: 'scale(1.05)', // Slightly enlarge the button
+            boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.3)', // Add a shadow effect
+          },
+        }}
+
+        onClick={openGradeModal}
+      >
+        <img className='inline-block ' src='/src/assets/admin-rubrics.png' alt='My Manuscript'/> <span className="ml-2"> Grade Rubrics </span> 
       </Button>
+
+      <Modal 
+      open={isGradeModalOpen} onClose={() => setIsGradeModalOpen(false)}
+     
+    
+      
+      >
+      
+      <Box
+        sx={{
+          width: '1500px',
+          height: '800px',
+          p: 4,
+          color: 'white',
+          bgcolor: "#1E1E1E",
+          borderRadius: 20,
+    
+          mx: "auto",
+          mt: 6,
+    
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)"
+        }}
+      >
+
+    </Box>
+      </Modal>
 
       <Modal open={isSpecializationModalOpen} onClose={() => setIsSpecializationModalOpen(false)}>
   <Box

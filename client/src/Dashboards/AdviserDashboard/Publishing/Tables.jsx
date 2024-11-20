@@ -59,7 +59,7 @@ const ListManuscript = () => {
   }
 
   return (
-    <div style={{ position: 'absolute', left: '440px', top: '200px', maxWidth: '1370px', height: '641px', borderRadius: '8px', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ position: 'absolute', left: '440px', top: '100px', maxWidth: '1370px', height: '641px', borderRadius: '8px', display: 'flex', flexDirection: 'column' }}>
       <div style={{ marginBottom: '16px' }}>
         <ConfigProvider
           theme={{
@@ -107,13 +107,13 @@ const ListManuscript = () => {
   <Box
   
     sx={{
-      position: 'fixed',
+      position: 'absolute',
       borderBottom: 1,
       borderColor: 'divider',
      
       width: '27.7%',
-      marginTop: '-36px',
-      marginLeft: '740px',
+      marginTop: '26px',
+      marginLeft: '860px',
     }}
   >
     <Tabs 

@@ -42,8 +42,8 @@ const Tables = ({ adviserName, adviserImage, students }) => {
           borderBottom: 1,
           borderColor: 'divider',
           width: '33.7%',
-          marginTop: '-36px',
-          marginLeft: '740px',
+          marginTop: '35px',
+          marginLeft: '40px',
         }}>
           <Tabs
             style={{ borderRadius: '20px', background: '#222222' }}

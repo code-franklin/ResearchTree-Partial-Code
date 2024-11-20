@@ -127,7 +127,7 @@ const LoginFunction = () => {
       </Form>
 
       <h1 className='Register'>
-        <span className='text1'>Don’t have an Account, contact the admin?</span>
+        <span className='text1 ml-[-20px]'>Don’t have an Account, contact the admin?</span>
       </h1>
     </div>
   );

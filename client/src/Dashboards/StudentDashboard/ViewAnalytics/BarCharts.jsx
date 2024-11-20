@@ -3,8 +3,8 @@ import { Chart, Interval, Tooltip, Axis, Legend } from 'bizcharts';
 import './Styles/barChart.css'; // Ensure this file contains the necessary styles
 
 const data = [
-  { category: 'AI', value: 150 },
-  { category: 'Internet of Things ', value: 150 },
+  { category: 'AI', value: 10 },
+  { category: 'Internet of Things ', value: 10 },
   { category: 'Mobile App', value: 50 },
   { category: 'Web Application', value: 250 },
   { category: 'Machine Learning', value: 120 },

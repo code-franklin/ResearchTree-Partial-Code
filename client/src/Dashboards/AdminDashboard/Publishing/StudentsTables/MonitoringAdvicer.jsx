@@ -268,6 +268,9 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                     marginTop: "-12px",
                     position: "absolute",
                   }}
+                  format={(percent) => (
+                    <span style={{ color: "white", fontSize: "20px" }}>{percent}%</span>
+                  )}
                 />
 
                 {student.manuscriptStatus === "Revise on Panelist" ? (

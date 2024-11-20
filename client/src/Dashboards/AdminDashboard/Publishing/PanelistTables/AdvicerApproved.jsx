@@ -304,18 +304,20 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
 
   return (
     <div style={{ flex: 1, overflowX: "hidden", padding: "20px", width: "1263px" }}>
-      <Avatar
+       <Avatar
         src={`http://localhost:7000/public/uploads/${
           panelImage|| "default-avatar.png"}`}
-        sx={{ width: 79, height: 79 }}
-      />
 
-      <h2 style={{ color: "#ffffff" }}>Advisees of {panelName}</h2>
+          style={{position: 'absolute', width: 100, height: 100, marginTop: '-200px' }}
+        // sx={{ width: 79, height: 79 }}
+      />
+      <h2 style={{ position: 'absolute',color: "#ffffff", marginTop: '-150px', marginLeft: '120px', }}>Defenders</h2>
+      <h2 style={{ position: 'absolute',color: "#ffffff", marginTop: '-200px', marginLeft: '120px', fontSize: '40px', fontWeight: 'bolder'}}>{panelName}</h2>
       
       <Select
         value={selectedCourse}
         onChange={handleCourseChange}
-        style={{ marginBottom: "20px", width: "200px" }}
+        style={{ marginBottom: "20px", width: "200px", marginLeft: '1000px' }}
         placeholder="Select a course"
       >
         <Option value="">All Courses</Option>
@@ -332,7 +334,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
         renderItem={(student) => (
           <List.Item key={student._id}>
             <div style={{
-              height: "200px", padding: "20px", borderRadius: "8px",
+             height: "270px", padding: "30px", borderRadius: "8px",
               display: "flex", justifyContent: "space-between",
               alignItems: "center", backgroundColor: "#2B2B2B", marginBottom: "16px"
             }}>
@@ -340,28 +342,28 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                 <Text
                   style={{
                     color: "#ffffff",
-                    fontSize: "18px",
+                    fontSize: "22px",
                     fontWeight: "bold",
                   }}
                 >
                   {student.proposalTitle}
                 </Text>
                 <br />
-                <Text style={{ color: "#ffffff" }}>
+                <Text style={{ color: "gray" }}>
                   <span className='font-bold'>Authors: </span>
                   {student.groupMembers
                     .map((member) => member.replace(/([a-z])([A-Z])/g, "$1 $2")) // Insert space between lowercase and uppercase letters
                     .join(", ")}
                 </Text>
                 <br />
-                <Text style={{ color: "#ffffff" }}>
+                <Text style={{ color: "gray" }}>
                   <span className='font-bold'>Panelists: </span>
                   {student.panelists.join(", ")}
                 </Text>
 
                 <br />
                 {student.submittedAt && (
-                  <Text style={{ color: "#ffffff", marginRight: "10px" }}>
+                  <Text style={{ color: "gray", marginRight: "10px" }}>
                     <span className='font-bold'>Date Uploaded:</span>{" "}
                     {new Date(student.submittedAt).toLocaleDateString("en-US", {
                       month: "short",
@@ -370,14 +372,13 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                     })}
                   </Text>
                 )}
-                <Text style={{ color: "#ffffff" }}>
+               <Text style={{ color: "gray", display: 'none'}}>
                   <span className='font-bold'>Manuscript Status : </span>{" "}
                   {student.manuscriptStatus || "N/A"}
                 </Text>
                 <br />
-                <br />
-                <p style={{ color: "#ffffff" }}>Course : {student.course}</p>
-                <p style={{ color: "#ffffff" }}>Name : {student.name}</p>
+                <p style={{ color: "#ffffff", marginTop: '10px'}}><span className='font-bold'>Course : </span>{student.course}</p>
+                <p style={{ color: "#ffffff" }}><span className='font-bold'>Leader :</span> {student.name}</p>
               </div>
 
               <div style={{
@@ -399,6 +400,9 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                     marginTop: "40px",
                     position: "absolute",
                   }}
+                  format={(percent) => (
+                    <span style={{ color: "white", fontSize: "20px" }}>{percent}%</span>
+                  )}
                 />
 
                 <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)}                   style={{

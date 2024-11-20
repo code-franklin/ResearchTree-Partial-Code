@@ -378,6 +378,9 @@ export default function NewTables() {
                     marginTop: "40px",
                     position: "absolute",
                   }}
+                  format={(percent) => (
+                    <span style={{ color: "white", fontSize: "20px" }}>{percent}%</span>
+                  )}
                 />
 
                 <Button

@@ -165,7 +165,7 @@ const LoginFunction = () => {
                 style={{
                   width: "104px",
                   height: "52px",
-                  marginLeft: "130px",
+                  marginLeft: "135px",
                   marginTop: "12px",
                   border: "none",
                   background: "#0BF677",
@@ -184,6 +184,7 @@ const LoginFunction = () => {
                     color: "white",
                     fontSize: "16px",
                     fontWeight: "bolder",
+                   
                   }}
                 >
                   Login

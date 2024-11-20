@@ -64,6 +64,7 @@ const Sidebar = ({ onSelect }) => {
           <img className="inline-block mr-2 mb-1" src="/src/assets/explore-manuscript.png" alt="Explore Manuscript" />
           Explore Manuscript
         </Link>
+        
 
         {/* View Analytics */}
         <Link

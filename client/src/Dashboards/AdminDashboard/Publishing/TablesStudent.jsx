@@ -82,7 +82,7 @@ const Tables = () => {
             onChange={(e, newValue) => handleChange(e, newValue + 3)}
             TabIndicatorProps={{ sx: { display: 'none' } }}
           >
-            <Tab label="Defense" sx={tabStyles} />
+            <Tab label="Defenders" sx={tabStyles} />
             <Tab label="Ongoing Revision" sx={tabStyles} />
             <Tab label="Approved" sx={tabStyles} />
           </Tabs>

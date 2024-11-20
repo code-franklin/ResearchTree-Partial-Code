@@ -415,6 +415,9 @@ const fetchTaskProgress = async (studentId) => {
                     marginTop: "40px",
                     position: "absolute",
                   }}
+                  format={(percent) => (
+                    <span style={{ color: "white", fontSize: "20px" }}>{percent}%</span>
+                  )}
                 />
 
                 <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)}                   style={{
