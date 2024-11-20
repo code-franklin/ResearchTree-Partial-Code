@@ -39,7 +39,14 @@ import {
 
   // Data Analytics
   import { 
-    // getStudentCourseCountsByAdvisor
+    getBSITBSCStudentsByAdviser,
+    getNewUploadsByAdviser,
+    getReadyToReviseOnAdvicerByAdviser,
+    getReadyToDefenseStudentByAdviser,
+
+    getPanelistStudentsReadyToDefense,
+    getPanelistStudentsReviseOnPanel,
+    getPanelistStudentsApprovedOnPanel
   } from '../controllers/advicerControllers';
 
 import uploadProfile from '../middleware/uploadProfile';
@@ -60,7 +67,15 @@ router.get('/get-ckeditor-token/:userId', getToken);
 router.get('/specializations', getSpecializations);
 
 // Data Analytics
-// router.get('/:userId/student-course-counts', getStudentCourseCountsByAdvisor);
+router.get('/:adviserId/course-count', getBSITBSCStudentsByAdviser);
+
+router.get('/:adviserId/newUploads-count', getNewUploadsByAdviser);
+router.get('/:adviserId/reviseOnAdvicer-count', getReadyToReviseOnAdvicerByAdviser);
+router.get('/:adviserId/readyToDefense-count', getReadyToDefenseStudentByAdviser);
+
+router.get('/:adviserId/approvedOnAdvicer-count', getPanelistStudentsReadyToDefense);
+router.get('/:adviserId/reivseOnAdvicer-count', getPanelistStudentsReviseOnPanel);
+router.get('/:adviserId/approvedOnPanel-count', getPanelistStudentsApprovedOnPanel);
 
 /* Adviser routes */
 router.get('/advisor-students/:advisorId', getAdviserStudents);

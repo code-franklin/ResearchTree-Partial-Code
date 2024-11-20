@@ -10,7 +10,14 @@ import CloseIcon from '@mui/icons-material/Close';
 export const Cards = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const [pdfCount, setPdfCount] = useState(0); 
-  const [studentCounts, setStudentCounts] = useState({});
+  const [newUploads, setNewUploads] = useState(null);
+  const [reviseOnPanelist, setReviseOnPanelist] = useState(null);
+  const [readyToDefenseCount, setReadyToDefenseCount] = useState(null);
+  const [approvedOnAdvicerCount, setApprovedOnAdvicerCount] = useState(null);
+  const [reviseOnPanelCount, setReviseOnPanelCount] = useState(null);
+  const [approvedOnPanelCount, setApprovedOnPanelCount] = useState(null);
+  const [bsitCount, setBSITCount] = useState(0);
+  const [bscsCount, setBSCSCount] = useState(0);
 
   const [open, setOpen] = React.useState(false); // State for alert box
 
@@ -35,16 +42,81 @@ export const Cards = () => {
       }
     };
 
-    const fetchCounts = async () => {
+    const fetchStudentCounts = async () => {
         try {
-          const response = await axios.get(`http://localhost:7000/api/advicer/${user._id}/student-course-counts`);
-          setStudentCounts(response.data.counts);
+            const response = await axios.get(`http://localhost:7000/api/advicer/${user._id}/course-count`);
+            setBSITCount(response.data.bsitCount);
+            setBSCSCount(response.data.bscsCount);
+        } catch (err) {
+            console.error('Error fetching student counts:', err);
+            setError('Failed to fetch student counts');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchNewUploadCount = async () => {
+        try {
+          const response = await axios.get(`http://localhost:7000/api/advicer/${user._id}/newUploads-count`);
+          setNewUploads(response.data.newUploadsCount);
         } catch (error) {
-          console.error("Error fetching student counts:", error);
+          console.error("Error fetching Ready to Defense count:", error);
         }
       };
 
-    fetchCounts();
+    const fetchReviseOnAdvicerCount = async () => {
+        try {
+          const response = await axios.get(`http://localhost:7000/api/advicer/${user._id}/reviseOnAdvicer-count`);
+          setReviseOnPanelist(response.data.reviseOnAdvicerCount);
+        } catch (error) {
+          console.error("Error fetching Ready to Defense count:", error);
+        }
+      };
+
+    const fetchReadyToDefenseCount = async () => {
+    try {
+        const response = await axios.get(`http://localhost:7000/api/advicer/${user._id}/readyToDefense-count`);
+        setReadyToDefenseCount(response.data.readyToDefenseCount);
+    } catch (error) {
+        console.error("Error fetching Ready to Defense count:", error);
+    }
+    };
+
+    const fetchApprovedOnAdvicerCount = async () => {
+    try {
+        const response = await axios.get(`http://localhost:7000/api/advicer/${user._id}/approvedOnAdvicer-count`);
+        setApprovedOnAdvicerCount(response.data.count);
+    } catch (error) {
+        console.error("Error fetching Ready to Defense count:", error);
+    }
+    };
+
+    const fetchReviseOnPanelCount = async () => {
+    try {
+        const response = await axios.get(`http://localhost:7000/api/advicer/${user._id}/reivseOnAdvicer-count`);
+        setReviseOnPanelCount(response.data.count);
+    } catch (error) {
+        console.error("Error fetching Ready to Defense count:", error);
+    }
+    };
+    
+    const fetchApprovedOnPanelCount = async () => {
+    try {
+        const response = await axios.get(`http://localhost:7000/api/advicer/${user._id}/approvedOnPanel-count`);
+        setApprovedOnPanelCount(response.data.count);
+    } catch (error) {
+        console.error("Error fetching Ready to Defense count:", error);
+    }
+    };
+    
+    fetchNewUploadCount();
+    fetchReviseOnAdvicerCount();
+    fetchReadyToDefenseCount();
+
+    fetchApprovedOnAdvicerCount();
+    fetchReviseOnPanelCount();
+    fetchApprovedOnPanelCount();
+    fetchStudentCounts();
     fetchPdfCount();
   }, []); 
 
@@ -62,14 +134,11 @@ export const Cards = () => {
           <div className="mt-[-100px] ml-[900px]">
             <p className="absolute text-[42px] font-bold ml-[-900px] mt-[-10px]">View Analytics</p>
             <img className="inline-block mb-1 ml-[200px]" src="/src/assets/BSIT.png" />
-            <span className="bsitColor">200</span>
+            <span className="bsitColor">{bsitCount}</span>
             <img className="inline-block mb-1" src="/src/assets/BSCS.png" />
-            <span className="bsitColor">2200</span> 
+            <span className="bsitColor">{bscsCount}</span> 
           </div>
         </div>
-
-        <p>BSIT: {studentCounts.BSIT || 0}</p>
-        <p>BSCS: {studentCounts.BSCS || 0}</p>
 
         <div className="card">
           <div className="card-icon-1">
@@ -98,7 +167,7 @@ export const Cards = () => {
           </div>
           <div className="card-content">
             <p className="card-title">New Uploads</p>
-            <p className="card-value-2"></p> {/* Display PDF count here */}
+            <p className="card-value-2">{newUploads}</p> {/* Display PDF count here */}
           </div>
         </div>
 
@@ -108,7 +177,7 @@ export const Cards = () => {
           </div>
           <div className="card-content">
             <p className="card-title">Ongoing Revision</p>
-            <p className="card-value-3"></p>
+            <p className="card-value-3">{reviseOnPanelist}</p>
           </div>
         </div>
 
@@ -118,7 +187,7 @@ export const Cards = () => {
           </div>
           <div className="card-content">
             <p className="card-title">Ready for Defense</p>
-            <p className="card-value-3"></p>
+            <p className="card-value-3">{readyToDefenseCount}</p>
           </div>
         </div>
 
@@ -129,7 +198,7 @@ export const Cards = () => {
             </div>
             <div className="card-content">
               <p className="card-title">Defenders</p>
-              <p className="card-value-3"></p>
+              <p className="card-value-2">{approvedOnAdvicerCount}</p>
             </div>
           </div>
 
@@ -139,7 +208,7 @@ export const Cards = () => {
             </div>
             <div className="card-content">
               <p className="card-title">Defender's Revision</p>
-              <p className="card-value-3"></p>
+              <p className="card-value-2">{reviseOnPanelCount}</p>
             </div>
           </div>
 
@@ -149,7 +218,7 @@ export const Cards = () => {
             </div>
             <div className="card-content">
               <p className="card-title">Approved</p>
-              <p className="card-value-3"></p>
+              <p className="card-value-2">{approvedOnPanelCount}</p>
             </div>
           </div>
         </div>

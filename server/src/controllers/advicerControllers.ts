@@ -267,6 +267,226 @@ export const fetchFinalStudentGrades = async (req: Request, res: Response) => {
   }
 };
 
+// Data Analytics
+export const getBSITBSCStudentsByAdviser = async (req: Request, res: Response) => {
+  try {
+    const { adviserId } = req.params;
+
+    // Ensure adviserId is provided
+    if (!adviserId) {
+      return res.status(400).json({ error: 'Adviser ID is required' });
+    }
+
+    // Fetch the adviser by ID and populate the acceptedStudents field
+    const adviser = await User.findById(adviserId).populate('acceptedStudents');
+
+    if (!adviser) {
+      return res.status(404).json({ error: 'Adviser not found' });
+    }
+
+    // Filter the acceptedStudents to count BSIT and BSCS students
+    const bsitStudents = adviser.acceptedStudents.filter(student => student.course === 'BSIT');
+    const bscsStudents = adviser.acceptedStudents.filter(student => student.course === 'BSCS');
+
+    // Return the counts for BSIT and BSCS
+    res.status(200).json({
+      bsitCount: bsitStudents.length,
+      bscsCount: bscsStudents.length
+    });
+
+  } catch (error) {
+    console.error('Error fetching students by adviser:', error);
+    res.status(500).json({ error: 'Failed to fetch students by adviser' });
+  }
+};
+
+export const getReadyToDefenseStudentByAdviser = async (req: Request, res: Response) => {
+  const { adviserId } = req.params;
+
+  try {
+    // Ensure adviserId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(adviserId)) {
+      return res.status(400).json({ message: 'Invalid adviser ID' });
+    }
+
+    // Fetch the adviser with their accepted students
+    const adviser = await User.findById(adviserId).populate('acceptedStudents');
+
+    if (!adviser || adviser.role !== 'adviser') {
+      return res.status(404).json({ message: 'Adviser not found' });
+    }
+
+    // Filter the accepted students who are 'Ready to Defense'
+    const readyToDefenseStudents = adviser.acceptedStudents.filter(student => 
+      student.manuscriptStatus === 'Ready to Defense'
+    );
+
+    // Get the count of students who are 'Ready to Defense'
+    const readyToDefenseCount = readyToDefenseStudents.length;
+
+    return res.status(200).json({ readyToDefenseCount });
+  } catch (error) {
+    console.error('Error fetching ready-to-defense students count:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const getReadyToReviseOnAdvicerByAdviser = async (req: Request, res: Response) => {
+  const { adviserId } = req.params;
+
+  try {
+    // Ensure adviserId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(adviserId)) {
+      return res.status(400).json({ message: 'Invalid adviser ID' });
+    }
+
+    // Fetch the adviser with their accepted students
+    const adviser = await User.findById(adviserId).populate('acceptedStudents');
+
+    if (!adviser || adviser.role !== 'adviser') {
+      return res.status(404).json({ message: 'Adviser not found' });
+    }
+
+    // Filter the accepted students who are 'Ready to Defense'
+    const reviseOnAdvicerStudents = adviser.acceptedStudents.filter(student => 
+      student.manuscriptStatus === 'Revise On Advicer'
+    );
+
+    // Get the count of students who are 'Ready to Defense'
+    const reviseOnAdvicerCount = reviseOnAdvicerStudents.length;
+
+    return res.status(200).json({ reviseOnAdvicerCount });
+  } catch (error) {
+    console.error('Error fetching ready-to-defense students count:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const getNewUploadsByAdviser = async (req: Request, res: Response) => {
+  const { adviserId } = req.params;
+
+  try {
+    // Ensure adviserId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(adviserId)) {
+      return res.status(400).json({ message: 'Invalid adviser ID' });
+    }
+
+    // Fetch the adviser with their accepted students
+    const adviser = await User.findById(adviserId).populate('acceptedStudents');
+
+    if (!adviser || adviser.role !== 'adviser') {
+      return res.status(404).json({ message: 'Adviser not found' });
+    }
+
+    // Filter the accepted students who are 'Ready to Defense'
+    const newUploadsStudents = adviser.acceptedStudents.filter(student => 
+      student.manuscriptStatus === null
+    );
+
+    // Get the count of students who are 'Ready to Defense'
+    const newUploadsCount = newUploadsStudents.length;
+
+    return res.status(200).json({ newUploadsCount });
+  } catch (error) {
+    console.error('Error fetching ready-to-defense students count:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const getPanelistStudentsReadyToDefense = async (req: Request, res: Response) => {
+  const { adviserId } = req.params;
+  
+    try {
+      // Use aggregation to count manuscriptStatus for 'Ready to Defense' students
+      const result = await User.aggregate([
+        {
+          $match: {
+            panelists: new mongoose.Types.ObjectId(adviserId), // Find students where the advisor is a panelist
+            advisorStatus: 'accepted', // Ensure the advisor status is 'accepted'
+            manuscriptStatus: 'Ready to Defense' // Filter only those with manuscriptStatus 'Ready to Defense'
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            count: { $sum: 1 } // Count the number of students with 'Ready to Defense' status
+          }
+        }
+      ]);
+  
+      const count = result.length > 0 ? result[0].count : 0; // Get the count of students or 0 if no results
+  
+      res.status(200).json({ count }); // Send the count in the response
+    } catch (error) {
+      console.error('Error fetching panelist students:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+  
+  export const getPanelistStudentsReviseOnPanel = async (req: Request, res: Response) => {
+    const { adviserId } = req.params;
+    
+      try {
+        // Use aggregation to count manuscriptStatus for 'Ready to Defense' students
+        const result = await User.aggregate([
+          {
+            $match: {
+              panelists: new mongoose.Types.ObjectId(adviserId), // Find students where the advisor is a panelist
+              advisorStatus: 'accepted', // Ensure the advisor status is 'accepted'
+              manuscriptStatus: 'Revise on Panelist' // Filter only those with manuscriptStatus 'Ready to Defense'
+            }
+          },
+          {
+            $group: {
+              _id: null,
+              count: { $sum: 1 } // Count the number of students with 'Ready to Defense' status
+            }
+          }
+        ]);
+    
+        const count = result.length > 0 ? result[0].count : 0; // Get the count of students or 0 if no results
+    
+        res.status(200).json({ count }); // Send the count in the response
+      } catch (error) {
+        console.error('Error fetching panelist students:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+      }
+    };
+    
+
+    export const getPanelistStudentsApprovedOnPanel = async (req: Request, res: Response) => {
+      const { adviserId } = req.params;
+      
+        try {
+          // Use aggregation to count manuscriptStatus for 'Ready to Defense' students
+          const result = await User.aggregate([
+            {
+              $match: {
+                panelists: new mongoose.Types.ObjectId(adviserId), // Find students where the advisor is a panelist
+                advisorStatus: 'accepted', // Ensure the advisor status is 'accepted'
+                manuscriptStatus: 'Approved on Panel' // Filter only those with manuscriptStatus 'Ready to Defense'
+              }
+            },
+            {
+              $group: {
+                _id: null,
+                count: { $sum: 1 } // Count the number of students with 'Ready to Defense' status
+              }
+            }
+          ]);
+      
+          const count = result.length > 0 ? result[0].count : 0; // Get the count of students or 0 if no results
+      
+          res.status(200).json({ count }); // Send the count in the response
+        } catch (error) {
+          console.error('Error fetching panelist students:', error);
+          res.status(500).json({ message: 'Internal Server Error' });
+        }
+      };
+      
+  
+
+
 
 export const registration = async (req: Request, res: Response) => {
   const { name, email, password, role, course, year, handleNumber, groupMembers, design } = req.body;

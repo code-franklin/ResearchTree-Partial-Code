@@ -28,7 +28,7 @@ export interface IUser extends Document {
   course?: string;
   year?: number;
   handleNumber?: number;
-  acceptedStudents: Schema.Types.ObjectId[]
+  acceptedStudents: IUser[];
   isApproved: boolean;
   chosenAdvisor: Schema.Types.ObjectId | null;
   advisorStatus: 'accepted' | 'declined' | 'pending' | null;

@@ -15,13 +15,13 @@ export const PieChart = () => {
             className: 'highcharts-custom-chart',
             backgroundColor: '#1E1E1E', // Set background color directly here
             spacingBottom: 10, // Bottom padding
-            spacingTop: 260, // Top padding
+            spacingTop: 270, // Top padding
             spacingLeft: 0, // Left padding
             spacingRight: 0, // Right padding
-            height: 800, // Set height
-            width: 460, // Set width
-            borderColor: null, // Remove Highcharts border
-            borderWidth: 0, // Remove Highcharts border width
+            height: 760, // Set height
+            width: 552, // Set width
+            borderColor: '#4B4B4B', // Remove Highcharts border
+            borderWidth: 3, // Remove Highcharts border width
         },
         title: {
             text: null // Remove title text
@@ -73,7 +73,7 @@ export const PieChart = () => {
     };
 
     return (
-        <div className="flex justify-center items-center w-[470px] mt-[130px] ml-[-75px] border border-[#4B4B4B]">
+        <div className="flex justify-center items-center w-[566px] mt-[130px] ml-[-180px] border-t border-[#4B4B4B] rounded-t">
             <HighchartsReact
                 highcharts={Highcharts}
                 options={options}
