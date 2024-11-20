@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
 
-export default function GradingTable({ advicerId, studentId }) {
+import GradingProcess from './ProcessGrading';
+
+export default function GradingTable({ panelistId, studentId }) {
   const [rubrics, setRubrics] = useState([]); // All rubrics
   const [selectedRubricId, setSelectedRubricId] = useState(null); // Selected rubricId
   const [categories, setCategories] = useState([]);
@@ -16,13 +18,29 @@ export default function GradingTable({ advicerId, studentId }) {
   const [finalGradeData, setFinalGradeData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [isGradeForStudentOpen, setGradeForStudentOpen] = useState(false);
+  const [selectedPanelistId, setSelectedPanelistId] = useState(null);
+  const [selectedStudentId, setSelectedStudentId] = useState(null);
 
+  const [isGradeForStudentModalOpen, setGradeForStudentModalOpen] = useState(false);
+
+  
   const user = JSON.parse(localStorage.getItem('user'));
 
-  console.log("Advicer ID : ", advicerId);
-  console.log("Student ID : ", studentId);
+
   // Fetch grades and initialize rubrics
+
+  const handleGrade = (studentId, panelistId) => {
+    setGradeForStudentModalOpen(true);
+    setSelectedStudentId(studentId);
+    setSelectedPanelistId(panelistId);
+  };
+  const closeGradingModal = () => {
+    setGradeForStudentModalOpen(false); // Close modal
+    setSelectedStudentId(null);
+    setSelectedPanelistId(null);
+  };
+
+
   useEffect(() => {
     const fetchGrades = async () => {
       try {
@@ -122,6 +140,8 @@ export default function GradingTable({ advicerId, studentId }) {
     }
   };
 
+
+
   return (
     <div className="text-[14px] p-4 w-[1400px] h-auto ml-[400px] mt-[380px]">
       {/* Rubric Selector */}
@@ -141,7 +161,7 @@ export default function GradingTable({ advicerId, studentId }) {
 
       {/* Rubric Title */}
       <h2 className="rubric-title text-white bg-[#2B2B2B] text-[25px] font-bold p-10 capitalize rounded">
-        {title || "Waiting for your manuscript to be graded"}
+        {title || 'You need to grade first to view the grading.'}
       </h2>
 
       {/* Panelist Buttons */}
@@ -162,6 +182,12 @@ export default function GradingTable({ advicerId, studentId }) {
           onClick={fetchFinalGrade}
         >
           Final Grade
+        </button>
+        <button
+          className="bg-blue-600 text-white px-4 py-2 m-2 rounded"
+          onClick={() => handleGrade(studentId, panelistId)}
+        >
+          Grading
         </button>
       </div>
 
@@ -255,6 +281,28 @@ export default function GradingTable({ advicerId, studentId }) {
     </Button>
   </DialogActions>
 </Dialog>
+
+      {/* Material UI Modal for Grading */}
+      <Dialog
+        open={isGradeForStudentModalOpen}
+        onClose={closeGradingModal}
+        fullWidth
+        maxWidth='xl'
+      >
+        <DialogContent sx={{ height: "1200px" }}>
+        {selectedStudentId && selectedPanelistId && (
+            <GradingProcess
+              studentId={selectedStudentId}
+              panelistId={selectedPanelistId}
+            />
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeGradingModal} color='primary'>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
 
     </div>
   );

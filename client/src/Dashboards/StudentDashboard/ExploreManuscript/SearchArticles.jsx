@@ -7,7 +7,7 @@ import Modal from '@mui/material/Modal';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { AutoComplete, Input, ConfigProvider, Pagination } from 'antd';
-import 'ldrs/trefoil'
+import 'ldrs/trefoil';
 
 
 

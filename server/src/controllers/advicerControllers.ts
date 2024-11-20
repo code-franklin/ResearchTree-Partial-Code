@@ -28,8 +28,7 @@ export const fetchRubrics  = async (req: Request, res: Response) => {
 
 
 export const submitGrades = async (req: Request, res: Response) => {
-  const { studentId, rubricId, grades, panelistId } = req.body;
-
+  const { studentId, panelistId, rubricId, grades } = req.body;
   try {
     // Validate student
     const student = await User.findById(studentId);
@@ -43,46 +42,29 @@ export const submitGrades = async (req: Request, res: Response) => {
       return res.status(403).json({ error: 'Only panels can grade students' });
     }
 
-    // Check for existing grades by the same panelist for the same rubric
+    // Check for existing grades
     const existingGrade = await Grading.findOne({ studentId, panelistId, rubricId });
     if (existingGrade) {
       return res.status(400).json({ error: 'Grades already submitted for this rubric by you' });
     }
 
-    // Compute total grade value
+    // Calculate grade values and label
     const totalGradeValue = grades.reduce((sum: number, grade: IGrade) => sum + grade.gradeValue, 0);
+    let overallGradeLabel = 'Needs Improvement';
+    if (totalGradeValue >= 16) overallGradeLabel = 'Excellent';
+    else if (totalGradeValue >= 11) overallGradeLabel = 'Good';
+    else if (totalGradeValue >= 6) overallGradeLabel = 'Satisfactory';
 
-    // Determine overall grade label based on total grade value
-    let overallGradeLabel: string;
-    if (totalGradeValue >= 16 && totalGradeValue <= 20) {
-      overallGradeLabel = 'Excellent';
-    } else if (totalGradeValue >= 11 && totalGradeValue <= 15) {
-      overallGradeLabel = 'Good';
-    } else if (totalGradeValue >= 6 && totalGradeValue <= 10) {
-      overallGradeLabel = 'Satisfactory';
-    } else if (totalGradeValue >= 1 && totalGradeValue <= 5) {
-      overallGradeLabel = 'Needs Improvement';
-    } else {
-      return res.status(400).json({ error: 'Invalid grade values provided.' });
-    }
-
-    // Create new grade entry
-    const newGrade = new Grading({
-      studentId,
-      panelistId,
-      rubricId,
-      grades,
-      totalGradeValue,
-      overallGradeLabel,
-    });
-
+    // Save grade entry
+    const newGrade = new Grading({ studentId, panelistId, rubricId, grades, totalGradeValue, overallGradeLabel });
     await newGrade.save();
-    return res.status(201).json({ message: 'Grades submitted successfully', newGrade });
+    
+    return res.status(201).json({ message: 'Grades submitted successfully'});
   } catch (error) {
-    console.error('Error submitting grades:', error);
-    return res.status(500).json({ error: 'Failed to submit grades.' });
+    return res.status(500).json({ error: 'Failed to submit grades BackEnd' });
   }
 };
+
 
 // Backup for Adviser view student grade
 export const fetchAdviseStudentGrades = async (req: Request, res: Response) => {
@@ -135,7 +117,6 @@ export const fetchAdviseStudentGrades = async (req: Request, res: Response) => {
     // Return enriched grades
     res.status(200).json(enrichedGrades);
   } catch (error) {
-    console.error('Error fetching grades:', error);
     res.status(500).json({ error: 'Failed to fetch grades.' });
   }
 };
@@ -190,7 +171,6 @@ export const fetchGrades = async (req: Request, res: Response) => {
     // Return enriched grades with all panelist contributions
     res.status(200).json(enrichedGrades);
   } catch (error) {
-    console.error('Error fetching grades:', error);
     res.status(500).json({ error: 'Failed to fetch grades.' });
   }
 };

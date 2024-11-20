@@ -619,7 +619,7 @@ export default function NewTables() {
         <DialogContent sx={{ height: "1200px" }}>
           {gradingStudentId && (
             <GradingAdvicer
-              advicerId={user._id}
+              panelistId={user._id}
               studentId={gradingStudentId}
             />
           )}
