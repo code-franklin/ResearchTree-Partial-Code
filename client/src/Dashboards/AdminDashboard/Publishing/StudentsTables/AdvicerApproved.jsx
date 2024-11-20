@@ -27,6 +27,10 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+
+import GradingButton from './Grading'
+
+
 import CkEditorDocuments from "../CkEditorDocuments";
 import axios from "axios";
 
@@ -455,7 +459,9 @@ const fetchTaskProgress = async (studentId) => {
                   }}
                 />
 
-                <Button
+                <GradingButton/>
+
+                {/* <Button
                   icon={<BookOutlined />}
                   onClick={() => handleGradingIconClick(student)}
                   style={{
@@ -463,7 +469,7 @@ const fetchTaskProgress = async (studentId) => {
                     backgroundColor: "#722ed1", // Purple for 'grading'
                     color: "#fff", // White text
                   }}
-                />
+                /> */}
 
                 <Button
                   icon={<PlusOutlined />}

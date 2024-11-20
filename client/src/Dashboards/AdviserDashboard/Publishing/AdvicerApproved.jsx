@@ -26,7 +26,14 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+
+import GradingButton from './GradingAdvicer'
+
+
+
+
 import CkEditorDocuments from "./CkEditorDocuments";
+import GradingAdvicer from "./GradingAdvicer";
 import axios from "axios";
 
 const { Text } = Typography;
@@ -37,6 +44,9 @@ export default function NewTables() {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
+
+  const [gradingModalOpen, setGradingModalOpen] = useState(false);
+  const [gradingStudentId, setGradingStudentId] = useState(null);
 
   const [courses, setCourses] = useState([]); // To store all unique courses
   const [filteredStudents, setFilteredStudents] = useState([]); // For filtering based on the course
@@ -109,6 +119,16 @@ export default function NewTables() {
     setSelectedStudentId(null);
     setSelectedChannelId(null);
   };
+
+  const handleViewGrade = (studentId) => {
+    setGradingModalOpen(true);
+    setGradingStudentId(studentId);
+  };
+  const closeGradingModal = () => {
+    setGradingModalOpen(false); // Close modal
+    setGradingStudentId(null);
+  };
+
   // Task for Student
 
   const addTask = async (studentId, taskTitle) => {
@@ -530,12 +550,15 @@ export default function NewTables() {
                   }}
                 />
 
+                {/* Grading Button Modal
+                <GradingButton/> */}
+
                 <Button
                   icon={<BookOutlined />}
-                  onClick={() => handleGradingIconClick(student)}
+                  onClick={() => handleViewGrade(student._id)}
                   style={{
                     width: "50px",
-                    backgroundColor: "#722ed1", // Purple for 'grading'
+                    backgroundColor: "yellow", // Purple for 'grading'
                     color: "#fff", // White text
                   }}
                 />
@@ -586,6 +609,29 @@ export default function NewTables() {
         </DialogActions>
       </Dialog>
 
+            {/* Material UI Modal for Grading */}
+      <Dialog
+        open={gradingModalOpen}
+        onClose={closeGradingModal}
+        fullWidth
+        maxWidth='xxl'
+      >
+        <DialogContent sx={{ height: "1200px" }}>
+          {gradingStudentId && (
+            <GradingAdvicer
+              advicerId={user._id}
+              studentId={gradingStudentId}
+            />
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeGradingModal} color='primary'>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+{/* Grading */}
       <Modal
               title='Grading Rubric'
               visible={isGradingModalVisible}

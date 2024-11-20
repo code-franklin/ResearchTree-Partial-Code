@@ -44,7 +44,7 @@ const Tables = () => {
       top: '20px',
       maxWidth: '1400px',
       height: 'auto',
-      borderRadius: '8px',
+      borderRadius: '30px',
       padding: '16px',
       backgroundColor: '#222222',
     }}>
@@ -89,7 +89,7 @@ const Tables = () => {
         </Box>
       </Box>
 
-      <Box sx={{ p: 6, backgroundColor: '#1E1E1E', borderRadius: '8px', boxShadow: 1, height: '760px' }}>
+      <Box sx={{ p: 6, backgroundColor: '#1E1E1E', borderRadius: '8px', boxShadow: 1, height: '' }}>
         {value === 0 && <ListManuscript studentData={studentData} />}
         {value === 1 && <OngoingRevise studentData={studentData} />}
         {value === 2 && <ReadyforDefense studentData={studentData} />}

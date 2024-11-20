@@ -301,15 +301,16 @@ const Sidebar = ({ onSelect }) => {
       p: 4,
       color: 'white',
       bgcolor: "#1E1E1E",
-      borderRadius: 3,
+      borderRadius: 20,
       maxWidth: 700,
       mx: "auto",
       mt: 6,
+ 
       boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)"
     }}
   >
     
-    <Typography variant="h5" mb={3} fontWeight={800} color="#333">
+    <Typography sx={{marginLeft: '150px', fontSize: '30px'}} variant="h5" mb={3} fontWeight={800} color="#333">
       Manage Specializations 
     </Typography>
 
@@ -368,7 +369,7 @@ const Sidebar = ({ onSelect }) => {
               variant="outlined"
               color="error"
               size="small"
-              sx={{ textTransform: "none", color: 'red'}}
+              sx={{ textTransform: "none", color: 'darkred'}}
             >
               Delete
             </Button>
@@ -379,27 +380,32 @@ const Sidebar = ({ onSelect }) => {
 
     {/* Add New Specialization */}
     <Input
-      placeholder="New Specialization"
+      placeholder="Type new specialization"
       value={newSpecialization}
       onChange={(e) => setNewSpecialization(e.target.value)}
       fullWidth
       sx={{
         mb: 2,
-        
-        bgcolor: "#ffffff",
-        borderRadius: 2,
+        color: 'white',
+        bgcolor: "#222222",
+        borderRadius: 60,
         px: 2,
         py: 1.5,
-        boxShadow: "inset 0px 1px 3px rgba(0, 0, 0, 0.1)"
+        boxShadow: "inset 0px 1px 3px rgba(0, 0, 0, 0.1)",
+        border: '2px solid',  // Set border width and style
+        borderColor: '#4B4B4B' // Choose your desired color here
       }}
+      
     />
     <Button
       onClick={handleAddSpecialization}
       variant=""
       color=""
       sx={{
-        marginLeft: '245px',
-        background: '#0BF677',
+        position: 'absolute',
+        marginTop: '10px',
+        marginLeft: '-170px',
+        background: '#4B4B4B',
         height: '20px',
         width: "160px",
         fontWeight: "bold",

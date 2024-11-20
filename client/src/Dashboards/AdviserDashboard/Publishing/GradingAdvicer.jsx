@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
 
-export default function GradingTable({ userId }) {
+export default function GradingTable({ advicerId, studentId }) {
   const [rubrics, setRubrics] = useState([]); // All rubrics
   const [selectedRubricId, setSelectedRubricId] = useState(null); // Selected rubricId
   const [categories, setCategories] = useState([]);
@@ -16,14 +16,18 @@ export default function GradingTable({ userId }) {
   const [finalGradeData, setFinalGradeData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [isGradeForStudentOpen, setGradeForStudentOpen] = useState(false);
+
   const user = JSON.parse(localStorage.getItem('user'));
 
+  console.log("Advicer ID : ", advicerId);
+  console.log("Student ID : ", studentId);
   // Fetch grades and initialize rubrics
   useEffect(() => {
     const fetchGrades = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:7000/api/student/fetch-student/grades/${user._id}`
+          `http://localhost:7000/api/student/fetch-student/grades/${studentId}`
         );
         const gradesData = response.data;
 
@@ -49,7 +53,7 @@ export default function GradingTable({ userId }) {
     };
 
     fetchGrades();
-  }, [user._id]);
+  }, [studentId]);
 
   // Update categories, grade labels, and panelists when a rubric is selected
   useEffect(() => {
@@ -106,23 +110,10 @@ export default function GradingTable({ userId }) {
     }
   };
 
-  // // Fetch final grade
-  // const fetchFinalGrade = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `http://localhost:7000/api/student/fetch-student/FinalGrades/${user._id}`
-  //     );
-  //     setFinalGradeData(response.data);
-  //     setIsModalOpen(true);
-  //   } catch (error) {
-  //     console.error('Error fetching final grade:', error);
-  //   }
-  // };
-
   const fetchFinalGrade = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:7000/api/student/fetch-student/FinalGrades/${user._id}/${selectedRubricId}` // Include selectedRubricId in the endpoint
+        `http://localhost:7000/api/student/fetch-student/FinalGrades/${studentId}/${selectedRubricId}` // Include selectedRubricId in the endpoint
       );
       setFinalGradeData(response.data);
       setIsModalOpen(true);
@@ -130,27 +121,6 @@ export default function GradingTable({ userId }) {
       console.error('Error fetching final grade:', error);
     }
   };
-
-  
-
-  // // Calculate Final Grade based on Rubrics and Panelists
-  // const calculateFinalGrade = () => {
-  //   if (!gradesData || gradesData.length === 0) return 0;
-
-  //   const rubricGrades = gradesData.filter(
-  //     (grade) => grade.rubricId?._id === selectedRubricId
-  //   );
-
-  //   const total = rubricGrades.reduce((acc, grade) => {
-  //     const panelGrade = grade.grades?.reduce((sum, g) => sum + g.value, 0) || 0;
-  //     return acc + panelGrade;
-  //   }, 0);
-
-  //   const totalPanelists = rubricGrades.length;
-  //   const averageGrade = total / totalPanelists;
-
-  //   return averageGrade;
-  // };
 
   return (
     <div className="text-[14px] p-4 w-[1400px] h-auto ml-[400px] mt-[380px]">

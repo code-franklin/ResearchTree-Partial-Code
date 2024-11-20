@@ -10,7 +10,7 @@ import ExploreManuscript from '../Dashboards/AdviserDashboard/ExploreManuscript/
 import ViewAnalytics from '../Dashboards/AdviserDashboard/AdviserAnalytics/Chart'
 import PanelistAnalytics from '../Dashboards/AdviserDashboard/PanelistAnalytics/PanelistMain'
 import UnauthorizedAccess from './UnauthorizedAccess'; // Import the UnauthorizedAccess component
-import GradingModal from '../Dashboards/AdviserDashboard/MyAdvisee/GradingModal'
+import GradingModal from '../Dashboards/AdviserDashboard/Publishing/GradingAdvicer'
 import Sidebar from '../Dashboards/AdviserDashboard/Sidebar/sidebar'
 
 
