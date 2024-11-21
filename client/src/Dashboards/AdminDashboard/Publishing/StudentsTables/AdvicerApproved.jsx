@@ -28,7 +28,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 
-import GradingButton from './Grading'
+ import ViewGrading from './Grading'
 
 
 import CkEditorDocuments from "../CkEditorDocuments";
@@ -54,16 +54,19 @@ export default function ListManuscript({ studentData  }) {
   const [progress, setProgress] = useState(0);
   const [tasks, setTasks] = useState([]);
 
+  const [gradingModalOpen, setGradingModalOpen] = useState(false);
+  const [gradingStudentId, setGradingStudentId] = useState(null);
+
   const [admin, setAdmin] = useState(null);
 
-    // Grading modal states
-    const [isGradingModalVisible, setIsGradingModalVisible] = useState(false);
-    const [gradingRubric, setGradingRubric] = useState({
-      criteria1: 0,
-      criteria2: 0,
-      criteria3: 0,
-    });
-    const [gradingData, setGradingData] = useState([]);
+    // // Grading modal states
+    // const [isGradingModalVisible, setIsGradingModalVisible] = useState(false);
+    // const [gradingRubric, setGradingRubric] = useState({
+    //   criteria1: 0,
+    //   criteria2: 0,
+    //   criteria3: 0,
+    // });
+    // const [gradingData, setGradingData] = useState([]);
 
   // Fetch admin data from localStorage on initial load
   useEffect(() => {
@@ -72,6 +75,15 @@ export default function ListManuscript({ studentData  }) {
       setAdmin(JSON.parse(storedUser));
     }
   }, []);
+
+  const handleViewGrade = (studentId) => {
+    setGradingModalOpen(true);
+    setGradingStudentId(studentId);
+  };
+  const closeGradingModal = () => {
+    setGradingModalOpen(false); // Close modal
+    setGradingStudentId(null);
+  };
 
   const fetchTasks = async (studentId) => {
     try {
@@ -127,6 +139,7 @@ export default function ListManuscript({ studentData  }) {
       }
     }
   };
+  
 
 // Function to add a task and update the task list and progress
 const addTask = async (studentId, taskTitle) => {
@@ -296,38 +309,38 @@ const fetchTaskProgress = async (studentId) => {
     setIsGradingModalVisible(true);
   };
 
-  const handleRubricChange = (criteria, value) => {
-    setGradingRubric((prev) => ({
-      ...prev,
-      [criteria]: value,
-    }));
-  };
+  // const handleRubricChange = (criteria, value) => {
+  //   setGradingRubric((prev) => ({
+  //     ...prev,
+  //     [criteria]: value,
+  //   }));
+  // };
 
-  const submitGrading = async () => {
-    try {
-      const response = await axios.post(
-        `http://localhost:7000/api/advicer/grade-student`,
-        {
-          studentId: selectedStudentId,
-          panelistId: admin.id,
-          gradingRubric,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        message.success("Grading submitted successfully.");
-        setIsGradingModalVisible(false);
-        setGradingRubric({ criteria1: 0, criteria2: 0, criteria3: 0 });
-      }
-    } catch (error) {
-      console.error("Error submitting grading:", error);
-      message.error("Failed to submit grading.");
-    }
-  };
+  // const submitGrading = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       `http://localhost:7000/api/advicer/grade-student`,
+  //       {
+  //         studentId: selectedStudentId,
+  //         panelistId: admin.id,
+  //         gradingRubric,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //       }
+  //     );
+  //     if (response.status === 200) {
+  //       message.success("Grading submitted successfully.");
+  //       setIsGradingModalVisible(false);
+  //       setGradingRubric({ criteria1: 0, criteria2: 0, criteria3: 0 });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error submitting grading:", error);
+  //     message.error("Failed to submit grading.");
+  //   }
+  // };
 
   return (
     <div style={{ flex: 1, overflowX: "hidden", padding: "20px", width: "1263px" }}>
@@ -463,7 +476,17 @@ const fetchTaskProgress = async (studentId) => {
                   }}
                 />
 
-                <GradingButton/>
+                <Button
+                  icon={<BookOutlined />}
+                  onClick={() => handleViewGrade(student._id)}
+                  style={{
+                    width: "50px",
+                    backgroundColor: "yellow", // Purple for 'grading'
+                    color: "#fff", // White text
+                  }}
+                />
+
+                {/* <GradingButton/> */}
 
                 {/* <Button
                   icon={<BookOutlined />}
@@ -521,6 +544,28 @@ const fetchTaskProgress = async (studentId) => {
           </DialogActions>
         </Dialog>
 
+                    {/* Material UI Modal for Grading */}
+      <Dialog
+        open={gradingModalOpen}
+        onClose={closeGradingModal}
+        fullWidth
+        maxWidth='xxl'
+      >
+        <DialogContent sx={{ height: "1200px" }}>
+          {gradingStudentId && (
+            <ViewGrading
+              // panelistId={user._id}
+              studentId={gradingStudentId}
+            />
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeGradingModal} color='primary'>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+{/* 
       <Modal
         title='Grading Rubric'
         visible={isGradingModalVisible}
@@ -558,7 +603,7 @@ const fetchTaskProgress = async (studentId) => {
             onChange={(e) => handleRubricChange("criteria3", e.target.value)}
           />
         </div>
-      </Modal>
+      </Modal> */}
 
 
       <ConfigProvider>

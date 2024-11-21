@@ -21,9 +21,7 @@ export default function GradingTable({ panelistId, studentId }) {
   const [selectedPanelistId, setSelectedPanelistId] = useState(null);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
 
-  const [isGradeForStudentModalOpen, setGradeForStudentModalOpen] = useState(false);
-
-  
+  const [isGradeForStudentModalOpen, setGradeForStudentModalOpen] = useState(false);  
   const user = JSON.parse(localStorage.getItem('user'));
 
 

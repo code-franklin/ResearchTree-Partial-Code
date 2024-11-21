@@ -7,6 +7,8 @@ import axios from "axios";
 import {DeploymentUnitOutlined } from '@ant-design/icons'
 import "./Sidebar.css";
 
+import Rubrics from './Rubrics';
+
 const Sidebar = ({ onSelect }) => {
   const location = useLocation();
   const [admin, setAdmin] = useState(null);
@@ -16,6 +18,8 @@ const Sidebar = ({ onSelect }) => {
   const [newSpecialization, setNewSpecialization] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState("");
+
+  const [isRubricsModalModalOpen, setRubricsModalOpen] = useState(false);  
 
   useEffect(() => {
     // Fetch stored user data from localStorage and set it to the admin state
@@ -70,22 +74,19 @@ const Sidebar = ({ onSelect }) => {
     }
   };
 
-    // Open the modal and fetch specializations
-    const openSpecializationModal = () => {
-      setIsSpecializationModalOpen(true);
-      fetchSpecializations();
-    };
-
-    const openGradeModal = () => {
-      setIsGradeModalOpen(true);
- 
-    };
-
-
-    const startEditing = (id, name) => {
-      setEditingId(id);
-      setEditingName(name);
-    };
+  const HandleEditRubrics = () => {
+    setRubricsModalOpen(true);
+  };
+  
+  // Open the modal and fetch specializations
+  const openSpecializationModal = () => {
+    setIsSpecializationModalOpen(true);
+    fetchSpecializations();
+  };
+  const startEditing = (id, name) => {
+    setEditingId(id);
+    setEditingName(name);
+  };
 
   return (
     <div className='sidebar z-1 h-screen w-[313px] bg-[#1E1E1E] text-white flex flex-col fixed'>
@@ -322,164 +323,161 @@ const Sidebar = ({ onSelect }) => {
           },
         }}
 
-        onClick={openGradeModal}
+        onClick={HandleEditRubrics}
       >
         <img className='inline-block ' src='/src/assets/admin-rubrics.png' alt='My Manuscript'/> <span className="ml-2"> Grade Rubrics </span> 
       </Button>
 
       <Modal 
-      open={isGradeModalOpen} onClose={() => setIsGradeModalOpen(false)}
-     
-    
+        open={isRubricsModalModalOpen} onClose={() => setRubricsModalOpen(false)}>
+        <Box
+          sx={{
+            width: '1500px',
+            height: '800px',
+            p: 4,
+            color: 'white',
+            bgcolor: "#1E1E1E",
+            borderRadius: 20,
       
-      >
+            mx: "auto",
+            mt: 6,
       
-      <Box
-        sx={{
-          width: '1500px',
-          height: '800px',
-          p: 4,
-          color: 'white',
-          bgcolor: "#1E1E1E",
-          borderRadius: 20,
-    
-          mx: "auto",
-          mt: 6,
-    
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)"
-        }}
-      >
-
-    </Box>
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)"
+          }}
+        >
+          <Rubrics/>
+        </Box>
       </Modal>
 
       <Modal open={isSpecializationModalOpen} onClose={() => setIsSpecializationModalOpen(false)}>
-  <Box
-    sx={{
-      p: 4,
-      color: 'white',
-      bgcolor: "#1E1E1E",
-      borderRadius: 20,
-      maxWidth: 700,
-      mx: "auto",
-      mt: 6,
- 
-      boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)"
-    }}
-  >
-    
-    <Typography sx={{marginLeft: '150px', fontSize: '30px'}} variant="h5" mb={3} fontWeight={800} color="#333">
-      Manage Specializations 
-    </Typography>
-
-    {/* Specialization List */}
-    <Box mb={3} maxHeight="500px" overflow="auto" px={1}>
-      {specializations.map((spec) => (
         <Box
-          key={spec._id}
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={1.5}
-          p={2}
-          borderRadius={2}
-          bgcolor="#222222"
-          color="white"
-          boxShadow="0px 2px 5px rgba(0, 0, 0, 0.05)"
-        >
-          {editingId === spec._id ? (
-            <Input
-              value={editingName}
-              onChange={(e) => setEditingName(e.target.value)}
-              size="small"
-         
-              sx={{ mr: 2, color: 'white',}}
-            />
-          ) : (
-            <Typography variant="body1" color="white">
-              {spec.name}
-            </Typography>
-          )}
-          <div>
-            {editingId === spec._id ? (
-              <Button
-                onClick={handleEditSpecialization}
-                variant="contained"
-                color="primary"
-                size="small"
-                sx={{ mr: 1, textTransform: "none", color:'blue' }}
-              >
-                Save
-              </Button>
-            ) : (
-              <Button
-                onClick={() => startEditing(spec._id, spec.name)}
-                variant=""
-                color="primary"
-                size="small"
-                sx={{ mr: 1, textTransform: "none" }}
-              >
-                Edit
-              </Button>
-            )}
-            <Button
-              onClick={() => handleDeleteSpecialization(spec._id)}
-              variant="outlined"
-              color="error"
-              size="small"
-              sx={{ textTransform: "none", color: 'darkred'}}
-            >
-              Delete
-            </Button>
-          </div>
-        </Box>
-      ))}
-    </Box>
-
-    {/* Add New Specialization */}
-    <Input
-      placeholder="Type new specialization"
-      value={newSpecialization}
-      onChange={(e) => setNewSpecialization(e.target.value)}
-      fullWidth
-      sx={{
-        mb: 2,
-        color: 'white',
-        bgcolor: "#222222",
-        borderRadius: 60,
-        px: 2,
-        py: 1.5,
-        boxShadow: "inset 0px 1px 3px rgba(0, 0, 0, 0.1)",
-        border: '2px solid',  // Set border width and style
-        borderColor: '#4B4B4B' // Choose your desired color here
-      }}
+          sx={{
+            p: 4,
+            color: 'white',
+            bgcolor: "#1E1E1E",
+            borderRadius: 20,
+            maxWidth: 700,
+            mx: "auto",
+            mt: 6,
       
-    />
-    <Button
-      onClick={handleAddSpecialization}
-      variant=""
-      color=""
-      sx={{
-        position: 'absolute',
-        marginTop: '10px',
-        marginLeft: '-170px',
-        background: '#4B4B4B',
-        height: '20px',
-        width: "160px",
-        fontWeight: "bold",
-        py: 1.5,
-        textTransform: "none",
-        borderRadius: 60,
-        boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.1)"
-      }}
-    >
-      <span className="text-[15px]">
-      Add Specialization
-      </span>
-    
-    </Button>
-  </Box>
-</Modal>
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)"
+          }}
+        >
+          
+          <Typography sx={{marginLeft: '150px', fontSize: '30px'}} variant="h5" mb={3} fontWeight={800} color="#333">
+            Manage Specializations 
+          </Typography>
+
+          {/* Specialization List */}
+          <Box mb={3} maxHeight="500px" overflow="auto" px={1}>
+            {specializations.map((spec) => (
+              <Box
+                key={spec._id}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                mb={1.5}
+                p={2}
+                borderRadius={2}
+                bgcolor="#222222"
+                color="white"
+                boxShadow="0px 2px 5px rgba(0, 0, 0, 0.05)"
+              >
+                {editingId === spec._id ? (
+                  <Input
+                    value={editingName}
+                    onChange={(e) => setEditingName(e.target.value)}
+                    size="small"
+              
+                    sx={{ mr: 2, color: 'white',}}
+                  />
+                ) : (
+                  <Typography variant="body1" color="white">
+                    {spec.name}
+                  </Typography>
+                )}
+                <div>
+                  {editingId === spec._id ? (
+                    <Button
+                      onClick={handleEditSpecialization}
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      sx={{ mr: 1, textTransform: "none", color:'blue' }}
+                    >
+                      Save
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => startEditing(spec._id, spec.name)}
+                      variant=""
+                      color="primary"
+                      size="small"
+                      sx={{ mr: 1, textTransform: "none" }}
+                    >
+                      Edit
+                    </Button>
+                  )}
+                  <Button
+                    onClick={() => handleDeleteSpecialization(spec._id)}
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                    sx={{ textTransform: "none", color: 'darkred'}}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </Box>
+            ))}
+          </Box>
+
+          {/* Add New Specialization */}
+          <Input
+            placeholder="Type new specialization"
+            value={newSpecialization}
+            onChange={(e) => setNewSpecialization(e.target.value)}
+            fullWidth
+            sx={{
+              mb: 2,
+              color: 'white',
+              bgcolor: "#222222",
+              borderRadius: 60,
+              px: 2,
+              py: 1.5,
+              boxShadow: "inset 0px 1px 3px rgba(0, 0, 0, 0.1)",
+              border: '2px solid',  // Set border width and style
+              borderColor: '#4B4B4B' // Choose your desired color here
+            }}
+            
+          />
+          <Button
+            onClick={handleAddSpecialization}
+            variant=""
+            color=""
+            sx={{
+              position: 'absolute',
+              marginTop: '10px',
+              marginLeft: '-170px',
+              background: '#4B4B4B',
+              height: '20px',
+              width: "160px",
+              fontWeight: "bold",
+              py: 1.5,
+              textTransform: "none",
+              borderRadius: 60,
+              boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.1)"
+            }}
+          >
+            <span className="text-[15px]">
+            Add Specialization
+            </span>
+          
+          </Button>
+        </Box>
+      </Modal>
+
+
 
 
     </div>
