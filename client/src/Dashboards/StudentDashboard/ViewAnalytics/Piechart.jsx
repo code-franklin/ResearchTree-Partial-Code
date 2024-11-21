@@ -1,126 +1,105 @@
-import React, { useState, useEffect } from 'react';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
-import variablePie from 'highcharts/modules/variable-pie';
-import "./Styles/pieChart.css";
+import React, { useState, useEffect } from "react";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+import variablePie from "highcharts/modules/variable-pie";
+import axios from "axios";
+import "tailwindcss/tailwind.css";
 
 // Initialize the variable pie module
 variablePie(Highcharts);
 
-export const PieChart = ({ user }) => {
-    const [tasks, setTasks] = useState([]);
-    const [progress, setProgress] = useState(0);
+export const PieChart = () => {
+  const [error, setError] = useState(null); // State for error handling
+  const [chartData, setChartData] = useState([]); // State for storing fetched chart data
 
-    // Fetch tasks data
-    const fetchUpdatedTasks = async () => {
-        try {
-            const response = await fetch(`http://localhost:7000/api/student/tasks/${user._id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
+  useEffect(() => {
+    const fetchKeywordCounts = async () => {
+      try {
+        // Fetch keyword counts
+        const response = await axios.get(
+          "http://localhost:7000/api/student/PdfKeywordsCount"
+        );
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error('Failed to fetch updated tasks:', errorData.message || 'Unknown error');
-                return;
-            }
-
-            const data = await response.json();
-            setTasks(data.tasks || []);
-        } catch (error) {
-            console.error('Error fetching updated tasks:', error.message);
+        // Check if valid data is returned
+        if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+          const top5Data = response.data.slice(0, 6); // Limit to top 5
+          setChartData(top5Data); // Update state with the data
+        } else {
+          setChartData([]); // Set chartData to an empty array if no data is found
+          setError("No keyword data available.");
         }
+      } catch (error) {
+        setError("Failed to fetch keyword counts.");
+        console.error("Error fetching keyword counts:", error);
+      }
     };
 
-    // Fetch task progress
-    const fetchTaskProgress = async (userId) => {
-        try {
-          const response = await fetch(`http://localhost:7000/api/student/tasks/progress/${userId}`, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-          });
-      
-          if (!response.ok) {
-            const errorData = await response.json();
-            console.error('Error fetching task progress:', errorData.message);
-            return;
-          }
-      
-          const { progress } = await response.json();
-          setProgress(progress >= 0 && progress <= 100 ? progress : 0); // Ensure valid range
-        } catch (error) {
-          console.error('Error fetching task progress:', error);
-        }
-    };
-    
-    // Fetch task data when user is updated
-    useEffect(() => {
-        if (user && user._id) {
-          fetchUpdatedTasks();  // Fetch tasks
-          fetchTaskProgress(user._id); // Fetch progress
-        }
-    }, [user]);  // Runs every time `user` is updated
-    
-    // Dynamic chart options based on the progress state
-    const options = {
-        chart: {
-            type: 'variablepie',
-            className: 'highcharts-custom-chart',
-            backgroundColor: '#1E1E1E',
-            spacingBottom: 0,
-            spacingTop: 200,
-            spacingLeft: 20,
-            spacingRight: 0,
-            height: 805,
-            width: 450,
-        },
-        title: {
-            text: null,
-        },
-        legend: {
-            align: 'center',
-            verticalAlign: 'bottom',
-            layout: 'horizontal',
-            itemStyle: {
-                color: '#FFFFFF',
-            },
-        },
-        series: [{
-            minPointSize: 10,
-            innerSize: '30%',
-            zMin: 0,
-            showInLegend: true,
-            dataLabels: {
-                enabled: false,
-            },
-            borderColor: 'none',
-            borderWidth: 0,
-            data: [
-                {
-                    name: 'Tasks',
-                    y: progress,
-                    z: 92.9,
-                    color: '#222222'
-                },
-                {
-                    name: 'Progress',
-                    y: progress,
-                    z: 201.8,
-                    color: '#0BF677'
-                }
-            ]
-        }]
-    };
+    fetchKeywordCounts(); // Fetch data on component mount
+  }, []); // Empty dependency array ensures this runs only once
 
-    return (
-        <div>
-            {/* idelete nalang dirin nagamit ito */}
-        </div>
-    );
+  const colors = [
+    "#0BF677",  // Lime Green (used in your trending graph)
+    "#222222",  // Dark Gray (background color)
+    "#1E90FF",  // Dodger Blue (for text or highlights)
+    "#66B58A",  // Gold (for accents)
+    "#FF6347",  // Tomato Red (for error or warning)
+  ];
+  
+
+  const options = {
+    chart: {
+      type: "variablepie",
+      backgroundColor: "#1E1E1E",
+      spacingBottom: 10,
+      spacingTop: 10,
+      spacingLeft: 0,
+      spacingRight: 0,
+      height: 425,
+      width: 402,
+      borderColor: "#4B4B4B",
+      borderWidth: 3,
+    },
+    title: {
+      text: null,
+    },
+    legend: {
+      enabled: true,
+      itemStyle: {
+        color: "#FFFFFF",
+      },
+    },
+    series: [
+      {
+        minPointSize: 20,
+        innerSize: "30%",
+        zMin: 0,
+        showInLegend: true,
+        borderColor: null, // Remove border color for pie segments
+            borderWidth: 0, // Remove border width for pie segments
+        dataLabels: {
+          enabled: false,
+        },
+        data: chartData.map((item, index) => ({
+            name: item.category,
+            y: item.value,
+            z: 20 + index * 5, // Different z value for each category
+            color: colors[index % colors.length], // Cycle through colors
+          })),
+      },
+    ],
+  };
+
+  return (
+    <div className="flex justify-center items-center w-[566px] mt-[125px] ml-[-125px] border-t border-[#4B4B4B] rounded-t">
+      {error ? (
+        <div className="text-white">{error}</div>
+      ) : chartData.length > 0 ? (
+        <HighchartsReact highcharts={Highcharts} options={options} />
+      ) : (
+        <div className="text-white"></div>
+      )}
+    </div>
+  );
 };
 
 export default PieChart;

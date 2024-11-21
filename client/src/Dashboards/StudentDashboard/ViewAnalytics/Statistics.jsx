@@ -217,7 +217,7 @@ export const Cards = () => {
             
             <div className='absolute mt-[128px] ml-[1020px] border border-[#4B4B4B]'>
          
-      <DonutChart
+      {/* <DonutChart
   
         data={[
           { type: "Progress", value: progress || 0 },
@@ -254,7 +254,7 @@ export const Cards = () => {
             formatter: () => `${progress || 0}%`, // Display the progress value or 0 if undefined
           },
         }}
-      />
+      /> */}
 
     </div> 
         </div>

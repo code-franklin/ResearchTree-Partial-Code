@@ -1,4 +1,8 @@
 import express, { Router } from 'express';
+
+import { addKeywords, getKeywords, getPdfKeywordsCount } from "../controllers/studentControllers";
+
+
 import { 
     createNewProposal, 
     chooseNewAdvisor,
@@ -51,5 +55,13 @@ router.get('/fetch-student/FinalGrades/:userId/:rubricId', fetchFinalGrade);
 /* router.get('/articles', getAllArticles); */
 router.get('/articles/search', searchArticles);
 /* router.post('/upload-manuscript', postUploadManuscript); */
+
+// Route to add a new keyword
+router.post("/keywords", addKeywords);
+
+// Route to get all keywords
+router.get("/CountKeywords", getKeywords);
+
+router.get("/PdfKeywordsCount", getPdfKeywordsCount);
 
 export default router;

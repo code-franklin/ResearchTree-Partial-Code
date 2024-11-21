@@ -1,22 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Chart, Interval, Tooltip, Axis, Legend } from 'bizcharts';
-import './Styles/barChart.css'; // Ensure this file contains the necessary styles
+import axios from 'axios';  // Import axios to make the API request
 
-const data = [
-  { category: 'AI', value: 10 },
-  { category: 'Internet of Things ', value: 10 },
-  { category: 'Mobile App', value: 50 },
-  { category: 'Web Application', value: 250 },
-  { category: 'Machine Learning', value: 120 },
-  { category: 'CyberSecurity', value: 20 },
-  { category: 'Government', value: 120 },
-  { category: 'Block Chain', value: 170 },
-  { category: 'Community', value: 120 },
-  { category: 'Business', value: 190 }
-];
 
 export const BarChart = () => {
-  // Create a copy of data to modify
+  // State to store the fetched data
+  const [data, setData] = useState([]);
+
+  // Fetch data from the backend API only if there's no data already
+  useEffect(() => {
+    if (data.length === 0) {  // Only fetch if the data is empty
+      const fetchPdfDetailsCount = async () => {
+        try {
+          const response = await axios.get('http://localhost:7000/api/student/PdfKeywordsCount'); // Adjust the endpoint as needed
+          
+          if (response.data.length > 0) { // Check if data exists
+            const top10Data = response.data.slice(0, 10); // Limit to the first 10 items
+            setData(top10Data); // Set the response data to state
+          }
+        } catch (error) {
+          console.error("Error fetching PDF details count:", error);
+        }
+      };
+
+      fetchPdfDetailsCount();
+    }
+  }, [data]); // Only re-run effect if data changes (but initially checks if data is empty)
+
+  // Create a copy of the fetched data to modify
   const sortedData = [...data];
 
   // Find the index of 'Machine Learning'
@@ -31,7 +42,7 @@ export const BarChart = () => {
 
   return (
     <div className="p-10 mr-5 rounded-lg shadow-custom-shadow bg-[#1E1E1E] border border-[#4B4B4B] w-[1000px]">
-      <h2 className="text-[#0BF677] text-xl mb-4">Top 10 Searches Manuscript</h2>
+      <h2 className="text-[#0BF677] text-xl mb-4">Top 10 Trending Manuscript</h2>
       <Chart height={300} width={950} autoFit data={sortedData} interactions={['active-region']} >
         <Axis name="value" visible={true} />
         <Axis name="category" label={null} visible={true} />
@@ -40,12 +51,11 @@ export const BarChart = () => {
           offsetY={-20} 
           offsetX={10} 
           marker={{
-           
             symbol: 'circle',
             style: { fill: '#0BF677', r: 5}, // Radius set to 8
           }}
           itemName={{
-            style: { fill: '#FFFFFF', fontSize: 14,  } // Set legend text color to white
+            style: { fill: '#FFFFFF', fontSize: 14, } // Set legend text color to white
           }}
         />
         <Tooltip shared />

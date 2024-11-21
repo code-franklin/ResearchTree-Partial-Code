@@ -787,4 +787,78 @@ export const trainModel = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
-          
+
+import PdfDetails from "../models/pdfDetails";
+
+export const getPdfKeywordsCount = async (req: Request, res: Response) => {
+  try {
+    // Fetch the keywords from the Keywords collection
+    const keywords = await Keyword.find();
+
+    // Ensure there are keywords to search for
+    if (keywords.length === 0) {
+      return res.status(404).json({ error: "No keywords found" });
+    }
+
+    // Count documents that match each keyword in the title
+    const counts = await Promise.all(
+      keywords.map(async (keywordDoc) => {
+        const keyword = keywordDoc.keyword; // Extract the keyword from the document
+
+        // Count PdfDetails documents that contain the keyword in the title (case-insensitive)
+        const count = await PdfDetails.countDocuments({
+          title: { $regex: keyword, $options: 'i' }, // Case-insensitive regex search
+        });
+
+        return { category: keyword, value: count }; // Return the category (keyword) and its count
+      })
+    );
+
+    // Send the counts as a response
+    res.status(200).json(counts);
+  } catch (error) {
+    console.error("Error fetching PdfDetails count:", error);
+    res.status(500).json({ error: "Failed to fetch PdfDetails count" });
+  }
+};
+
+
+
+// GET endpoint to fetch all keywords
+export const getKeywords = async (req: Request, res: Response) => {
+  try {
+    const keywords = await Keyword.find();
+    res.status(200).json(keywords);
+  } catch (error) {
+    console.error("Error fetching keywords:", error);
+    res.status(500).json({ error: "Failed to fetch keywords" });
+  }
+};
+
+
+import Keyword from "../models/Keywords"; // Assuming the model is in models/Keyword.ts
+// POST endpoint to add multiple keywords to the database
+export const addKeywords = async (req: Request, res: Response) => {
+  try {
+    const { keywords } = req.body;
+
+    // Validate that keywords is provided and is an array
+    if (!keywords || !Array.isArray(keywords)) {
+      return res.status(400).json({ error: "Keywords should be an array" });
+    }
+
+    // Ensure each keyword is a string
+    const validKeywords = keywords.filter((keyword: any) => typeof keyword === "string");
+
+    // Create an array of new keyword documents
+    const keywordDocs = validKeywords.map((keyword) => new Keyword({ keyword }));
+
+    // Save all keywords to the database at once
+    await Keyword.insertMany(keywordDocs);
+
+    res.status(201).json({ message: "Keywords added successfully", keywords: validKeywords });
+  } catch (error) {
+    console.error("Error adding keywords:", error);
+    res.status(500).json({ error: "Failed to add keywords" });
+  }
+};

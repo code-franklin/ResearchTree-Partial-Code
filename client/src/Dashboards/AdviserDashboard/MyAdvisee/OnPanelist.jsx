@@ -345,12 +345,13 @@ export default function NewTables() {
                 marginBottom: "16px",
               }}
             >
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1,   maxWidth: '890px',}}>
                 <Text
                   style={{
                     color: "#ffffff",
                     fontSize: "22px",
                     fontWeight: "bold",
+                  
                   }}
                 >
                   {student.proposalTitle}
@@ -420,8 +421,12 @@ export default function NewTables() {
                   onClick={() =>
                     handleViewManuscript(student._id, student.channelId)
                   }
-                  style={{ marginBottom: "20px", width: "100px" }}
-                />
+                  style={{ marginBottom: "20px", width: "100px"  }}
+                >
+                  Revise
+                </Button>
+                
+
                 {/*                 <Button
                   icon={<LoadingOutlined />}  
                   onClick={() => updateManuscriptStatus(student._id, 'Revise On Advicer')}
@@ -431,7 +436,9 @@ export default function NewTables() {
                   icon={<CheckOutlined />}
                   onClick={() => updatePanelManuscriptStatus(student._id, 'Approved on Panel')}
                   style={{ marginBottom: "20px", width: "100px" }}
-                /> 
+                > 
+                Approved
+                </Button>
                 <Button
                   type='primary'
                   onClick={() => openTaskModal(student)}

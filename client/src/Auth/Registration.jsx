@@ -101,7 +101,10 @@ const LoginFunction = () => {
   return (
     <form onSubmit={handleSubmit} encType="multipart/form-data" className="flex justify-center items-center bg-[#1E1E1E]">
       <div className="bg-white p-8 shadow-lg w-[500px] h-[790px] mt-[100px] ml-[-680px] rounded-tl-[20px] rounded-bl-[20px]">
-
+      <Link to="/" className="absolute ml-[-140px] mt-[-40px]">
+          <img className="inline-block mb-1" src="/src/assets/back-icon.png" />
+      </Link>
+      {message && <p className="absolute text-[18px] text-center mt-[-80px] ml-[380px] text-green-600">  <img className="inline-block mb-1" src="/src/assets/check-icon.png" />{message}</p>}
       <img
         className="absolute ml-[469px] h-[789px] w-[700px] mt-[-31px] rounded-tr-[20px] rounded-br-[20px]"
         src="./src/assets/registration.gif"
@@ -290,13 +293,11 @@ const LoginFunction = () => {
         </Button>
 
         <div className="text-center mt-4">
-          <p className="text-gray-600">Already have an account?</p>
-          <Link to="/" className="text-blue-500 hover:underline">
-            Sign In here
-          </Link>
+         
+          
         </div>
 
-        {message && <p className="text-center mt-4 text-green-600">{message}</p>}
+    
       </div>
     </form>
 

@@ -511,7 +511,7 @@ export const registration = async (req: Request, res: Response) => {
 
     await newUser.save();
 
-    res.status(201).json({ message: 'User registered successfully. Awaiting admin approval.' });
+    res.status(201).json({ message: 'User registered successfully. Waiting for Admin Approval' });
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong', error });
   }
