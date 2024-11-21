@@ -66,7 +66,7 @@ export default function BasicModal() {
         setAdvisorInfo(data.chosenAdvisor);
         setAdvisorStatus(data.advisorStatus);
         setGetPanelists(data.panelists || []);
-        setProposal(data.proposal || {}); // Set proposal to an empty object if not found
+        setProposal(data.proposal || ""); // Set proposal to an empty object if not found
         setSubmittedAt(data.submittedAt);
       } else {
         const errorData = await response.json();
@@ -175,7 +175,8 @@ const chooseAdvisor = async (advisorId) => {
       console.log("List Panelist : ", panelists)
       message.success("Advisor chosen and panelists assigned successfully");
     } else {
-      console.error("Error: No panelists found in the response.");
+      fetchStudentInfoAndProposal();
+      message.success("Advisor chosen and panelists assigned successfully");
     }
   } catch (err) {
     console.error("Error choosing advisor:", err.message);

@@ -326,7 +326,19 @@ export const createNewProposal = async (req: Request, res: Response) => {
       return res.status(404).json({ status: "not found", message: "No advisors found matching specializations." });
     }
 
-    const advisorsWithMatchPercentage = advisors.map(advisor => {
+    // Filter advisors based on their availability
+    const availableAdvisors = advisors.filter(advisor => {
+      // Ensure handleNumber is defined before using it
+      return advisor.handleNumber !== undefined && advisor.acceptedStudents.length < advisor.handleNumber;
+    });
+    
+
+    if (availableAdvisors.length === 0) {
+      return res.status(404).json({ status: "not found", message: "No available advisors found." });
+    }
+
+    // Calculate match percentage for available advisors
+    const advisorsWithMatchPercentage = availableAdvisors.map(advisor => {
       const matchedSpecializations = advisor.specializations.filter(specialization =>
         escapedQueryTerms.some(term => new RegExp(term, 'i').test(specialization))
       );
@@ -354,7 +366,6 @@ export const createNewProposal = async (req: Request, res: Response) => {
   }
 };
 
-// Advisor selection
 export const chooseNewAdvisor = async (req: Request, res: Response) => {
   const { userId, advisorId } = req.body;
 
@@ -363,73 +374,90 @@ export const chooseNewAdvisor = async (req: Request, res: Response) => {
   }
 
   try {
+    // Fetch the student
     const student = await User.findById(userId) as IStudent | null;
     if (!student) {
       return res.status(404).json({ message: 'Student not found.' });
     }
 
+    // Ensure advisor hasn't already been chosen unless declined
     if (student.chosenAdvisor && student.advisorStatus !== 'declined') {
       return res.status(400).json({ message: 'Advisor already chosen.' });
     }
 
+    // Fetch the selected advisor
     const selectedAdvisor = await User.findById(advisorId) as IUser | null;
     if (!selectedAdvisor) {
       return res.status(404).json({ message: 'Advisor not found.' });
     }
 
-    // Get the top 5 advisors from the student's proposal
+    // Validate selected advisor's capacity
+    if (
+      selectedAdvisor.handleNumber !== undefined &&
+      selectedAdvisor.acceptedStudents.length >= selectedAdvisor.handleNumber
+    ) {
+      return res.status(400).json({ message: 'This advisor has already accepted the maximum number of students.' });
+    }
+
+    // Save the selected advisor
+    student.chosenAdvisor = advisorId;
+    student.advisorStatus = 'pending';
+
+    // Expand keywords for advisor matching
     const expandedQueryTerms = await expandEntitiesWithSynonyms(student.proposals.slice(-1)[0]?.proposalText || "");
     const escapedQueryTerms = expandedQueryTerms.map(term =>
       term.replace(/[.*+?^=!:${}()|\[\]\/\\]/g, "\\$&")
     );
 
-    const advisors = await User.find({
+    // Fetch additional advisors for panelist roles
+    let advisors = await User.find({
       role: 'adviser',
       isApproved: true,
       specializations: { $in: escapedQueryTerms.map(term => new RegExp(term, 'i')) },
     });
 
-    const advisorsWithMatchPercentage = advisors.map(advisor => {
-      const matchedSpecializations = advisor.specializations.filter(specialization =>
-        escapedQueryTerms.some(term => new RegExp(term, 'i').test(specialization))
-      );
+    // Exclude the chosen advisor from the list
+    advisors = advisors.filter(advisor => advisor._id.toString() !== advisorId);
 
-      const matchPercentage = (matchedSpecializations.length / escapedQueryTerms.length) * 100;
-      return { advisor, matchPercentage };
-    });
-
-    advisorsWithMatchPercentage.sort((a, b) => b.matchPercentage - a.matchPercentage);
-    const top5Advisors = advisorsWithMatchPercentage.slice(0, 5);
-
-    // Exclude the chosen advisor and assign panelists
-    const panelists = top5Advisors
-      .filter(item => item.advisor._id.toString() !== advisorId)
-      .map(item => item.advisor);
-
-    const panelistsByRole: { [role: string]: IUser | null } = {
-      'Technical Expert': null,
-      'Statistician': null,
-      'Subject Expert': null,
+    // Map panelist roles
+    const panelistsByRole: { [role: string]: IUser[] } = {
+      'Technical Expert': [],
+      'Statistician': [],
+      'Subject Expert': [],
     };
 
-    for (const panelist of panelists) {
-      if (panelistsByRole[panelist.design] === null) {
-        panelistsByRole[panelist.design] = panelist;
+    // Assign advisors to roles
+    for (const advisor of advisors) {
+      if (advisor.design && panelistsByRole[advisor.design] && panelistsByRole[advisor.design].length === 0) {
+        panelistsByRole[advisor.design].push(advisor);
       }
     }
 
-    // Save the selected advisor and panelists
-    student.chosenAdvisor = advisorId;
-    student.advisorStatus = 'pending';
-    student.panelists = Object.values(panelistsByRole).filter(p => p !== null).map(panelist =>
-      new mongoose.Types.ObjectId(panelist!._id) as unknown as ObjectId
-    );
+    // Fill roles with unlimited advisors if necessary
+    for (const [role, panelists] of Object.entries(panelistsByRole)) {
+      if (panelists.length === 0) {
+        const moreAdvisors = await User.find({
+          role: 'adviser',
+          isApproved: true,
+          specializations: { $in: escapedQueryTerms.map(term => new RegExp(term, 'i')) },
+        }).limit(5); // Dynamically fetch more advisors for panelist roles
+
+        panelistsByRole[role].push(...moreAdvisors);
+      }
+    }
+
+    // Combine all panelists
+    const allPanelists = Object.values(panelistsByRole).flat();
+
+    // Save panelists in the student's record
+    student.panelists = allPanelists.map(panelist => panelist._id as ObjectId);
 
     await student.save();
 
     return res.status(200).json({
       message: 'Advisor chosen and panelists assigned successfully.',
-      student,
+      advisor: selectedAdvisor,
+      panelists: allPanelists,
     });
 
   } catch (error) {
@@ -437,6 +465,8 @@ export const chooseNewAdvisor = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Internal server error.' });
   }
 };
+
+
 export const trainingProposal = async (req: Request, res: Response) => {
   const { terms } = req.body;
 
@@ -787,6 +817,7 @@ export const trainModel = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
 
 import PdfDetails from "../models/pdfDetails";
 
