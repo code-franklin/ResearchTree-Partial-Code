@@ -105,8 +105,8 @@ const ListManuscript = () => {
       borderColor: 'divider',
      
       width: '33.7%',
-      marginTop: '-36px',
-      marginLeft: '740px',
+      marginTop: '-55px',
+      marginLeft: '40px',
     }}
   >
     <Tabs 

@@ -141,7 +141,7 @@ export default function GradingTable({ panelistId, studentId }) {
 
 
   return (
-    <div className="text-[14px] p-4 w-[1400px] h-auto ml-[400px] mt-[380px]">
+    <div className="text-[14px] p-4 w-[1400px] ml-[390px] h-auto  mt-[380px]">
       {/* Rubric Selector */}
       <div className="flex justify-center mb-4">
         {rubrics.map((rubric) => (
@@ -158,9 +158,9 @@ export default function GradingTable({ panelistId, studentId }) {
       </div>
 
       {/* Rubric Title */}
-      <h2 className="rubric-title text-white bg-[#2B2B2B] text-[25px] font-bold p-10 capitalize rounded">
+      {/* <h2 className="rubric-title text-white text-[25px] font-bold p-10 capitalize rounded">
         {title || 'You need to grade first to view the grading.'}
-      </h2>
+      </h2> */}
 
       {/* Panelist Buttons */}
       <div className="flex justify-center mb-4">

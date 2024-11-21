@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "cors": "^2.8.5",
-    "react-select": "^5.8.2"
-  }
-}

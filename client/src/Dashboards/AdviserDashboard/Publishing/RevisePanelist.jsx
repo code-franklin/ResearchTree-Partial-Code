@@ -373,7 +373,7 @@ export default function NewTables() {
       <Select
         value={selectedCourse}
         onChange={handleCourseChange}
-        style={{ marginBottom: "20px", width: "200px" }}
+        style={{ marginBottom: "20px", width: "200px", marginLeft: '1000px' }}
         placeholder='Select a course'
       >
         <Option value=''>All Courses</Option>

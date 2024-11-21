@@ -408,7 +408,7 @@ export default function NewTables() {
       <Select
         value={selectedCourse}
         onChange={handleCourseChange}
-        style={{ marginBottom: "20px", width: "200px" }}
+        style={{ marginBottom: "20px", width: "200px", marginLeft: '1000px' }}
         placeholder='Select a course'
       >
         <Option value=''>All Courses</Option>
@@ -428,8 +428,7 @@ export default function NewTables() {
           <List.Item key={student._id}>
             <div
               style={{
-                height: "200px",
-                padding: "20px",
+                height: "270px", padding: "30px",
                 borderRadius: "8px",
                 display: "flex",
                 justifyContent: "space-between",
@@ -442,28 +441,28 @@ export default function NewTables() {
                 <Text
                   style={{
                     color: "#ffffff",
-                    fontSize: "18px",
+                    fontSize: "22px",
                     fontWeight: "bold",
                   }}
                 >
                   {student.proposalTitle}
                 </Text>
                 <br />
-                <Text style={{ color: "#ffffff" }}>
+                <Text style={{ color: "gray" }}>
                   <span className='font-bold'>Authors: </span>
                   {student.groupMembers
                     .map((member) => member.replace(/([a-z])([A-Z])/g, "$1 $2")) // Insert space between lowercase and uppercase letters
                     .join(", ")}
                 </Text>
                 <br />
-                <Text style={{ color: "#ffffff" }}>
+                <Text style={{ color: "gray" }}>
                   <span className='font-bold'>Panelists: </span>
                   {student.panelists.join(", ")}
                 </Text>
 
                 <br />
                 {student.submittedAt && (
-                  <Text style={{ color: "#ffffff", marginRight: "10px" }}>
+                 <Text style={{ color: "gray", marginRight: "10px" }}>
                     <span className='font-bold'>Date Uploaded:</span>{" "}
                     {new Date(student.submittedAt).toLocaleDateString("en-US", {
                       month: "short",
@@ -472,14 +471,14 @@ export default function NewTables() {
                     })}
                   </Text>
                 )}
-                <Text style={{ color: "#ffffff" }}>
+                  <Text style={{ color: "gray", display: 'none'}}>
                   <span className='font-bold'>Manuscript Status : </span>{" "}
                   {student.manuscriptStatus || "N/A"}
                 </Text>
                 <br />
                 <br />
-                <p style={{ color: "#ffffff" }}>Course : {student.course}</p>
-                <p style={{ color: "#ffffff" }}>Name : {student.name}</p>
+                <p style={{ color: "#ffffff", marginTop: '10px'}}><span className='font-bold'>Course : </span>{student.course}</p>
+                <p style={{ color: "#ffffff" }}><span className='font-bold'>Leader :</span> {student.name}</p>
               </div>
 
               <div
@@ -621,9 +620,9 @@ export default function NewTables() {
         open={gradingModalOpen}
         onClose={closeGradingModal}
         fullWidth
-        maxWidth='xxl'
+        maxWidth='xl'
       >
-        <DialogContent sx={{ height: "1200px" }}>
+        <DialogContent sx={{ background: '#1E1E1E',height: "auto", marginTop:'-400px', marginLeft: '-350px'}}>
           {gradingStudentId && (
             <GradingAdvicer
               panelistId={user._id}
@@ -631,11 +630,11 @@ export default function NewTables() {
             />
           )}
         </DialogContent>
-        <DialogActions>
+        {/* <DialogActions>
           <Button onClick={closeGradingModal} color='primary'>
             Close
           </Button>
-        </DialogActions>
+        </DialogActions> */}
       </Dialog>
 
 {/* Grading */}
@@ -645,6 +644,7 @@ export default function NewTables() {
               onOk={submitGrading}
               onCancel={() => setIsGradingModalVisible(false)}
               okText='Submit'
+             
             >
               {['research', 'presentation', 'content', 'design', 'function'].map((criteria) => (
                 <div key={criteria}>

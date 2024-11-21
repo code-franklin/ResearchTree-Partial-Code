@@ -66,7 +66,7 @@ export default function AccountMenu() {
     if (updatedProfile.profileImage) formData.append("profileImage", updatedProfile.profileImage);
 
     try {
-      const { data } = await axios.put(`http://localhost:7000/api/admin/admin-user/${admin._id}`, formData);
+      const { data } = await axios.put(`http://localhost:7000/api/admin/admin-user/${admin.id}`, formData);
       const updatedAdmin = data.admin;
 
       // Update localStorage with new profile data
@@ -88,7 +88,7 @@ export default function AccountMenu() {
 
   const handleResetPassword = async () => {
     try {
-      await axios.put(`http://localhost:7000/api/admin/admin-user/${admin._id}/reset-password`, {
+      await axios.put(`http://localhost:7000/api/admin/admin-user/${admin.id}/reset-password`, {
         newPassword
       });
       setResetPasswordModalOpen(false);
