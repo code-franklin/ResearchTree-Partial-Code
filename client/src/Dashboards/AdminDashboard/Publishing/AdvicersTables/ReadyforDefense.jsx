@@ -274,11 +274,24 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                   )}
                 />
 
-                <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)} style={{ marginBottom: "20px", width: "100px" }} />
-{/*                 <Button icon={<LoadingOutlined />} style={{ marginBottom: "20px", width: "100px" }} />
+
+                {/*<Button icon={<LoadingOutlined />} style={{ marginBottom: "20px", width: "100px" }} />
                 <Button icon={<CheckOutlined />} style={{ marginBottom: "20px", width: "100px" }} /> */}
-                <Button type="primary" onClick={() => openTaskModal(student)} style={{marginBottom: "10px", width: "100px" }}>
-                  View Task
+
+                <Button 
+                
+                onClick={() => handleViewManuscript(student._id, student.channelId)} 
+                style={{ marginBottom: "10px", width: "105px" }}
+                >
+                 <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
+                 Document
+                </Button>
+
+                <Button  onClick={() => openTaskModal(student)} 
+                  style={{ marginBottom: "10px", width: "105px" }}
+                  >
+                    <img className="mr-[-4px]" src="/src/assets/addtask.png" />
+                    View Task
                 </Button>
 
                 <Button

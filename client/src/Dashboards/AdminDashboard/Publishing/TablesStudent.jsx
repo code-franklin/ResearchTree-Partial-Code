@@ -70,7 +70,7 @@ const Tables = () => {
           >
             <Tab label="New Uploads" sx={tabStyles} />
             <Tab label="Ongoing Revision" sx={tabStyles} />
-            <Tab label="Ready for Defense" sx={tabStyles} />
+            <Tab label="Defenders" sx={tabStyles} />
           </Tabs>
         </Box>
         <Box display="flex" flexDirection="column" alignItems="center" sx={{ width: '45%' }}>
@@ -84,7 +84,7 @@ const Tables = () => {
           >
             <Tab label="Defenders" sx={tabStyles} />
             <Tab label="Ongoing Revision" sx={tabStyles} />
-            <Tab label="Approved" sx={tabStyles} />
+            <Tab label="Finished" sx={tabStyles} />
           </Tabs>
         </Box>
       </Box>

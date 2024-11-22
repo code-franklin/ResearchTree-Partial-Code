@@ -143,7 +143,7 @@ const ListManuscript = () => {
             backgroundColor: 'green', // Customize active background color
           },
         }}
-        label="Defense"
+        label="Defenders"
         {...a11yProps(0)}
       />
       <Tab
@@ -177,7 +177,7 @@ const ListManuscript = () => {
             backgroundColor: 'green', // Customize active background color
           },
         }}
-        label="Approved"
+        label="Finished"
         {...a11yProps(2)}
       />
 

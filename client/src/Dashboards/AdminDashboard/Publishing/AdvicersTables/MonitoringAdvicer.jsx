@@ -10,12 +10,14 @@ import {
   ConfigProvider,
   Select,
   Progress,
+  Tag,
 } from "antd";
 import {
   EditOutlined,
   CheckOutlined,
   LoadingOutlined,
   DeleteOutlined,
+  StarOutlined,
 } from "@ant-design/icons";
 import {
   Dialog,
@@ -241,7 +243,9 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                 <Text style={{ 
                    color: "#ffffff",
                    fontSize: "22px",
-                   fontWeight: "bold", }}>
+                   fontWeight: "bold", 
+                   
+                   }}>
                   {student.proposalTitle}
                 </Text>
                 <br />
@@ -258,9 +262,26 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                     <span className="font-bold">Date Uploaded:</span> {new Date(student.submittedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </Text>
                 )}
-                   <Text style={{ color: "gray", display: 'none'}}>
-                  <span className="font-bold">Manuscript Status : </span>{" "}{student.manuscriptStatus || "N/A"}
-                </Text>
+                    <Tag
+                  icon={<StarOutlined />}
+                  color={
+                    student.manuscriptStatus === "Revise on Panelist"
+                      ? "#faad14"
+                      : student.manuscriptStatus === "Approved on Panel"
+                      ? "#1E1E"
+                      : "#1E90FF" // Default color
+                  }
+                  style={{
+                    padding: "2px",
+                    position: "absolute",
+                    color: "white",
+                    marginTop: "-110px",
+                    marginLeft: "-202px",
+                    fontSize: "15px",
+                  }}
+                >
+                  {student.manuscriptStatus || "N/A"}
+                </Tag>
                 <br />
         
                 <p style={{ color: "#ffffff", marginTop: '10px'}}><span className='font-bold'>Course : </span>{student.course}</p>
@@ -298,17 +319,19 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                       onClick={() =>
                         handleViewManuscript(student._id, student.channelId)
                       }
-                      style={{ marginBottom: "10px", width: "100px" }}
+                      style={{ marginBottom: "10px", width: "105px" }}
                     >
-                      Edit
+                     <img className="mr-[-4px]" src="/src/assets/view-docs.png" />
+                      Document
                     </Button>
-                      
+
                     <Button
                       type='primary'
                       onClick={() => openTaskModal(student)}
-                      style={{ marginBottom: "20px", width: "100px" }}
+                     style={{ marginBottom: "10px", width: "105px" }}
                     >
-                      View Task
+                      <img className="mr-[-4px]" src="/src/assets/addtask.png" />
+                      Add Task
                     </Button>
 
 {/*                     <Button
@@ -324,10 +347,11 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                 ) : (
                   <>
                     <Button
-                      type='primary'
+                    
                       onClick={() => openTaskModal(student)}
-                      style={{ marginBottom: "20px", width: "100px" }}
+                      style={{ marginBottom: "10px", width: "105px" }}
                     >
+                       <img className="mr-[-4px]" src="/src/assets/addtask.png" />
                       View Task
                     </Button>
 {/*                     <Button

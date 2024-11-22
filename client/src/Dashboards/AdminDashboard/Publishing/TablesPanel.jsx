@@ -46,9 +46,9 @@ const Tables = ({ panelName, panelImage, panelistStudents }) => {
             aria-label="basic tabs example"
             TabIndicatorProps={{ sx: { display: 'none' } }}
           >
-            <Tab label="Defense" sx={tabStyles} />
+            <Tab label="Defenders" sx={tabStyles} />
             <Tab label="Ongoing Revision" sx={tabStyles} />
-            <Tab label="Approved" sx={tabStyles} />
+            <Tab label="Finished" sx={tabStyles} />
           </Tabs>
         </Box>
         

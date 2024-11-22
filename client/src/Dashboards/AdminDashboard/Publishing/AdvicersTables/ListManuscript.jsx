@@ -278,12 +278,24 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                   
                 />
 
-                <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)} style={{ marginBottom: "20px", width: "100px" }} />
+                <Button 
+              
+                onClick={() => handleViewManuscript(student._id, student.channelId)} 
+                style={{ marginBottom: "10px", width: "105px" }}>
+                <img className="mr-[-4px]" src="/src/assets/view-docs.png" />
+                  Document
+                </Button>
+
+
 {/*                 <Button icon={<LoadingOutlined />} style={{ marginBottom: "20px", width: "100px" }} />
                 <Button icon={<CheckOutlined />} style={{ marginBottom: "20px", width: "100px" }} /> */}
-                <Button type="primary" onClick={() => openTaskModal(student)} style={{ width: "100px" }}>
-                  View Task
-                </Button>
+                <Button 
+                  onClick={() => openTaskModal(student)} 
+                 style={{ marginBottom: "10px", width: "105px" }}
+                 >
+                   <img className="mr-[-4px]" src="/src/assets/addtask.png" />
+                   View Task
+               </Button>
               </div>
             </div>
           </List.Item>
