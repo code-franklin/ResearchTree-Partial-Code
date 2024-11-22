@@ -447,18 +447,16 @@ const fetchTaskProgress = async (studentId) => {
 
              
 
-                <Button
+                {/* <Button
              
                   onClick={() => handleGradingIconClick(student)}
                   style={{ width: "105px" }}
                     > 
                       <img className="mr-[-4px]" src="/src/assets/grade.png" />
                     View Grade 
-                </Button>
+                </Button> */}
 
                 <Button
-              
-               
                   onClick={() => openTaskModal(student)}
                   style={{  width: "105px" }}
                   >

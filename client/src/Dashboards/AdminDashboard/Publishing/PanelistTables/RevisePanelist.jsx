@@ -440,7 +440,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                   }}
                 />
 
-                <Button
+                {/* <Button
                   icon={<BookOutlined />}
                   onClick={() => handleGradingIconClick(student)}
                   style={{
@@ -448,7 +448,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                     backgroundColor: "#722ed1", // Purple for 'grading'
                     color: "#fff", // White text
                   }}
-                />
+                /> */}
 
                 <Button
                   icon={<PlusOutlined />}

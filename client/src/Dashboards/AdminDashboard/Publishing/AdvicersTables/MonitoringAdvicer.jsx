@@ -23,7 +23,9 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+
 import CkEditorDocuments from "../CkEditorDocuments";
+import ViewGrading from "./Grading";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -41,6 +43,9 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
   
   const [progress, setProgress] = useState(0);
   const [tasks, setTasks] = useState([]);
+
+  const [gradingModalOpen, setGradingModalOpen] = useState(false);
+  const [gradingStudentId, setGradingStudentId] = useState(null);
 
 
   const [isGradeModalVisible, setIsGradeModalVisible] = useState(false); // State for grade modal
@@ -139,6 +144,14 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
     fetchTasks(student._id); // Fetch tasks when opening modal
   };
   
+  const handleViewGrade = (studentId) => {
+    setGradingModalOpen(true);
+    setGradingStudentId(studentId);
+  };
+  const closeGradingModal = () => {
+    setGradingModalOpen(false); // Close modal
+    setGradingStudentId(null);
+  };
 
   const closeEditorModal = () => {
     setIsEditorOpen(false); // Close modal
@@ -326,12 +339,13 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                     >
                       Edit
                     </Button> */}
-                    <Button
-                      onClick={openGradeModal}
-                      style={{ marginBottom: "10px", width: "100px" }}
-                    >
-                      View Grade
-                    </Button>
+                <Button
+                  onClick={() => handleViewGrade(student._id)}
+                  style={{ width: "105px" }}
+                    > 
+                      <img className="mr-[-4px]" src="/src/assets/grade.png" />
+                    View Grade 
+                </Button>
                     
                   </>
                 )}
@@ -370,6 +384,48 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
             </Button>
           </DialogActions>
         </Dialog>
+
+        <Dialog
+          open={isEditorOpen}
+          onClose={closeEditorModal}
+          fullWidth
+          maxWidth='xxl'
+        >
+          <DialogContent sx={{ height: "1200px" }}>
+            {selectedStudentId && selectedChannelId && (
+              <CkEditorDocuments
+                userId={admin.id}
+                channelId={selectedChannelId}
+              />
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeEditorModal} color='primary'>
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+      <Dialog
+        open={gradingModalOpen}
+        onClose={closeGradingModal}
+        fullWidth
+        maxWidth='xl'
+      > 
+        <DialogContent sx={{ background: '#1E1E1E',height: "auto", marginTop:'-400px', marginLeft: '-350px'}}>
+          {gradingStudentId && (
+            <ViewGrading
+              // panelistId={user._id}
+              studentId={gradingStudentId}
+            />
+          )}
+        </DialogContent>
+        {/* <DialogActions>
+          <Button onClick={closeGradingModal} color='primary'>
+            Close
+          </Button>
+        </DialogActions> */}
+      </Dialog>
 
       <Modal
         visible={isGradeModalVisible}

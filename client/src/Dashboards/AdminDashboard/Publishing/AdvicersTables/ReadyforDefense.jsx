@@ -24,7 +24,9 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+
 import CkEditorDocuments from "../CkEditorDocuments";
+import ViewGrading from "./Grading";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -39,6 +41,9 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentTaskStudent, setCurrentTaskStudent] = useState(null);
   const [taskInput, setTaskInput] = useState("");
+
+  const [gradingModalOpen, setGradingModalOpen] = useState(false);
+  const [gradingStudentId, setGradingStudentId] = useState(null);
 
   const [progress, setProgress] = useState(0);
   const [tasks, setTasks] = useState([]);
@@ -142,7 +147,14 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
     setSelectedChannelId(null);
   };
 
-
+  const handleViewGrade = (studentId) => {
+    setGradingModalOpen(true);
+    setGradingStudentId(studentId);
+  };
+  const closeGradingModal = () => {
+    setGradingModalOpen(false); // Close modal
+    setGradingStudentId(null);
+  };
 
   const handleTaskInputChange = (e) => {
     setTaskInput(e.target.value);
@@ -265,9 +277,18 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                 <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)} style={{ marginBottom: "20px", width: "100px" }} />
 {/*                 <Button icon={<LoadingOutlined />} style={{ marginBottom: "20px", width: "100px" }} />
                 <Button icon={<CheckOutlined />} style={{ marginBottom: "20px", width: "100px" }} /> */}
-                <Button type="primary" onClick={() => openTaskModal(student)} style={{ width: "100px" }}>
+                <Button type="primary" onClick={() => openTaskModal(student)} style={{marginBottom: "10px", width: "100px" }}>
                   View Task
                 </Button>
+
+                <Button
+                  onClick={() => handleViewGrade(student._id)}
+                  style={{ marginBottom: "10px", width: "105px" }}
+                    > 
+                      <img className="mr-[-4px]" src="/src/assets/grade.png" />
+                    View Grade 
+                </Button>
+
               </div>
             </div>
           </List.Item>
@@ -281,6 +302,27 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
           onClose={() => setIsEditorOpen(false)}
         />
       )} */}
+
+      <Dialog
+        open={gradingModalOpen}
+        onClose={closeGradingModal}
+        fullWidth
+        maxWidth='xl'
+      > 
+        <DialogContent sx={{ background: '#1E1E1E',height: "auto", marginTop:'-400px', marginLeft: '-350px'}}>
+          {gradingStudentId && (
+            <ViewGrading
+              // panelistId={user._id}
+              studentId={gradingStudentId}
+            />
+          )}
+        </DialogContent>
+        {/* <DialogActions>
+          <Button onClick={closeGradingModal} color='primary'>
+            Close
+          </Button>
+        </DialogActions> */}
+      </Dialog>
 
               {/* Material UI Modal for CKEditor */}
         <Dialog

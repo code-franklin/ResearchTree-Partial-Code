@@ -28,10 +28,11 @@ import {
   DialogTitle,
 } from "@mui/material";
 
- import ViewGrading from './Grading'
 
 
 import CkEditorDocuments from "../CkEditorDocuments";
+import ViewGrading from './Grading';
+
 import axios from "axios";
 
 const { Text } = Typography;
@@ -46,6 +47,7 @@ export default function ListManuscript({ studentData  }) {
   const [courses, setCourses] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
+  
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentTaskStudent, setCurrentTaskStudent] = useState(null);
@@ -459,13 +461,11 @@ const fetchTaskProgress = async (studentId) => {
                 >
                  <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
                  Revise 
-                 
                  </Button>
 
 
 
                 <Button
-                 
                   onClick={() => handleViewGrade(student._id)}
                   style={{ width: "105px" }}
                   > 
@@ -486,8 +486,6 @@ const fetchTaskProgress = async (studentId) => {
                 /> */}
 
                 <Button
-                 
-                  
                   onClick={() => openTaskModal(student)}
                   style={{  width: "105px" }}
                   >
@@ -563,9 +561,9 @@ const fetchTaskProgress = async (studentId) => {
         open={gradingModalOpen}
         onClose={closeGradingModal}
         fullWidth
-        maxWidth='xxl'
-      >
-        <DialogContent sx={{ height: "1200px" }}>
+        maxWidth='xl'
+      > 
+        <DialogContent sx={{ background: '#1E1E1E',height: "auto", marginTop:'-400px', marginLeft: '-350px'}}>
           {gradingStudentId && (
             <ViewGrading
               // panelistId={user._id}
@@ -573,11 +571,11 @@ const fetchTaskProgress = async (studentId) => {
             />
           )}
         </DialogContent>
-        <DialogActions>
+        {/* <DialogActions>
           <Button onClick={closeGradingModal} color='primary'>
             Close
           </Button>
-        </DialogActions>
+        </DialogActions> */}
       </Dialog>
 {/* 
       <Modal

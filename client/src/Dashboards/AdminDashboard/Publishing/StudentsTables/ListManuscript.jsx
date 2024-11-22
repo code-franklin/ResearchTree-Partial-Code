@@ -465,23 +465,23 @@ const fetchTaskProgress = async (studentId) => {
                   )}
                 />
 
-                <Button icon={<EditOutlined />} 
-                onClick={() => handleViewManuscript(student._id, student.channelId)}                   
-                
-                style={{ marginBottom: "10px", width: "105px" }}>
+                <Button
+                  onClick={() =>
+                    handleViewManuscript(student._id, student.channelId)
+                  }
+                  style={{  marginBottom: '12px', width: "105px" }}>
                      <img className="mr-[-4px]" src="/src/assets/view-docs.png" />
                   Document
-                </Button>
+                  </Button>
 
                 <Button
-                  icon={<PlusOutlined />}
-                  type='primary'
                   onClick={() => openTaskModal(student)}
-                  style={{ marginBottom: "10px", width: "105px" }}
+                  style={{  width: "105px" }}
                   >
                     <img className="mr-[-4px]" src="/src/assets/addtask.png" />
                     Add Task
                 </Button>
+
               </div>
             </div>
           </List.Item>
@@ -531,9 +531,9 @@ const fetchTaskProgress = async (studentId) => {
           ]}
         >
 
-          <Text strong style={{ fontSize: "18px", color: "#000000" }}>
+          {/* <Text strong style={{ fontSize: "18px", color: "#000000" }}>
             {currentTaskStudent?.proposalTitle || "Proposal Title"}
-          </Text>
+          </Text> */}
 
           <Input
             placeholder='Enter a task'

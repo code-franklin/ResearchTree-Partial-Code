@@ -27,7 +27,10 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+
 import CkEditorDocuments from "../CkEditorDocuments";
+import ViewGrading from './Grading';
+
 import axios from "axios";
 
 const { Text } = Typography;
@@ -49,6 +52,9 @@ export default function ListManuscript({ studentData  }) {
 
   const [progress, setProgress] = useState(0);
   const [tasks, setTasks] = useState([]);
+
+  const [gradingModalOpen, setGradingModalOpen] = useState(false);
+  const [gradingStudentId, setGradingStudentId] = useState(null);
 
   const [admin, setAdmin] = useState(null);
 
@@ -248,7 +254,14 @@ const fetchTaskProgress = async (studentId) => {
     setSelectedChannelId(null);
   };
 
-
+  const handleViewGrade = (studentId) => {
+    setGradingModalOpen(true);
+    setGradingStudentId(studentId);
+  };
+  const closeGradingModal = () => {
+    setGradingModalOpen(false); // Close modal
+    setGradingStudentId(null);
+  };
 
   const handleTaskInputChange = (e) => {
     setTaskInput(e.target.value);
@@ -393,7 +406,7 @@ const fetchTaskProgress = async (studentId) => {
                 <br />
                 <br />
                 <p style={{ color: "#ffffff" }}>Course : {student.course}</p>
-                <p style={{ color: "#ffffff" }}>Name : {student.name}</p>
+                <p style={{ color: "#ffffff" }}>Leader : {student.name}</p>
               </div>
 
               <div style={{
@@ -421,13 +434,11 @@ const fetchTaskProgress = async (studentId) => {
                 />
 
                 <Button 
-                
-                onClick={() => handleViewManuscript(student._id, student.channelId)}                   
-                
-                style={{  width: "105px" }}>
-                <img className="mr-[-4px]" src="/src/assets/view-docs.png" />
-             Document
-             </Button>
+                  onClick={() => handleViewManuscript(student._id, student.channelId)}                   
+                  style={{  width: "105px" }}>
+                  <img className="mr-[-4px]" src="/src/assets/view-docs.png" />
+                    Document
+                </Button>
 
                 {/* <Button
                   icon={<LoadingOutlined />}
@@ -463,7 +474,7 @@ const fetchTaskProgress = async (studentId) => {
 
                 <Button
                   
-                  onClick={() => handleGradingIconClick(student)}
+                  onClick={() => handleViewGrade(student._id)}
                   style={{ width: "105px" }}
                     > 
                       <img className="mr-[-4px]" src="/src/assets/grade.png" />
@@ -516,7 +527,28 @@ const fetchTaskProgress = async (studentId) => {
           </DialogActions>
         </Dialog>
 
-      <Modal
+        <Dialog
+        open={gradingModalOpen}
+        onClose={closeGradingModal}
+        fullWidth
+        maxWidth='xl'
+      > 
+        <DialogContent sx={{ background: '#1E1E1E',height: "auto", marginTop:'-400px', marginLeft: '-350px'}}>
+          {gradingStudentId && (
+            <ViewGrading
+              // panelistId={user._id}
+              studentId={gradingStudentId}
+            />
+          )}
+        </DialogContent>
+        {/* <DialogActions>
+          <Button onClick={closeGradingModal} color='primary'>
+            Close
+          </Button>
+        </DialogActions> */}
+      </Dialog>
+
+      {/* <Modal
         title='Grading Rubric'
         visible={isGradingModalVisible}
         onOk={submitGrading}
@@ -553,7 +585,7 @@ const fetchTaskProgress = async (studentId) => {
             onChange={(e) => handleRubricChange("criteria3", e.target.value)}
           />
         </div>
-      </Modal>
+      </Modal> */}
 
 
       <ConfigProvider>

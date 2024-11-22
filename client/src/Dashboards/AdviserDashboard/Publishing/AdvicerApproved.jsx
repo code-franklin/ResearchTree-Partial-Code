@@ -513,7 +513,6 @@ export default function NewTables() {
                 />
 
                 <Button
-               
                   onClick={() =>
                     handleViewManuscript(student._id, student.channelId)
                   }
@@ -523,7 +522,6 @@ export default function NewTables() {
                   </Button>
 
                 <Button
-                 
                   onClick={() =>
                     updatePanelManuscriptStatus(
                       student._id,
@@ -552,8 +550,6 @@ export default function NewTables() {
                 </Button>
 
                 <Button
-             
-            
                   onClick={() => openTaskModal(student)}
                   style={{  width: "105px" }}
                   >
@@ -587,12 +583,6 @@ export default function NewTables() {
                     >
                       FINISHED
                     </Button>
-
-
-
-
-
-
               </div>
             </div>
           </List.Item>
