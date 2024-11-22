@@ -535,7 +535,6 @@ export default function NewTables() {
                 >
                  <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
                  Revise 
-                 
                  </Button>
 
                 
@@ -637,12 +636,16 @@ export default function NewTables() {
         fullWidth
         maxWidth='xl'
       >
+        
         <DialogContent sx={{ background: '#1E1E1E',height: "auto", marginTop:'-400px', marginLeft: '-350px'}}>
+          
           {gradingStudentId && (
+            
             <GradingAdvicer
               panelistId={user._id}
               studentId={gradingStudentId}
             />
+            
           )}
         </DialogContent>
         {/* <DialogActions>

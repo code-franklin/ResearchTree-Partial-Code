@@ -264,7 +264,9 @@ export default function GradingTable({ userId }) {
 
       {/* Display Grade Summary */}
       {gradeSummary && (
+        
        <div className="text-white mt-4 p-4 bg-[#2B2B2B] rounded flex flex-col items-center justify-center text-center">
+          <img className="absolute ml-[-1200px] w-[120px] h-[120px]" src="/src/assets/legend.png" />
        <h3 className="text-[20px] font-bold mb-2">Grade Summary</h3>
        <p className="text-[16px]">Total Grade: {gradeSummary.totalGradeValue}</p>
        <p className="text-[16px]">Overall Grade: {gradeSummary.overallGradeLabel}</p>

@@ -420,11 +420,14 @@ const fetchTaskProgress = async (studentId) => {
                   )}
                 />
 
-                <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)}                   style={{
-                    width: "50px",
-                    backgroundColor: "#1890ff", // Blue for 'edit'
-                    color: "#fff", // White text
-                  }} />
+                <Button  
+                onClick={() => handleViewManuscript(student._id, student.channelId)}                   
+                
+                 style={{ marginBottom: "10px", width: "105px" }}
+                >
+                 <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
+                 Revise
+                </Button>
 
 {/*                 <Button
                   icon={<LoadingOutlined />}
@@ -469,15 +472,14 @@ const fetchTaskProgress = async (studentId) => {
                 /> */}
 
                 <Button
-                  icon={<PlusOutlined />}
-                  type='primary'
+                  
+                  
                   onClick={() => openTaskModal(student)}
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#f5222d", // Red for 'add task'
-                    color: "#fff", // White text
-                  }}
-                />
+                  style={{ marginBottom: "10px", width: "105px" }}>
+
+                  <img className="mr-[-4px]" src="/src/assets/addtask.png" />
+                Add Task
+              </Button>
               </div>
             </div>
           </List.Item>

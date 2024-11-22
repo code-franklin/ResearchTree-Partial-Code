@@ -412,7 +412,7 @@ const fetchTaskProgress = async (studentId) => {
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "40px",
+                    marginTop: "-20px",
                     position: "absolute",
                   }}
                   format={(percent) => (
@@ -420,13 +420,16 @@ const fetchTaskProgress = async (studentId) => {
                   )}
                 />
 
-                <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)}                   style={{
-                    width: "50px",
-                    backgroundColor: "#1890ff", // Blue for 'edit'
-                    color: "#fff", // White text
-                  }} />
+                <Button 
+                
+                onClick={() => handleViewManuscript(student._id, student.channelId)}                   
+                
+                style={{  width: "105px" }}>
+                <img className="mr-[-4px]" src="/src/assets/view-docs.png" />
+             Document
+             </Button>
 
-                <Button
+                {/* <Button
                   icon={<LoadingOutlined />}
                   onClick={() =>
                     updatePanelManuscriptStatus(
@@ -456,19 +459,18 @@ const fetchTaskProgress = async (studentId) => {
                     backgroundColor: "#52c41a", // Green for 'approve'
                     color: "#fff", // White text
                   }}
-                />
+                /> */}
 
                 <Button
-                  icon={<BookOutlined />}
+                  
                   onClick={() => handleGradingIconClick(student)}
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#722ed1", // Purple for 'grading'
-                    color: "#fff", // White text
-                  }}
-                />
+                  style={{ width: "105px" }}
+                    > 
+                      <img className="mr-[-4px]" src="/src/assets/grade.png" />
+                    View Grade 
+                </Button>
 
-                <Button
+                {/* <Button
                   icon={<PlusOutlined />}
                   type='primary'
                   onClick={() => openTaskModal(student)}
@@ -477,7 +479,7 @@ const fetchTaskProgress = async (studentId) => {
                     backgroundColor: "#f5222d", // Red for 'add task'
                     color: "#fff", // White text
                   }}
-                />
+                /> */}
               </div>
             </div>
           </List.Item>
