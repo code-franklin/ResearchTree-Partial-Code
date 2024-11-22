@@ -57,7 +57,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
 
   const fetchTaskProgress = async (studentId) => {
     if (!studentId) {
-      console.log("No selectedStudentId found."); // Debug statement
+      console.log("No selected StudentId found."); // Debug statement
       return;
     }
     try {

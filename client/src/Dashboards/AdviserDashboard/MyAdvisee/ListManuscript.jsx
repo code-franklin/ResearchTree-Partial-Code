@@ -161,6 +161,9 @@ export default function NewTables() {
   }, [filteredStudents]);
 
   const updateManuscriptStatus = async (channelId, newStatus) => {
+    Modal.confirm({
+      title: 'Are you sure you want to update manuscript?',
+      onOk: async () => {
     try {
       const response = await axios.patch(
         "http://localhost:7000/api/advicer/thesis/manuscript-status",
@@ -179,7 +182,9 @@ export default function NewTables() {
         message.error("Error updating status");
       }
     }
-  };
+  },
+});
+};
 
   const deleteTask = async (studentId, taskId) => {
     try {

@@ -97,6 +97,9 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
   };
 
   const updatePanelManuscriptStatus = async (channelId, newStatus, userId) => {
+    Modal.confirm({
+      title: 'Are you sure you want to save the changes?',
+      onOk: async () => {
     try {
       const response = await axios.patch(
         "http://localhost:7000/api/advicer/thesis/panel/manuscript-status",
@@ -127,7 +130,9 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
         message.error("Error updating status");
       }
     }
-  };
+  },
+});
+};
 
   const fetchTaskProgress = async (studentId) => {
     if (!studentId) {

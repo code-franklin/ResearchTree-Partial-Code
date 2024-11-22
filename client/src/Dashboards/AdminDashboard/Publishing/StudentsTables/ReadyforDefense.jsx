@@ -91,6 +91,9 @@ export default function ListManuscript({ studentData  }) {
   };
 
   const updatePanelManuscriptStatus = async (channelId, newStatus, userId) => {
+Modal.confirm({
+  title: 'Are you sure you want to update manuscript?',
+  onOk: async () => {
     try {
       const response = await axios.patch(
         "http://localhost:7000/api/advicer/thesis/panel/manuscript-status",
@@ -121,7 +124,9 @@ export default function ListManuscript({ studentData  }) {
         message.error("Error updating status");
       }
     }
-  };
+  },
+});
+};
 // Function to add a task and update the task list and progress
 const addTask = async (studentId, taskTitle) => {
   try {

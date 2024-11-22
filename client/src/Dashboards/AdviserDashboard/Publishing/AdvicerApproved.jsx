@@ -226,37 +226,42 @@ export default function NewTables() {
   };
 
   const updatePanelManuscriptStatus = async (channelId, newStatus, userId) => {
-    try {
-      const response = await axios.patch(
-        "http://localhost:7000/api/advicer/thesis/panel/manuscript-status",
-        { channelId, manuscriptStatus: newStatus, userId }
-      );
+    Modal.confirm({
+      title: 'Are you sure you want to update manuscript?',
+      onOk: async () => {
+        try {
+          const response = await axios.patch(
+            "http://localhost:7000/api/advicer/thesis/panel/manuscript-status",
+            { channelId, manuscriptStatus: newStatus, userId }
+          );
 
-      const { remainingVotes, message: successMessage } = response.data;
+          const { remainingVotes, message: successMessage } = response.data;
 
-      message.success(successMessage);
+          message.success(successMessage);
 
-      // Display remaining votes if status is `Approved on Panel` or `Revise on Panelist` and there are pending votes
-      if (
-        (newStatus === "Revise on Panelist" || newStatus === "Approved on Panel") &&
-        remainingVotes > 0
-      ) {
-        message.info(
-          `Only ${remainingVotes} more vote(s) needed to proceed with the manuscript`
-        );
-      }
-    } catch (error) {
-      if (error.response) {
-        console.error("Error response:", error.response.data);
-        message.error(
-          `Error: ${error.response.data.message || "Failed to update status"}`
-        );
-      } else {
-        console.error("Error:", error.message);
-        message.error("Error updating status");
-      }
-    }
-  };
+          // Display remaining votes if status is `Approved on Panel` or `Revise on Panelist` and there are pending votes
+          if (
+            (newStatus === "Revise on Panelist" || newStatus === "Approved on Panel") &&
+            remainingVotes > 0
+          ) {
+            message.info(
+              `Only ${remainingVotes} more vote(s) needed to proceed with the manuscript`
+            );
+          }
+        } catch (error) {
+          if (error.response) {
+            console.error("Error response:", error.response.data);
+            message.error(
+              `Error: ${error.response.data.message || "Failed to update status"}`
+            );
+          } else {
+            console.error("Error:", error.message);
+            message.error("Error updating status");
+          }
+        }
+      },
+    });
+    };
 
   const deleteTask = async (studentId, taskId) => {
     try {

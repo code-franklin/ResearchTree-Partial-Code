@@ -91,6 +91,10 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
   };
 
   const updatePanelManuscriptStatus = async (channelId, newStatus, userId) => {
+
+Modal.confirm({
+  title: 'Are you sure you want to update manuscript?',
+  onOk: async () => {
     try {
       const response = await axios.patch(
         "http://localhost:7000/api/advicer/thesis/panel/manuscript-status",
@@ -121,7 +125,11 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
         message.error("Error updating status");
       }
     }
-  };
+
+  },
+});
+};
+
 
   const fetchTaskProgress = async (studentId) => {
     if (!studentId) {
@@ -374,8 +382,8 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                 </Text>
                 <br />
                 <br />
-                <p style={{ color: "#ffffff" }}>Course : {student.course}</p>
-                <p style={{ color: "#ffffff" }}>Name : {student.name}</p>
+                <p style={{ color: "#ffffff", marginTop: '10px'}}><span className='font-bold'>Course : </span>{student.course}</p>
+                <p style={{ color: "#ffffff" }}><span className='font-bold'>Leader :</span> {student.name}</p>
               </div>
 
               <div style={{
@@ -411,7 +419,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                     color: "#fff", // White text
                   }} />
 
-                <Button
+                {/* <Button
                   icon={<LoadingOutlined />}
                   onClick={() =>
                     updatePanelManuscriptStatus(
@@ -425,7 +433,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                     backgroundColor: "#faad14", // Yellow for 'revise'
                     color: "#fff", // White text
                   }}
-                />
+                /> */}
 
                 <Button
                   icon={<CheckOutlined />}
@@ -453,7 +461,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                   }}
                 /> */}
 
-                <Button
+                {/* <Button
                   icon={<PlusOutlined />}
                   type='primary'
                   onClick={() => openTaskModal(student)}
@@ -462,7 +470,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                     backgroundColor: "#f5222d", // Red for 'add task'
                     color: "#fff", // White text
                   }}
-                />
+                /> */}
               </div>
             </div>
           </List.Item>
