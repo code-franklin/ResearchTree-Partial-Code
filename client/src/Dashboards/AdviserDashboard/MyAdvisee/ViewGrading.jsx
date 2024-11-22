@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
 
-// import GradingProcess from './ProcessGrading';
-
-export default function GradingTable({ studentId }) {
+export default function GradingTable({ panelistId, studentId }) {
   const [rubrics, setRubrics] = useState([]); // All rubrics
   const [selectedRubricId, setSelectedRubricId] = useState(null); // Selected rubricId
   const [categories, setCategories] = useState([]);
@@ -27,16 +25,17 @@ export default function GradingTable({ studentId }) {
 
   // Fetch grades and initialize rubrics
 
-  // const handleGrade = (studentId, panelistId) => {
-  //   setGradeForStudentModalOpen(true);
-  //   setSelectedStudentId(studentId);
-  //   setSelectedPanelistId(panelistId);
-  // };
-  // const closeGradingModal = () => {
-  //   setGradeForStudentModalOpen(false); // Close modal
-  //   setSelectedStudentId(null);
-  //   setSelectedPanelistId(null);
-  // };
+  const handleGrade = (studentId, panelistId) => {
+    setGradeForStudentModalOpen(true);
+    setSelectedStudentId(studentId);
+    setSelectedPanelistId(panelistId);
+  };
+  const closeGradingModal = () => {
+    setGradeForStudentModalOpen(false); // Close modal
+    setSelectedStudentId(null);
+    setSelectedPanelistId(null);
+  };
+
 
   useEffect(() => {
     const fetchGrades = async () => {
@@ -143,6 +142,8 @@ export default function GradingTable({ studentId }) {
     satisfactory: 'bg-yellow-500',
     needsImprovement: 'bg-red-500',
   };
+  
+
 
 
 
@@ -269,61 +270,39 @@ export default function GradingTable({ studentId }) {
         </div>
       )}
 
-{/* Final Grade Modal */}
-<Dialog
-  open={isModalOpen}
-  onClose={() => setIsModalOpen(false)}
-  fullWidth
-  maxWidth="sm"
->
-  <DialogTitle>Final Grade</DialogTitle>
-  <DialogContent>
-    {finalGradeData ? (
-      <>
-        <Typography>
-          <strong>Student:</strong> {finalGradeData.student.name}
-        </Typography>
-        {finalGradeData.rubrics.map((rubric) => (
-          <div key={rubric.rubricId} className="mb-2">
-            <Typography variant="h6">{rubric.rubricTitle}</Typography>
-            <Typography>
-              Final Grade: {rubric.totalGradeValue} ({rubric.overallGradeLabel})
-            </Typography>
-          </div>
-        ))}
-      </>
-    ) : (
-      <Typography>No final grade data available.</Typography>
-    )}
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={() => setIsModalOpen(false)} color="primary">
-      Close
-    </Button>
-  </DialogActions>
-</Dialog>
-
-      {/* Material UI Modal for Grading
-      <Dialog
-        open={isGradeForStudentModalOpen}
-        onClose={closeGradingModal}
+        {/* Final Grade Modal */}
+    <Dialog
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
         fullWidth
-        maxWidth='xl'
-      >
-        <DialogContent sx={{ height: "1200px" }}>
-        {selectedStudentId && selectedPanelistId && (
-            <GradingProcess
-              studentId={selectedStudentId}
-              panelistId={selectedPanelistId}
-            />
-          )}
+        maxWidth="sm"
+        >
+        <DialogTitle>Final Grade</DialogTitle>
+        <DialogContent>
+            {finalGradeData ? (
+            <>
+                <Typography>
+                <strong>Student:</strong> {finalGradeData.student.name}
+                </Typography>
+                {finalGradeData.rubrics.map((rubric) => (
+                <div key={rubric.rubricId} className="mb-2">
+                    <Typography variant="h6">{rubric.rubricTitle}</Typography>
+                    <Typography>
+                    Final Grade: {rubric.totalGradeValue} ({rubric.overallGradeLabel})
+                    </Typography>
+                </div>
+                ))}
+            </>
+            ) : (
+            <Typography>No final grade data available.</Typography>
+            )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeGradingModal} color='primary'>
+            <Button onClick={() => setIsModalOpen(false)} color="primary">
             Close
-          </Button>
+            </Button>
         </DialogActions>
-      </Dialog> */}
+    </Dialog>
 
     </div>
   );

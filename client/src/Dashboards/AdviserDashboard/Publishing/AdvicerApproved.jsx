@@ -697,9 +697,9 @@ export default function NewTables() {
           ]}
         >
 
-          <Text strong style={{ fontSize: "18px", color: "#000000" }}>
+          {/* <Text strong style={{ fontSize: "18px", color: "#000000" }}>
             {currentTaskStudent?.proposalTitle || "Proposal Title"}
-          </Text>
+          </Text> */}
 
           <Input
             placeholder='Enter a task'

@@ -23,7 +23,10 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+
 import CkEditorDocuments from "./CkEditorDocuments";
+import GradingAdvicer from "./ViewGrading";
+
 import axios from "axios";
 
 const { Text } = Typography;
@@ -34,6 +37,9 @@ export default function NewTables() {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
+
+  const [gradingModalOpen, setGradingModalOpen] = useState(false);
+  const [gradingStudentId, setGradingStudentId] = useState(null);
 
   const [courses, setCourses] = useState([]); // To store all unique courses
   const [filteredStudents, setFilteredStudents] = useState([]); // For filtering based on the course
@@ -93,6 +99,15 @@ export default function NewTables() {
     setIsEditorOpen(false); // Close modal
     setSelectedStudentId(null);
     setSelectedChannelId(null);
+  };
+
+  const handleViewGrade = (studentId) => {
+    setGradingModalOpen(true);
+    setGradingStudentId(studentId);
+  };
+  const closeGradingModal = () => {
+    setGradingModalOpen(false); // Close modal
+    setGradingStudentId(null);
   };
 
   const addTask = async (studentId, taskTitle) => {
@@ -442,6 +457,14 @@ export default function NewTables() {
                 Approved
                 </Button>
 
+                <Button
+                  onClick={() => handleViewGrade(student._id)}
+                  style={{ marginBottom: "10px", width: "105px" }}
+                    > 
+                      <img className="mr-[-4px]" src="/src/assets/grade.png" />
+                    View Grade 
+                </Button>
+
 
                 <Button
                       onClick={() => openTaskModal(student)}
@@ -450,6 +473,8 @@ export default function NewTables() {
                       <img className="mr-[-4px]" src="/src/assets/addtask.png" />
                       Add Task
                 </Button>
+
+
 
 
                 
@@ -466,6 +491,29 @@ export default function NewTables() {
           onClose={() => setIsEditorOpen(false)}
         />
       )} */}
+
+          {/* Material UI Modal for Grading */}
+          <Dialog
+            open={gradingModalOpen}
+            onClose={closeGradingModal}
+            fullWidth
+            maxWidth='xl'
+          >
+            <DialogContent sx={{ background: '#1E1E1E',height: "auto", marginTop:'-400px', marginLeft: '-350px'}}>
+              {gradingStudentId && (
+                <GradingAdvicer
+                  panelistId={user._id}
+                  studentId={gradingStudentId}
+                />
+              )}
+            </DialogContent>
+            {/* <DialogActions>
+              <Button onClick={closeGradingModal} color='primary'>
+                Close
+              </Button>
+            </DialogActions> */}
+          </Dialog>
+
 
       <ConfigProvider
         theme={{

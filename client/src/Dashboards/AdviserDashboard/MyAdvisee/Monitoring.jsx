@@ -29,7 +29,10 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+
 import CkEditorDocuments from "./CkEditorDocuments";
+import GradingAdvicer from "./ViewGrading";
+
 import axios from "axios";
 import { bgcolor, maxWidth } from "@mui/system";
 
@@ -41,6 +44,9 @@ export default function NewTables() {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedChannelId, setSelectedChannelId] = useState(null);
+
+  const [gradingModalOpen, setGradingModalOpen] = useState(false);
+  const [gradingStudentId, setGradingStudentId] = useState(null);
 
   const [courses, setCourses] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
@@ -101,6 +107,15 @@ export default function NewTables() {
     setIsEditorOpen(false); // Close modal
     setSelectedStudentId(null);
     setSelectedChannelId(null);
+  };
+
+  const handleViewGrade = (studentId) => {
+    setGradingModalOpen(true);
+    setGradingStudentId(studentId);
+  };
+  const closeGradingModal = () => {
+    setGradingModalOpen(false); // Close modal
+    setGradingStudentId(null);
   };
 
   const addTask = async (studentId, taskTitle) => {
@@ -365,6 +380,7 @@ export default function NewTables() {
                     color: "#ffffff",
                     fontSize: "22px",
                     fontWeight: "bold",
+                    
                   }}
                 >
                   {student.proposalTitle}
@@ -508,7 +524,7 @@ export default function NewTables() {
                     </Button>
 
                     <Button
-                      onClick={openGradeModal}
+                      onClick={() => handleViewGrade(student._id)}
                       style={{ marginBottom: "10px", width: "105px" }}
                     >
                     <img className="mr-[-4px]" src="/src/assets/grade.png" />
@@ -536,7 +552,6 @@ export default function NewTables() {
         footer={null}
       >
         <h2>Grade Rubric</h2>
-        {/* Render rubric details here */}
         <p>Rubric information goes here...</p>
       </Modal>
 
@@ -549,6 +564,29 @@ export default function NewTables() {
           },
         }}
       >
+
+          {/* Material UI Modal for Grading */}
+          <Dialog
+            open={gradingModalOpen}
+            onClose={closeGradingModal}
+            fullWidth
+            maxWidth='xl'
+          >
+            <DialogContent sx={{ background: '#1E1E1E',height: "auto", marginTop:'-400px', marginLeft: '-350px'}}>
+              {gradingStudentId && (
+                <GradingAdvicer
+                  panelistId={user._id}
+                  studentId={gradingStudentId}
+                />
+              )}
+            </DialogContent>
+            {/* <DialogActions>
+              <Button onClick={closeGradingModal} color='primary'>
+                Close
+              </Button>
+            </DialogActions> */}
+          </Dialog>
+          
         {/* Material UI Modal for CKEditor */}
         <Dialog
           open={isEditorOpen}
@@ -600,12 +638,9 @@ export default function NewTables() {
               <List.Item
                 key={task._id}
                 actions={[
-                  <Checkbox
-                    checked={task.isCompleted}
-                    onChange={() => handleCompleteTask(task._id)}
-                  >
-                    {task.isCompleted ? "Completed" : "Pending"}
-                  </Checkbox>,
+                  <Text style={{ fontWeight: "bold", color: task.isCompleted ? "green" : "red" }}>
+                    {task.isCompleted ? "Completed" : "Not Done"}
+                  </Text>,
                   <Button
                     type='link'
                     icon={<DeleteOutlined />}
