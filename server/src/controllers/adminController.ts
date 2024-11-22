@@ -13,6 +13,8 @@ import Grading from '../models/Grading';
 
 const JWT_SECRET = 'your_jwt_secret';
 
+
+
 export const fetchGrades = async (req: Request, res: Response) => {
   const { studentId } = req.params; // Fetch studentId from route params
 
@@ -557,14 +559,9 @@ export const getPendingUsersStudent = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllUsersStudent = async (req: Request, res: Response) => {
-  try {
-    const users = await User.find({role: 'student', isApproved: true});
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
-  }
-};
+
+
+
 
 export const getAllUsersAdvicer = async (req: Request, res: Response) => {
   try {
@@ -584,6 +581,45 @@ export const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllUsersStudent = async (req: Request, res: Response) => {
+  try {
+    // Fetch all students who are approved
+    const users = await User.find({ role: 'student', isApproved: true })
+      .populate({
+        path: 'panelists', // Populating the panelists field to fetch their details
+        select: 'name' // Selecting only the 'name' field of panelists
+      });
+
+      const updatedUsers = users.map((user) => ({
+        ...user.toObject(),
+        panelists: user.panelists.map((panelist) => ({
+          _id: panelist._id, // Include panelist ID
+          name: panelist.name, // Include panelist name
+        })),
+      }));
+
+    res.json(updatedUsers);
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+
+
+export const fetchPanelists = async (req: Request, res: Response) => {
+  try {
+    // Fetch advisors with the specified design
+    const panelists = await User.find({ role: 'adviser' })
+      .select('name profileImage design email') // Select specific fields to return
+      .exec();
+
+    res.status(200).json(panelists);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching advisors', error });
+  }
+};
+
 // Update or delete profile image
 export const updateUserStudent = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -591,18 +627,24 @@ export const updateUserStudent = async (req: Request, res: Response) => {
   const profileImage = (req as any).file?.filename;
 
   try {
+    
     // Find the user by ID
     const user = await User.findById(id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const panelists = Array.isArray(req.body.panelists) 
+    ? req.body.panelists 
+    : JSON.parse(req.body.panelists || "[]");
+    
     // Prepare the update object conditionally
     const updateData: any = {
       name,
       email,
       course,
       groupMembers,
+      panelists // Ensure panelists is always an array
     };
 
     if (deleteProfileImage) {
@@ -755,6 +797,78 @@ export const deleteSpecialization = async (req: Request, res: Response) => {
 
 
 // View Analytics
+
+export const countStudentsByCourse = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Count students enrolled in BSIT
+    const totalBSITStudents = await User.countDocuments({
+      role: 'student',
+      course: 'BSIT', // Filter by BSIT course
+    });
+
+    // Count students enrolled in BSCS
+    const totalBSCSStudents = await User.countDocuments({
+      role: 'student',
+      course: 'BSCS', // Filter by BSCS course
+    });
+
+    res.status(200).json({
+      totalBSITStudents,
+      totalBSCSStudents,
+    });
+  } catch (error) {
+    console.error('Error counting students by course:', error);
+    res.status(500).json({ message: 'Server error while counting students by course' });
+  }
+};
+
+export const countStudentsWithoutAdvisors = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Query to count students with no chosen advisor
+    const count = await User.countDocuments({
+      role: 'student', // Only students
+      chosenAdvisor: null, // No advisor assigned
+    });
+
+    res.status(200).json({ totalStudentsWithoutAdvisors: count });
+  } catch (error) {
+    console.error('Error counting students without advisors:', error);
+    res.status(500).json({ message: 'Server error while counting students without advisors' });
+  }
+};
+
+export const countAcceptedStudentsForAdvisors = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Query all advisors and sum up the size of their acceptedStudents arrays
+    const advisors = await User.find({ role: 'adviser' }, 'acceptedStudents');
+    
+    // Calculate the total count of acceptedStudents
+    const totalAcceptedStudents = advisors.reduce(
+      (sum, advisor) => sum + (advisor.acceptedStudents?.length || 0),
+      0
+    );
+
+    res.status(200).json({ totalAcceptedStudents });
+  } catch (error) {
+    console.error('Error counting accepted students for advisors:', error);
+    res.status(500).json({ message: 'Server error while counting accepted students' });
+  }
+};
+
+export const countNoStatusManuscripts = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Query to count documents with manuscriptStatus set to null and role as student
+    const count = await User.countDocuments({
+      manuscriptStatus: null,
+      role: 'student', // Filter for students only
+    });
+    res.status(200).json({ totalNoStatusManuscripts: count });
+  } catch (error) {
+    console.error('Error counting manuscripts with no status:', error);
+    res.status(500).json({ message: 'Server error while counting manuscripts' });
+  }
+};
+
 
 export const countReadyToDefenseManuscripts = async (req: Request, res: Response): Promise<void> => {
   try {

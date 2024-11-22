@@ -169,11 +169,10 @@ export const Cards = () => {
        
        <div className="mt-[-100px] ml-[900px]">
         <p className="absolute text-white text-[42px] font-bold ml-[-900px] mt-[-10px]">View Analytics</p>
-       <img className="inline-block mb-1 ml-[200px]" src="/src/assets/BSIT.png"/>
+       {/* <img className="inline-block mb-1 ml-[200px]" src="/src/assets/BSIT.png"/>
        <span className='bsitColor'>200</span>
        <img className="inline-block mb-1" src="/src/assets/BSCS.png"/>
-       <span className='bsitColor'>2500</span>
-
+       <span className='bsitColor'>2500</span> */}
        </div>
         
         </div>
@@ -182,7 +181,7 @@ export const Cards = () => {
                  
                     </div>
                     <div className="card-content">
-                        <p className="card-title">Top Searches</p>
+                        <p className="card-title">Most Uploads</p>
                         <p className="card-value-2 text-white"></p>
                     </div>
                 </div>

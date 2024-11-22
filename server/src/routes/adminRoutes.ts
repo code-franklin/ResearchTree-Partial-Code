@@ -25,6 +25,9 @@ import {
     // deleteProfileImage
 } from '../controllers/adminController';
 
+// Fetch Panelist Advicers
+import { fetchPanelists } from '../controllers/adminController';
+
 // Specialization Management
 import { 
     getSpecializations, 
@@ -34,11 +37,15 @@ import {
 } from '../controllers/adminController';
 
 // View Analytics
-import { 
+import {
+    countStudentsByCourse,
+    countStudentsWithoutAdvisors,
+    countAcceptedStudentsForAdvisors,
     countReadyToDefenseManuscripts , 
     countReviseOnAdvicerManuscripts, 
     countReviseOnAPanelManuscripts,
-    countApprovedOnPanelManuscripts
+    countApprovedOnPanelManuscripts,
+    countNoStatusManuscripts
 } from '../controllers/adminController';
 
 // Advicer Info w/ Handle Manu
@@ -76,6 +83,9 @@ router.get("/pdfdetails/count", getPdfDetailsCount);
 router.get('/advicer-pending',  getPendingUsersAdvicer);
 router.get('/student-pending', getPendingUsersStudent);
 
+// Fetch Panelist Advicers
+router.get('/fetch-advisors', fetchPanelists);
+
 router.get('/student-users', getAllUsersStudent);
 router.get('/advicer-users', getAllUsersAdvicer);
 
@@ -90,15 +100,20 @@ router.delete('/users/:id', deleteUser);
 router.put('/approve/:userId', approveUser);
 router.put('/decline/:userId', declineUser);
 
+
 // Specialization Management
 router.get('/specializations', getSpecializations);
 router.post('/specializations', addSpecialization);
 router.put('/specializations/:id', updateSpecialization);
 router.delete('/specializations/:id', deleteSpecialization);
 
-// View Analytics
+// View AnalyticsS
+router.get('/students/courses', countStudentsByCourse);
+router.get('/students/without-advisors', countStudentsWithoutAdvisors);
+router.get('/advisors/accepted-students-count', countAcceptedStudentsForAdvisors);
+router.get('/manuscripts/noStatusManuscript/count', countNoStatusManuscripts);
+router.get('/manuscripts/readyToDefense/count', countReadyToDefenseManuscripts);
 
-router.get('/manuscripts/readyToDefense/:userId/count', countReadyToDefenseManuscripts);
 router.get('/manuscripts/reviseOnAdvicer/count', countReviseOnAdvicerManuscripts);
 router.get('/manuscripts/reviseOnPanel/count', countReviseOnAPanelManuscripts);
 router.get('/manuscripts/approvedOnPanel/count', countApprovedOnPanelManuscripts);

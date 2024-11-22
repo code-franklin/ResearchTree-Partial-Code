@@ -33,7 +33,7 @@ export interface IUser extends Document {
   chosenAdvisor: Schema.Types.ObjectId | null;
   advisorStatus: 'accepted' | 'declined' | 'pending' | null;
   declinedAdvisors: Schema.Types.ObjectId[];
-  panelists: Schema.Types.ObjectId[];
+  panelists: IUser[];
   channelId?: string;
   design: 'Subject Expert' | 'Statistician' | 'Technical Expert';
   groupMembers: string[];

@@ -15,6 +15,8 @@ const App = () => {
   const [file, setFile] = useState(null);
   const [form] = Form.useForm();
 
+  const [panelists, setPanelists] = useState([]); // State for panelists
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -29,6 +31,21 @@ const App = () => {
   ];
 
   useEffect(() => {
+    const fetchPanelists = async () => {
+      try {
+        const response = await axios.get("http://localhost:7000/api/admin/fetch-advisors");
+        const uniquePanelists = Array.from(new Set(response.data.map(p => p._id)))
+        .map(id => response.data.find(p => p._id === id));
+      setPanelists(uniquePanelists.map(panelist => ({
+        value: panelist._id,
+        label: panelist.name || "Unnamed Panelist",
+      })));
+      } catch (error) {
+        console.error("Error fetching panelists:", error);
+        message.error("Failed to fetch panelists.");
+      }
+    };
+
     const fetchAllUsers = async () => {
       try {
         const response = await axios.get("http://localhost:7000/api/admin/student-users");
@@ -40,6 +57,7 @@ const App = () => {
     };
 
     if (admin) {
+      fetchPanelists();
       fetchAllUsers();
     }
   }, [admin]);
@@ -50,6 +68,10 @@ const App = () => {
         name: currentUser.name || '',
         email: currentUser.email || '', 
         groupMembers: currentUser.groupMembers || '',
+        panelists: currentUser.panelists.map((panel) => ({
+          value: panel._id,
+          label: panel.name,
+        })) || [], // Prevent undefined map issues
         course: courseOptions.find(option => option.value === currentUser.course),
       }); // Update form fields with the latest currentUser data
       
@@ -57,11 +79,16 @@ const App = () => {
   }, [currentUser, form]);
 
   const handleEditUser = async (values) => {
+    const selectedPanelists = values.panelists.map((panel) => panel.value); // Extract IDs
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("email", values.email);
     formData.append("groupMembers", values.groupMembers);
+    formData.append("panelists", JSON.stringify(selectedPanelists));
     formData.append("course", values.course.value);
+
+    // const selectedPanelists = values.panelists.map((panel) => panel.value);
+    // formData.append("panelists", JSON.stringify(selectedPanelists));
 
     // Handle profile image update
     if (values.deleteProfileImage) {
@@ -96,11 +123,11 @@ const App = () => {
             );
             
             // Refresh the page after saving
-            window.location.reload();
             message.success("User updated successfully");
             setIsEditModalVisible(false);
             setCurrentUser(null);
             form.resetFields();
+            window.location.reload();
           } catch (error) {
             message.error("Failed to update user.");
           }
@@ -183,6 +210,7 @@ const App = () => {
   ];
 
   const openEditModal = (user) => {
+    console.log("Editing user:", user); // Debug
     setCurrentUser(user);
     setFile(null); // Reset file when opening modal for editing
     setIsEditModalVisible(true);
@@ -207,7 +235,7 @@ const App = () => {
           }}
           columns={columns}
           dataSource={allUsers}
-          rowKey="_id"
+          rowKey={(record) => record._id || record.email || record.name} // Fallback to email or name
           pagination={{ pageSize: 8 }}
         />
       ) : (
@@ -249,6 +277,39 @@ const App = () => {
             <Input />
           </Form.Item>
 
+          {/* <Form.Item name="panelists" label="Panelists" style={{ marginBottom: "15px" }}>
+            <Input />
+          </Form.Item> */}
+
+          {/* Panelists Multi-Select Dropdown */}
+          {/* <Form.Item name="panelists" label="Panelists">
+            <Select
+              isMulti
+              options={panelists.map(panelist => ({ value: panelist._id, label: panelist.name }))}
+              placeholder="Select Panelists"
+            />
+          </Form.Item> */}
+          
+          {/* <Form.Item name="panelists" label="Panelists">
+            <Select
+              isMulti
+              options={panelists}
+              value={form.getFieldValue("panelists")}
+              onChange={(selectedOptions) => form.setFieldsValue({ panelists: selectedOptions })}
+            />
+          </Form.Item> */}
+
+          <Form.Item name="panelists" label="Panelists">
+            <Select
+              isMulti
+              options={panelists}
+              placeholder="Select Panelists"
+              value={form.getFieldValue("panelists")}
+              onChange={(selectedOptions) => form.setFieldsValue({ panelists: selectedOptions })}
+            />
+          </Form.Item>
+
+
           <Form.Item name="profileImage" label="Profile Image" style={{ marginBottom: "15px" }}>
             <Upload
               beforeUpload={(file) => {
@@ -274,9 +335,9 @@ const App = () => {
             </Button>
           </div>
 
-          <Button type="default" onClick={handleModalClose} style={{ marginTop: "10px", width: "100%" }}>
+          {/* <Button type="default" onClick={handleModalClose} style={{ marginTop: "10px", width: "100%" }}>
             Close
-          </Button>
+          </Button> */}
         </Form>
       </Modal>
 

@@ -16,7 +16,12 @@ export const Cards = () => {
   const [open, setOpen] = useState(false); // Start with the alert closed
 
   // State for total count
-  const [readyToDefenseData, setReadyToDefenseData] = useState([]);
+  const [totalCountBSITStudents, setTotalBSITStudents] = useState([]);
+  const [totalCountBSCSStudents, setTotalBSCSStudents] = useState([]);
+  const [totalStudentWithoutAdvisors, setTotalStudentWithoutAdvisors] = useState([]);
+  const [acceptedStudentAdvicerCount, setAcceptedStudentAdvicerCount] = useState([]);
+  const [noStatusCount, setNoStatusCount] = useState([]);
+  const [readyToDefenseCount, setReadyToDefenseCount] = useState([]);
   const [reviseOnAdvicerCount, setReviseOnAdvicerCount] = useState(0);
   const [reviseOnPanelCount, setReviseOnPanelCount] = useState(0);
   const [ApprovedOnPanelCount, setApprovedOnPanelCount] = useState(0);
@@ -32,14 +37,61 @@ export const Cards = () => {
     }
   }, []);
 
-  // Fetch the count of readyToDefense manuscripts when component mounts
+  
   useEffect(() => {
+
+    const fetchTotalCouses = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:7000/api/admin/students/courses" // Correct endpoint
+        );
+        setTotalBSITStudents(response.data.totalBSITStudents);
+        setTotalBSCSStudents(response.data.totalBSCSStudents); 
+      } catch (error) {
+        console.error("Error fetching ready-to-defense data:", error);
+      }
+    };
+
+    const fetchStudentNoAdvicerCount = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:7000/api/admin/students/without-advisors" // Correct endpoint
+        );
+        setTotalStudentWithoutAdvisors(response.data.totalStudentsWithoutAdvisors); // Update state with the backend response
+      } catch (error) {
+        console.error("Error fetching ready-to-defense data:", error);
+      }
+    };
+
+    const fetchAcceptedStudentAdvicerCount = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:7000/api/admin/advisors/accepted-students-count" // Correct endpoint
+        );
+        setAcceptedStudentAdvicerCount(response.data.totalAcceptedStudents); // Update state with the backend response
+      } catch (error) {
+        console.error("Error fetching ready-to-defense data:", error);
+      }
+    };
+
+    const fetchNoStatusData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:7000/api/admin/manuscripts/noStatusManuscript/count" // Correct endpoint
+        );
+        setNoStatusCount(response.data.totalNoStatusManuscripts); // Update state with the backend response
+      } catch (error) {
+        console.error("Error fetching ready-to-defense data:", error);
+      }
+    };
+
+    
     const fetchDefenseData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:7000/api/manuscripts/readyToDefense/:userId/count" // Correct endpoint
+          "http://localhost:7000/api/admin/manuscripts/readyToDefense/count" // Correct endpoint
         );
-        setReadyToDefenseData(response.data); // Update state with the backend response
+        setReadyToDefenseCount(response.data.totalReadyToDefense); // Update state with the backend response
       } catch (error) {
         console.error("Error fetching ready-to-defense data:", error);
       }
@@ -90,6 +142,10 @@ export const Cards = () => {
     };
 
     fetchPdfCount();
+    fetchTotalCouses();
+    fetchStudentNoAdvicerCount();
+    fetchAcceptedStudentAdvicerCount();
+    fetchNoStatusData();
     fetchDefenseData();
     fetchReviseOnAdvicerCount();
     fetchReviseOnPanelCount();
@@ -111,9 +167,9 @@ export const Cards = () => {
           <div className="mt-[-100px] ml-[900px]">
             <p className="absolute text-[42px] font-bold ml-[-900px] mt-[-10px]">View Analytics</p>
             <img className="inline-block mb-1 ml-[200px]" src="/src/assets/BSIT.png" />
-            <span className="bsitColor"></span>
+            <span className="bsitColor">{totalCountBSITStudents}</span>
             <img className="inline-block mb-1" src="/src/assets/BSCS.png" />
-            <span className="bsitColor"></span> 
+            <span className="bsitColor">{totalCountBSCSStudents}</span> 
           </div>
         </div>
 
@@ -132,39 +188,39 @@ export const Cards = () => {
           <img className="ml-[290px]" src="/src/assets/adviserAnalytics-icon-2.png" />
           </div>
           <div className="card-content">
-            <p className="card-title">Student Handle</p>
-            <p className="card-value-1 ml-[80px]">Groups</p>
+            <p className="card-title"> <span className="ml-1"></span> Student No Adviser</p>
+            <p className="card-value-1 ml-[80px]">{totalStudentWithoutAdvisors}</p>
           </div>
         </div>
 
         {/* New Uploads Card displaying PDF count */}
         <div className="card">
           <div className="card-icon-2">
-            <img className="ml-[295px]" src="/src/assets/adviserAnalytics-icon-1.png" />
+          <img className="ml-[290px]" src="/src/assets/adviserAnalytics-icon-2.png" />
           </div>
           <div className="card-content">
-            <p className="card-title">New Uploads</p>
-            <p className="card-value-2"></p> {/* Display PDF count here */}
+            <p className="card-title">Adviser Student Handle</p>
+            <p className="card-value-2">{acceptedStudentAdvicerCount}</p> {/* Display PDF count here */}
           </div>
         </div>
 
         <div className="card">
           <div className="card-icon-3">
-            <img className="ml-[290px]" src="/src/assets/adviserAnalytics-icon-3.png" />
+          <img className="ml-[295px]" src="/src/assets/adviserAnalytics-icon-1.png" />
           </div>
           <div className="card-content">
-            <p className="card-title">Adviser's Revision</p>
-            <p className="card-value-3">{reviseOnAdvicerCount}</p>
+            <p className="card-title">New Uploads</p>
+            <p className="card-value-3">{noStatusCount}</p>
           </div>
         </div>
 
         <div className="card">
           <div className="card-icon-4">
-            <img className="ml-[290px]" src="/src/assets/adviserAnalytics-icon-5.png" />
+          <img className="ml-[290px]" src="/src/assets/adviserAnalytics-icon-3.png" />
           </div>
           <div className="card-content">
-            <p className="card-title">Ready for Defense</p>
-            <p className="card-value-3">{readyToDefenseData}</p>
+            <p className="card-title">Adviser's Revision</p>
+            <p className="card-value-3">{reviseOnAdvicerCount}</p>
           </div>
         </div>
 
@@ -175,7 +231,7 @@ export const Cards = () => {
             </div>
             <div className="card-content">
               <p className="card-title">Defenders</p>
-              <p className="card-value-2"></p>
+              <p className="card-value-2">{readyToDefenseCount}</p>
             </div>
           </div>
 

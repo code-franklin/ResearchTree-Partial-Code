@@ -109,7 +109,6 @@ const App = () => {
           setCurrentUser(null);
           form.resetFields();
 
-          // Refresh the page after saving
           window.location.reload();
         } catch (error) {
           message.error("Failed to update user.");
@@ -287,9 +286,15 @@ const App = () => {
             <Checkbox>Delete Profile Image</Checkbox>
           </Form.Item>
 
-          <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-            Save Changes
-          </Button>
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
+            <Button type="primary" htmlType="submit" style={{ width: "48%" }}>
+              Save Changes
+            </Button>
+            <Button type="default" onClick={() => setIsResetPasswordModalVisible(true)} style={{ width: "48%" }}>
+              Reset Password
+            </Button>
+            
+          </div>
         </Form>
       </Modal>
 
@@ -299,12 +304,20 @@ const App = () => {
         visible={isResetPasswordModalVisible}
         onCancel={() => setIsResetPasswordModalVisible(false)}
         onOk={handleResetPassword}
+        centered
+        width={400}
       >
-        <Input.Password
+
+        <Form layout="vertical" style={{ padding: "20px" }}>
+          <Form.Item label="New Password" style={{ marginBottom: "20px" }}>
+            <Input.Password value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+          </Form.Item>
+        </Form>
+        {/* <Input.Password
           placeholder="Enter New Password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
-        />
+        /> */}
       </Modal>
     </div>
   );
