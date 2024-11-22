@@ -4,45 +4,51 @@ import HighchartsReact from "highcharts-react-official";
 import variablePie from "highcharts/modules/variable-pie";
 import axios from "axios";
 import "tailwindcss/tailwind.css";
+import 'ldrs/dotSpinner'
 
 // Initialize the variable pie module
 variablePie(Highcharts);
-
 export const PieChart = () => {
-  const [error, setError] = useState(null); // State for error handling
-  const [chartData, setChartData] = useState([]); // State for storing fetched chart data
+    const [error, setError] = useState(null); // State for error handling
+    const [chartData, setChartData] = useState([]); // State for storing fetched chart data
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+      const fetchKeywordCounts = async () => {
+        try {
+          setLoading(true); // Start loading
+          // Fetch keyword counts
+          const response = await axios.get(
+            "http://localhost:7000/api/student/PdfKeywordsCount"
+          );
+  
+          // Check if valid data is returned
+          if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+            const top5Data = response.data.slice(0, 6); // Limit to top 5
+            setChartData(top5Data); // Update state with the data
+          } else {
+            setChartData([]); // Set chartData to an empty array if no data is found
+            setError("No keyword data available.");
+          }
+        } catch (error) {
+          setError("Failed to fetch keyword counts.");
+          console.error("Error fetching keyword counts:", error);
+        } finally {
+          setLoading(false);
+          
+        }// End loading
+      };
+  
+      fetchKeywordCounts(); // Fetch data on component mount
+    }, []); // Empty dependency array ensures this runs only once
+  
 
-  useEffect(() => {
-    const fetchKeywordCounts = async () => {
-      try {
-        // Fetch keyword counts
-        const response = await axios.get(
-          "http://localhost:7000/api/student/PdfKeywordsCount"
-        );
-
-        // Check if valid data is returned
-        if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-          const top5Data = response.data.slice(0, 6); // Limit to top 5
-          setChartData(top5Data); // Update state with the data
-        } else {
-          setChartData([]); // Set chartData to an empty array if no data is found
-          setError("No keyword data available.");
-        }
-      } catch (error) {
-        setError("Failed to fetch keyword counts.");
-        console.error("Error fetching keyword counts:", error);
-      }
-    };
-
-    fetchKeywordCounts(); // Fetch data on component mount
-  }, []); // Empty dependency array ensures this runs only once
-
-  const colors = [
-    "#0BF677",  // Lime Green (used in your trending graph)
-    "#222222",  // Dark Gray (background color)
-    "#1E90FF",  // Dodger Blue (for text or highlights)
-    "#66B58A",  // Gold (for accents)
-    "#FF6347",  // Tomato Red (for error or warning)
+    const colors = [
+      "#222222",  // Dark color (perhaps for background)
+      "#0C8900",  // Rich Green (used in your trending graph)
+      "#2BC20E",  // Bright Green (for accents)
+      "#9CFF00",  // Light Green (for highlights or success)
+      "#39FF13",  // Neon Green (for highlights or accents)
+      "#31572c",  // Forest Green (for background or text contrast)
   ];
   
 
@@ -91,15 +97,28 @@ export const PieChart = () => {
 
   return (
     <div className="flex justify-center items-center w-[566px] mt-[130px] ml-[-180px] border-t border-[#4B4B4B] rounded-t">
-      {error ? (
+       {loading ? (
+
+
+            <div className="mt-[150px]"> 
+           
+            <l-dot-spinner
+            size="70"
+            speed="0.9"
+            color="#0BF677" 
+            ></l-dot-spinner>
+            </div>
+       
+      ) : error ? (
         <div className="text-white">{error}</div>
       ) : chartData.length > 0 ? (
         <HighchartsReact highcharts={Highcharts} options={options} />
       ) : (
-        <div className="text-white"></div>
+        <div className="text-white">No data available.</div>
       )}
     </div>
   );
 };
+
 
 export default PieChart;

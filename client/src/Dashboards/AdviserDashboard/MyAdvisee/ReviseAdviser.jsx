@@ -381,31 +381,41 @@ export default function NewTables() {
                   
                 />
                 <Button
-                  icon={<EditOutlined />}
+                  
                   onClick={() =>
                     handleViewManuscript(student._id, student.channelId)
                   }
-                  style={{ marginBottom: "20px", width: "100px" }}
-                />
+                  style={{ marginBottom: "10px", width: "105px" }}
+                >
+                 <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
+                 Revise
+                </Button>
+
                 {/*                 <Button
                   icon={<LoadingOutlined />}  
                   onClick={() => updateManuscriptStatus(student._id, 'Revise On Advicer')}
                   style={{ marginBottom: "20px", width: "100px" }}
                 /> */}
+
                 <Button
-                  icon={<CheckOutlined />}
                   onClick={() =>
                     updateManuscriptStatus(student._id, "Ready to Defense")
                   }
-                  style={{ marginBottom: "20px", width: "100px" }}
-                />
-                <Button
-                  type='primary'
-                  onClick={() => openTaskModal(student)}
-                  style={{ marginBottom: "20px", width: "100px" }}
-                >
-                  View Task
+                  style={{ marginBottom: "10px", width: "105px" }}> 
+                    <img className="mr-[-4px]" src="/src/assets/approved.png" />
+                  Approved
                 </Button>
+
+                <Button
+                    onClick={() => openTaskModal(student)}
+                    style={{ marginBottom: "10px", width: "105px" }}>
+
+                    <img className="mr-[-4px]" src="/src/assets/addtask.png" />
+                  Add Task
+                </Button>
+
+
+
               </div>
             </div>
           </List.Item>

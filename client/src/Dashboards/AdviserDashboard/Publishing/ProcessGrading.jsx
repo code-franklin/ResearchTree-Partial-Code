@@ -110,15 +110,27 @@ export default function GradingTable({ studentId, panelistId }) {
   const selectedRubric = rubrics.find(rubric => rubric._id === selectedRubricId);
 
   return (
-    <div className=''>
+    <div className="bg-[#1E1E1E]">
       {/* <h2 className="text-center text-black">Grading Table</h2> */}
 
+       {/* Submit Button */}
+       <div className="fixed mt-[-5px] ml-[1300px]  ">
+        <button
+          onClick={handleSubmitGrades}
+          disabled={isSubmitting}
+          className=" text-white py-2 px-4 rounded disabled:bg-gray-500 "
+        >
+         {isSubmitting ? 'Submitting...' : 'Submit Grades'}
+         <img className="inline-block mb-1 ml-2" src="/src/assets/send-icon.png" />  
+        </button>
+      </div>
+
       {/* Rubric Selector */}
-      <div className="flex justify-center mb-4 space-x-4">
+      <div className="flex justify-center mb-4 space-x-4 mt-[20px]">
         {rubrics.map(rubric => (
           <button
             key={rubric._id}
-            className={`py-2 px-4 rounded ${selectedRubricId === rubric._id ? 'bg-blue-500 text-white' : 'bg-gray-500 text-gray-200'}`}
+            className={`text-white py-2 px-4 rounded ${selectedRubricId === rubric._id ? 'bg-[#4B4B4B]' : 'bg-[#2B2B2B]'}`}
             onClick={() => handleRubricSwitch(rubric._id)}
           >
             {rubric.title}
@@ -128,13 +140,13 @@ export default function GradingTable({ studentId, panelistId }) {
 
       {/* Grading Table */}
       {selectedRubric ? (
-        <div >
+        <div className=''>
           {/* <h3 className="text-lg font-bold text-white mb-4 text-center">{selectedRubric.title}</h3> */}
           <div className="grid grid-cols-5 gap-2 text-white text-center ">
             {/* Table Header */}
             <div className="bg-[#575757] font-bold p-4">Criterion</div>
             {['4', '3', '2', '1'].map(score => (
-              <div key={score} className="p-4 font-bold bg-gray-700">
+              <div key={score} className="p-4 font-bold bg-[#575757] ">
                 {score}
               </div>
             ))}
@@ -175,16 +187,7 @@ export default function GradingTable({ studentId, panelistId }) {
       {/* Display message if grades are missing */}
       {submitMessage && <p className="text-red-500 text-center mt-4">{submitMessage}</p>}
 
-      {/* Submit Button */}
-      <div className="fixed">
-        <button
-          onClick={handleSubmitGrades}
-          disabled={isSubmitting}
-          className=" bg-green-500 text-white py-2 px-4 rounded disabled:bg-gray-500"
-        >
-          {isSubmitting ? 'Submitting...' : 'Submit Grades'}
-        </button>
-      </div>
+     
 
       {/* Modal for error message */}
       {errorMessage && (

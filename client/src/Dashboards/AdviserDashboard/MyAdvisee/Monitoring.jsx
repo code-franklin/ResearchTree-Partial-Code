@@ -12,6 +12,7 @@ import {
   Select,
   Progress,
   Space,
+  Tag
 } from "antd";
 import {
   EditOutlined,
@@ -20,6 +21,7 @@ import {
   DeleteOutlined,  
   PlusOutlined,
   BookOutlined,
+  StarOutlined
 } from "@ant-design/icons";
 import {
   Dialog,
@@ -390,10 +392,27 @@ export default function NewTables() {
                     })}
                   </Text>
                 )}
-                <Text style={{ color: "gray", display: 'none'}}>
-                  <span className='font-bold'>Manuscript Status :</span>{" "}
+               <Tag
+                  icon={<StarOutlined />}
+                  color={
+                    student.manuscriptStatus === "Revise on Panelist"
+                      ? "#faad14"
+                      : student.manuscriptStatus === "Approved on Panel"
+                      ? "#1E1E"
+                      : "#1E90FF" // Default color
+                  }
+                  style={{
+                    padding: "2px",
+                    position: "absolute",
+                    color: "white",
+                    marginTop: "-110px",
+                    marginLeft: "-202px",
+                    fontSize: "15px",
+                  }}
+                >
                   {student.manuscriptStatus || "N/A"}
-                </Text>
+                </Tag>
+
                 <br />
                  <p style={{ color: "#ffffff", marginTop: '10px'}}><span className='font-bold'>Course : </span>{student.course}</p>
                 <p style={{ color: "#ffffff" }}><span className='font-bold'>Leader :</span> {student.name}</p>
@@ -429,34 +448,26 @@ export default function NewTables() {
                 {student.manuscriptStatus === "Revise on Panelist" ? (
                   <>
                     <Button
-                      icon={<EditOutlined />}
+                     
                       onClick={() =>
                         handleViewManuscript(student._id, student.channelId)
                       }
-                      style={{ marginBottom: "10px", width: "100px" }}
+                      style={{ marginBottom: "10px", width: "105px" }}
                     >
-                      Edit
+                     <img className="mr-[-4px]" src="/src/assets/view-docs.png" />
+                      Document
                     </Button>
 
                     <Button
-                      type='primary'
                       onClick={() => openTaskModal(student)}
-                      style={{ marginBottom: "20px", width: "100px" }}
+                      style={{ marginBottom: "10px", width: "105px" }}
                     >
-                      View Task
-                    </Button>
-                    <Button
-                      icon={<CheckOutlined />}
-                      onClick={() =>
-                        updateManuscriptStatus(student._id, "Ready to Defense")
-                      }
-                      style={{ marginBottom: "10px" }}
-                    >
-                      Submit
+                      <img className="mr-[-4px]" src="/src/assets/addtask.png" />
+                      Add Task
                     </Button>
 
-                    <Button
-                      icon={<FileDoneOutlined />}
+                    {/* <Button
+                      
                       onClick={() =>
                         updatePanelManuscriptStatus(
                           student._id,
@@ -464,28 +475,43 @@ export default function NewTables() {
                           user._id
                         )
                       }
-                      style={{
-                        width: "50px",
-                        backgroundColor: "#faad14", // Yellow for 'revise'
-                        color: "#fff", // White text
-                      }}
-                    />
+                      style={{ marginBottom: "10px", width: "105px" }}
+                    > 
+                      <img className="mr-[-4px]" src="/src/assets/grade.png" />
+                    View Grade
+                    </Button> */}
+                    
+                    <Button
+                     
+                      onClick={() =>
+                        updateManuscriptStatus(student._id, "Ready to Defense")
+                      }
+                      style={{ background: '#1E1E', color: 'white', border: 'none', fontWeight: '700',marginBottom: "10px", width: "105px" }}
+                    >
+                    
+                      Submit
+
+                    </Button>
+
+                   
 
                   </>
                 ) : (
                   <>
                     <Button
-                      type='primary'
+                      
                       onClick={() => openTaskModal(student)}
-                      style={{ marginBottom: "20px", width: "100px" }}
+                      style={{ marginBottom: "10px", width: "105px" }}
                     >
+                       <img className="mr-[-4px]" src="/src/assets/addtask.png" />
                       View Task
                     </Button>
 
                     <Button
                       onClick={openGradeModal}
-                      style={{ marginBottom: "10px", width: "100px" }}
+                      style={{ marginBottom: "10px", width: "105px" }}
                     >
+                    <img className="mr-[-4px]" src="/src/assets/grade.png" />
                       View Grade
                     </Button>
                   </>

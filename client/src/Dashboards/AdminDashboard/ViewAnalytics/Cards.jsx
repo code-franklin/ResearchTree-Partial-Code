@@ -247,7 +247,7 @@ export const Cards = () => {
 
           <div className="card ml-[18px]">
             <div className="absolute ml-[204px] bottom-[56px]">
-              <img className="" src="/src/assets/adviserAnalytics-icon-Approved.png" />
+              <img className="" src="/src/assets/adviserAnalytics-icon-5.png" />
             </div>
             <div className="card-content">
               <p className="card-title">Approved</p>

@@ -171,7 +171,7 @@ const ListManuscript = () => {
             backgroundColor: 'green', // Customize active background color
           },
         }}
-        label="Approved"
+        label="FINISHED"
         {...a11yProps(2)}
       />
 

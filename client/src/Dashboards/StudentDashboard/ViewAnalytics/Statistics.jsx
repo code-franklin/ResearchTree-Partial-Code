@@ -154,8 +154,8 @@ export const Cards = () => {
         }
       
         return (
-          <span style={{ color: 'white' }}>
-            <span className="font-bold text-white ml-[10px]"><span className='font-normal'> {panelists.map((panelist) => panelist.name).join(', ')}</span>  </span>
+          <span className='max-w-[200px]'>
+            <span className="font-bold text-white ml-[10px] "><span className='font-bold'> {panelists.map((panelist) => panelist.name).join(', ')}</span>  </span>
           </span>
         );
       };  
@@ -169,6 +169,7 @@ export const Cards = () => {
        
        <div className="mt-[-100px] ml-[900px]">
         <p className="absolute text-white text-[42px] font-bold ml-[-900px] mt-[-10px]">View Analytics</p>
+       {/* <img className="inline-block mb-1 ml-[200px]" src="/src/assets/BSIT.png"/>
        {/* <img className="inline-block mb-1 ml-[200px]" src="/src/assets/BSIT.png"/>
        <span className='bsitColor'>200</span>
        <img className="inline-block mb-1" src="/src/assets/BSCS.png"/>
@@ -197,15 +198,26 @@ export const Cards = () => {
                 </div>
                 
                 <div className="bg-[#1E1E1E] p-[20px] rounded-[8px] border border-[#4B4B4B] w-[340px] h-[110px]">
+
+                <div className="absolute ml-[267px] mt-[-5px]">
+                    <img className="ml-[0px]" src="/src/assets/adviser-student.png"  />
+                </div>
+
                 <div className="card-content">
                     <p className="card-title ">Advicer</p>
-                    <p className="text-white whitespace-nowrap">{getStatusMessage(advisorStatus, advisorInfo)}</p>
+                    <p className="text-white whitespace-nowrap font-bold">{getStatusMessage(advisorStatus, advisorInfo)}</p>
                 </div>
             </div>
+
+
             <div className="bg-[#1E1E1E] p-[20px] rounded-[8px] border border-[#4B4B4B] w-[340px] h-[110px]">
-                <div className="card-content">
+                <div className="absolute ml-[267px] mt-[-5px]">
+                    <img className="ml-[0px]" src="/src/assets/panelist-student.png"  />
+                </div>
+
+                <div className="card-content ">
                     <p className="card-title">Panelist</p>
-                    <p className="card-title text-white ">
+                    <p className="card-title text-white">
                         {advisorStatus === 'accepted' && <PanelistList panelists={panelists} />}</p>
                         {advisorStatus === 'declined' && (<p style={{ color: 'red' }} className="">Submit another title proposal...</p>)}
                         {advisorStatus === 'pending' && (<p style={{ color: 'orange'}} className="">Pending <SyncOutlined spin /></p>)}

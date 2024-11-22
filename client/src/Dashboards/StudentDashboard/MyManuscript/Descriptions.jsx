@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogActions, Button } from '@mui/material';
+
 import { Modal, Checkbox, Divider, Typography, List } from 'antd';
 
 import CkEditorDocuments from './CkEditorDocuments';
@@ -265,14 +266,14 @@ const ResearchCard = () => {
                 <Tooltip title="Edit Title"><img src="/src/assets/edit-title-icon.png"/></Tooltip>
         </button>
             
-            <h1 className="text-2xl font-bold mb-2 max-w-[1000px]">
+            <h1 className="text-2xl font-bold mb-2 max-w-[1010px]">
               {isEditingProposalTitle ? (
                 <input
                   type="text"
                   value={newProposalTitle}
                   onChange={(e) => setNewProposalTitle(e.target.value)}
                   onBlur={handleSaveProposalTitle}
-                  style={{color: 'black', width: '950px', height:'50px'}}
+                  style={{border: '2px solid white', background: '#1E1E1E', color: 'white', width: '950px', height:'50px'}}
                 />
               ) : (
                 proposal?.proposalTitle
@@ -423,21 +424,28 @@ const ResearchCard = () => {
           <Button onClick={closeEditorModal}  color="primary">Close</Button>
         </DialogActions>
       </Dialog>
+
+
+      
             
-            <Button onClick={() => setIsTaskVisible(true)}>
+      <Button onClick={() => setIsTaskVisible(true)}>
               Show Tasks
             </Button>
 
             <Modal
+              
+              
               title="Task Checklist"
               visible={isTaskVisible}
               onCancel={() => setIsTaskVisible(false)}
               footer={null}
+           
             >
               <Title level={4}>Checklist for Manuscript</Title>
               <Divider />
 
               <List
+              
                 dataSource={user?.tasks || []}
                 renderItem={(task) => (
                   <List.Item>

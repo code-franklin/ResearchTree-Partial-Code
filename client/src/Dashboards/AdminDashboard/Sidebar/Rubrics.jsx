@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Textarea from '@mui/joy/Textarea';
 
 export default function GradingTable() {
   const [rubrics, setRubrics] = useState([]);
@@ -67,15 +68,15 @@ export default function GradingTable() {
 
   return (
     <div>
-      <h2 className="text-center text-white">Grading Table</h2>
+      {/* <h2 className="text-center text-white">Grading Table</h2> */}
 
       {/* Rubric Selector */}
       <div className="flex justify-center mb-4 space-x-4">
         {rubrics.map((rubric) => (
           <button
             key={rubric._id}
-            className={`py-2 px-4 rounded ${
-              selectedRubricId === rubric._id ? 'bg-blue-500 text-white' : 'bg-gray-500 text-gray-200'
+            className={`h-[50px] w-[300px] text-[20px] m-2 text-white rounded ${
+              selectedRubricId === rubric._id ? 'bg-[#4B4B4B]' : 'bg-[#2B2B2B]'
             }`}
             onClick={() => handleRubricSwitch(rubric._id)}
           >
@@ -87,7 +88,7 @@ export default function GradingTable() {
       {/* Grading Table */}
       {selectedRubric ? (
         <div>
-        <h3 className="text-lg font-bold text-white mb-4 text-center">
+        {/* <h3 className="text-lg font-bold text-white mb-4 text-center">
             {editableRubric ? (
               <input
                 type="text"
@@ -98,7 +99,7 @@ export default function GradingTable() {
             ) : (
               selectedRubric.title
             )}
-        </h3>
+        </h3> */}
           <div className="grid grid-cols-5 gap-2 text-white text-center">
             {/* Table Header */}
             <div className="bg-[#575757] font-bold p-4">Criterion</div>
@@ -113,25 +114,27 @@ export default function GradingTable() {
               <React.Fragment key={criterion._id}>
                 <div className="bg-[#2B2B2B] text-[20px] font-bold p-4 capitalize">
                 {editableRubric ? (
-                  <input
+                  <Textarea 
+                  sx={{background: 'transparent', borderColor: 'green', color: 'white'}}
                     type="text"
                     value={editableRubric.criteria.find(c => c._id === criterion._id)?.category || ''}
                     onChange={(e) => handleInputChange(e, 'category', criterion)}
-                    className="bg-transparent border-b border-white text-white"
+                    
                   />
                 ) : (
                   criterion.category
                 )}
                 </div>
                 {['4', '3', '2', '1'].map((score) => (
-                  <div key={score} className="p-4 bg-gray-600">
+                  <div key={score} className="p-4 bg-gray-600 ">
                   {editableRubric ? (
-                    <input
+                    <Textarea 
+                      sx={{background: 'transparent', borderColor: 'green', color: 'white'}}
                       type="text"
                       name={score === '4' ? 'excellent' : score === '3' ? 'good' : score === '2' ? 'satisfactory' : 'needsImprovement'}
                       value={editableRubric.criteria.find(c => c._id === criterion._id)?.gradeLabels[score === '4' ? 'excellent' : score === '3' ? 'good' : score === '2' ? 'satisfactory' : 'needsImprovement'] || ''}
                       onChange={(e) => handleInputChange(e, 'gradeLabel', criterion)}
-                      className="bg-transparent border-b border-white text-white w-full"
+                     
                     />
                   ) : (
                     criterion.gradeLabels[
@@ -151,17 +154,18 @@ export default function GradingTable() {
 
         {/* Edit/Save Button */}
           {editableRubric ? (
-            <div className="text-center mt-4">
+            <div className="absolute text-center mt-[-70px] ml-[1300px] ">
               <button onClick={handleSaveRubric} className="bg-blue-500 text-white py-2 px-4 rounded">
                 Save Changes
               </button>
             </div>
           ) : (
-            <div className="text-center mt-4">
+            <div className="absolute text-center mt-[-70px] ml-[1300px] ">
               <button
                 onClick={() => handleEditRubric(selectedRubric)}
-                className="bg-yellow-500 text-white py-2 px-4 rounded"
+                className=" text-white py-2 px-4 rounded"
               >
+                    <img className="inline-block mb-1" src="/src/assets/edit-rubrics.png" />
                 Edit Rubric
               </button>
             </div>

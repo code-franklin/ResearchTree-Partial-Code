@@ -333,19 +333,20 @@ const Sidebar = ({ onSelect }) => {
         <Box
           sx={{
             width: '1500px',
-            height: '800px',
+            // height: 'auto',
             p: 4,
             color: 'white',
-            bgcolor: "#1E1E1E",
-            borderRadius: 20,
-      
+            bgcolor: "transparent",
+            
+            
             mx: "auto",
-            mt: 6,
+            mt: '-10px',
       
             boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)"
           }}
         >
           <Rubrics/>
+
         </Box>
       </Modal>
 

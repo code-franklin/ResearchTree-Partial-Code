@@ -138,37 +138,28 @@ export default function GradingTable({ panelistId, studentId }) {
     }
   };
 
+  const gradeColors = {
+    excellent: 'bg-green-500',
+    good: 'bg-blue-500',
+    satisfactory: 'bg-yellow-500',
+    needsImprovement: 'bg-red-500',
+  };
+  
+
+
 
 
   return (
     <div className="text-[14px] p-4 w-[1400px] ml-[390px] h-auto  mt-[380px]">
-      {/* Rubric Selector */}
-      <div className="flex justify-center mb-4">
-        {rubrics.map((rubric) => (
-          <button
-            key={rubric._id}
-            className={`px-4 py-2 m-2 text-white rounded ${
-              selectedRubricId === rubric._id ? 'bg-blue-600' : 'bg-gray-600'
-            }`}
-            onClick={() => setSelectedRubricId(rubric._id)}
-          >
-            {rubric.title}
-          </button>
-        ))}
-      </div>
 
-      {/* Rubric Title */}
-      {/* <h2 className="rubric-title text-white text-[25px] font-bold p-10 capitalize rounded">
-        {title || 'You need to grade first to view the grading.'}
-      </h2> */}
-
+      
       {/* Panelist Buttons */}
       <div className="flex justify-center mb-4">
         {panelists.map((panelist) => (
           <button
             key={panelist._id}
             className={`px-4 py-2 m-2 text-white rounded ${
-              selectedPanelist === panelist._id ? 'bg-green-600' : 'bg-gray-600'
+              selectedPanelist === panelist._id ? 'bg-[#4B4B4B]' : 'bg-[#2B2B2B]'
             }`}
             onClick={() => handlePanelistClick(panelist._id, gradesData)}
           >
@@ -181,68 +172,103 @@ export default function GradingTable({ panelistId, studentId }) {
         >
           Final Grade
         </button>
+        </div>
+        
+
+
+{/*  */}
+
+      {/* Rubric Selector */}
+      <div className="flex justify-center mb-4">
+        {rubrics.map((rubric) => (
+          <button
+            key={rubric._id}
+            className={`h-[50px] w-[1500px] text-[20px] m-2 text-white rounded ${
+              selectedRubricId === rubric._id ? 'bg-[#4B4B4B]' : 'bg-[#2B2B2B]'
+            }`}
+            onClick={() => setSelectedRubricId(rubric._id)}
+          >
+            {rubric.title}
+
+          </button>
+        ))}
+      </div>
+      <div className='fixed mt-[-150px] ml-[1200px] '>
         <button
-          className="bg-blue-600 text-white px-4 py-2 m-2 rounded"
+          className="text-white px-4 py-2 m-2 rounded hover:text-[#1E1E]"
           onClick={() => handleGrade(studentId, panelistId)}
         >
-          Grading
+         <img className="inline-block mr-2 mb-1" src="/src/assets/edit-rubrics.png" /> 
+         Set Grading
         </button>
-      </div>
+        </div>
+      {/* Rubric Title */}
+      {/* <h2 className="rubric-title text-white text-[25px] font-bold p-10 capitalize rounded">
+        {title || 'You need to grade first to view the grading.'}
+      </h2> */}
+
 
       {/* Grade Table */}
       <div className="grid grid-cols-5 gap-2 text-white text-center mt-4">
-        <div className="bg-[#575757] font-bold p-4">Criterion</div>
-        {['4', '3', '2', '1'].map((score) => (
-          <div key={score} className={`p-4 font-bold bg-gray-700`}>
-            {score}
-          </div>
-        ))}
+  <div className="bg-[#575757] font-bold p-4">Criterion</div>
+  {['4', '3', '2', '1'].map((score) => {
+    const labelColor = {
+      '4': 'bg-green-500', // Excellent
+      '3': 'bg-blue-500', // Good
+      '2': 'bg-yellow-500', // Satisfactory
+      '1': 'bg-red-500', // Needs Improvement
+    }[score];
 
-        {categories.map((category) => {
-          const panelistGrade = grades.find(
-            (grade) => grade.criterion === category
-          );
+    return (
+      <div key={score} className={`p-4 font-bold ${labelColor}`}>
+        {score}
+      </div>
+    );
+  })}
+
+  {categories.map((category) => {
+    const panelistGrade = grades.find(
+      (grade) => grade.criterion === category
+    );
+
+    return (
+      <React.Fragment key={category}>
+        <div className="bg-[#2B2B2B] text-[25px] font-bold p-4 capitalize">
+          {category}
+        </div>
+        {['4', '3', '2', '1'].map((score) => {
+          const gradeLabel = {
+            '4': 'excellent',
+            '3': 'good',
+            '2': 'satisfactory',
+            '1': 'needsImprovement',
+          }[score];
+
+          const gradeColor =
+            panelistGrade && panelistGrade.gradeValue === parseInt(score)
+              ? gradeColors[gradeLabel] || 'bg-gray-600'
+              : 'bg-gray-600';
 
           return (
-            <React.Fragment key={category}>
-              <div className="bg-[#2B2B2B] text-[25px] font-bold p-4 capitalize">
-                {category}
-              </div>
-              {['4', '3', '2', '1'].map((score) => {
-                const gradeLabel = {
-                  '4': 'excellent',
-                  '3': 'good',
-                  '2': 'satisfactory',
-                  '1': 'needsImprovement',
-                }[score];
-
-                return (
-                  <div
-                    key={score}
-                    className={`p-4 ${
-                      panelistGrade && panelistGrade.gradeValue === parseInt(score)
-                        ? 'bg-green-500'
-                        : 'bg-gray-600'
-                    }`}
-                  >
-                    {gradeLabels[category] && gradeLabels[category][gradeLabel]
-                      ? gradeLabels[category][gradeLabel]
-                      : 'N/A'}
-                  </div>
-                );
-              })}
-            </React.Fragment>
+            <div key={score} className={`p-4 ${gradeColor}`}>
+              {gradeLabels[category] && gradeLabels[category][gradeLabel]
+                ? gradeLabels[category][gradeLabel]
+                : 'N/A'}
+            </div>
+          );
+        })}
+      </React.Fragment>
           );
         })}
       </div>
 
       {/* Display Grade Summary */}
       {gradeSummary && (
-        <div className="text-white mt-4 p-4 bg-gray-800 rounded">
-          <h3 className="text-xl text-white">Grade Summary</h3>
-          <p>Total Grade: {gradeSummary.totalGradeValue}</p>
-          <p>Overall Grade: {gradeSummary.overallGradeLabel}</p>
-          <p>Graded At: {new Date(gradeSummary.gradedAt).toLocaleString()}</p>
+        <div className="text-white mt-4 p-4 bg-[#2B2B2B] rounded flex flex-col items-center justify-center text-center">
+        <h3 className="text-[20px] font-bold mb-2">Grade Summary</h3>
+        <p className="text-[16px]">Total Grade: {gradeSummary.totalGradeValue}</p>
+        <p className="text-[16px]">Overall Grade: {gradeSummary.overallGradeLabel}</p>
+        <p className="text-[14px]">Graded At: {new Date(gradeSummary.gradedAt).toLocaleString()}</p>
         </div>
       )}
 
@@ -287,7 +313,7 @@ export default function GradingTable({ panelistId, studentId }) {
         fullWidth
         maxWidth='xl'
       >
-        <DialogContent sx={{ height: "1200px" }}>
+        <DialogContent sx={{ height: "1200px", background: '#1E1E1E'}}>
         {selectedStudentId && selectedPanelistId && (
             <GradingProcess
               studentId={selectedStudentId}
@@ -295,11 +321,7 @@ export default function GradingTable({ panelistId, studentId }) {
             />
           )}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={closeGradingModal} color='primary'>
-            Close
-          </Button>
-        </DialogActions>
+      
       </Dialog>
 
     </div>

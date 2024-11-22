@@ -12,7 +12,7 @@ import "./ViewAnalytics.css";
 
 const Chart = () => {
   return (
-   <div className="h-[auto]">
+   <div className="">
     
    <div className="chart-1">
  

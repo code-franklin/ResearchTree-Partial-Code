@@ -4,6 +4,7 @@ import HighchartsReact from "highcharts-react-official";
 import variablePie from "highcharts/modules/variable-pie";
 import axios from "axios";
 import "tailwindcss/tailwind.css";
+import 'ldrs/dotSpinner'
 
 // Initialize the variable pie module
 variablePie(Highcharts);
@@ -11,10 +12,11 @@ variablePie(Highcharts);
 export const PieChart = () => {
   const [error, setError] = useState(null); // State for error handling
   const [chartData, setChartData] = useState([]); // State for storing fetched chart data
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchKeywordCounts = async () => {
       try {
+        setLoading(true); // Start loading
         // Fetch keyword counts
         const response = await axios.get(
           "http://localhost:7000/api/student/PdfKeywordsCount"
@@ -31,19 +33,23 @@ export const PieChart = () => {
       } catch (error) {
         setError("Failed to fetch keyword counts.");
         console.error("Error fetching keyword counts:", error);
-      }
+      } finally {
+        setLoading(false);
+        
+      }// End loading
     };
 
     fetchKeywordCounts(); // Fetch data on component mount
   }, []); // Empty dependency array ensures this runs only once
 
   const colors = [
-    "#0BF677",  // Lime Green (used in your trending graph)
-    "#222222",  // Dark Gray (background color)
-    "#1E90FF",  // Dodger Blue (for text or highlights)
-    "#66B58A",  // Gold (for accents)
-    "#FF6347",  // Tomato Red (for error or warning)
-  ];
+    "#222222",  // Dark color (perhaps for background)
+    "#0C8900",  // Rich Green (used in your trending graph)
+    "#2BC20E",  // Bright Green (for accents)
+    "#9CFF00",  // Light Green (for highlights or success)
+    "#39FF13",  // Neon Green (for highlights or accents)
+    "#31572c",  // Forest Green (for background or text contrast)
+];
   
 
   const options = {
@@ -91,12 +97,24 @@ export const PieChart = () => {
 
   return (
     <div className="flex justify-center items-center w-[566px] mt-[125px] ml-[-125px] border-t border-[#4B4B4B] rounded-t">
-      {error ? (
+       {loading ? (
+
+
+            <div className="mt-[150px]"> 
+           
+            <l-dot-spinner
+            size="70"
+            speed="0.9"
+            color="#0BF677" 
+            ></l-dot-spinner>
+            </div>
+       
+      ) : error ? (
         <div className="text-white">{error}</div>
       ) : chartData.length > 0 ? (
         <HighchartsReact highcharts={Highcharts} options={options} />
       ) : (
-        <div className="text-white"></div>
+        <div className="text-white">No data available.</div>
       )}
     </div>
   );
