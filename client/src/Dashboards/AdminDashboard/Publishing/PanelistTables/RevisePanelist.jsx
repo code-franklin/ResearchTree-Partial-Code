@@ -402,7 +402,7 @@ Modal.confirm({
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "40px",
+                    marginTop: "-30px",
                     position: "absolute",
                   }}
                   format={(percent) => (
@@ -411,16 +411,17 @@ Modal.confirm({
                 />
 
                 <Button 
-                icon={<EditOutlined />} 
+               
                 onClick={() => handleViewManuscript(student._id, student.channelId)}                   
-                style={{
-                    width: "50px",
-                    backgroundColor: "#1890ff", // Blue for 'edit'
-                    color: "#fff", // White text
-                  }} />
+                style={{  width: "105px" }}>
+                     <img className="mr-[-4px]" src="/src/assets/view-docs.png" />
+                  Document
+                  </Button>
 
                 {/* <Button
                   icon={<LoadingOutlined />}
+                <Button
+                
                   onClick={() =>
                     updatePanelManuscriptStatus(
                       student._id,
@@ -435,21 +436,7 @@ Modal.confirm({
                   }}
                 /> */}
 
-                <Button
-                  icon={<CheckOutlined />}
-                  onClick={() =>
-                    updatePanelManuscriptStatus(
-                      student._id,
-                      "Approved on Panel",
-                      admin.id
-                    )
-                  }
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#52c41a", // Green for 'approve'
-                    color: "#fff", // White text
-                  }}
-                />
+             
 
                 {/* <Button
                   icon={<BookOutlined />}
@@ -464,11 +451,33 @@ Modal.confirm({
                 {/* <Button
                   icon={<PlusOutlined />}
                   type='primary'
+                <Button
+                  
+                
                   onClick={() => openTaskModal(student)}
+                  style={{  width: "105px" }}
+                  >
+                    <img className="mr-[-4px]" src="/src/assets/addtask.png" />
+                    Add Task
+                </Button>
+
+                <Button
+                  
+                  onClick={() =>
+                    updatePanelManuscriptStatus(
+                      student._id,
+                      "Approved on Panel",
+                      admin.id
+                    )
+                  }
                   style={{
-                    width: "50px",
-                    backgroundColor: "#f5222d", // Red for 'add task'
-                    color: "#fff", // White text
+                    width: "105px",
+                    background: "#1E1E",
+                    border: "none",
+                    color: "white",
+
+                    boxShadow: "0 0 10px rgba(0, 255, 0, 0.7)", // Green glow effect around the button
+                    transition: "box-shadow 0.3s ease-in-out", // Smooth glow transition
                   }}
                 /> */}
               </div>

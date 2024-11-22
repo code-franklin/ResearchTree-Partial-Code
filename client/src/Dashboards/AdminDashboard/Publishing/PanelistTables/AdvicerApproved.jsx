@@ -420,14 +420,14 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                   )}
                 />
 
-                <Button icon={<EditOutlined />} onClick={() => handleViewManuscript(student._id, student.channelId)}                   style={{
-                    width: "50px",
-                    backgroundColor: "#1890ff", // Blue for 'edit'
-                    color: "#fff", // White text
-                  }} />
+                <Button 
+                onClick={() => handleViewManuscript(student._id, student.channelId)}                   
+                style={{  width: "105px" }}>
+                <img className="mr-[-4px]" src="/src/assets/view-docs.png" />
+                  Document
+                  </Button>
 
                 <Button
-                  icon={<LoadingOutlined />}
                   onClick={() =>
                     updatePanelManuscriptStatus(
                       student._id,
@@ -435,28 +435,13 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                       admin.id
                     )
                   }
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#faad14", // Yellow for 'revise'
-                    color: "#fff", // White text
-                  }}
-                />
+                  style={{width: "105px" }}
+                  >
+                   <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
+                   Revise 
+                   </Button>
 
-                <Button
-                  icon={<CheckOutlined />}
-                  onClick={() =>
-                    updatePanelManuscriptStatus(
-                      student._id,
-                      "Approved on Panel",
-                      admin.id
-                    )
-                  }
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#52c41a", // Green for 'approve'
-                    color: "#fff", // White text
-                  }}
-                />
+               
 {/* 
                 < GradingButton/> */}
 
@@ -472,24 +457,48 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                 
                 <Button
                   onClick={() => handleViewGrade(student._id)}
-                  style={{ marginBottom: "10px", width: "105px" }}
+                  style={{ width: "105px" }}
                     > 
                       <img className="mr-[-4px]" src="/src/assets/grade.png" />
                     View Grade 
                 </Button>
 
                 <Button
-                  icon={<PlusOutlined />}
-                  type='primary'
+               
                   onClick={() => openTaskModal(student)}
+                  style={{  width: "105px" }}
+                  >
+                    <img className="mr-[-4px]" src="/src/assets/addtask.png" />
+                    View Task
+                </Button>
+
+                <Button
+                  icon={<CheckOutlined />}
+                  onClick={() =>
+                    updatePanelManuscriptStatus(
+                      student._id,
+                      "Approved on Panel",
+                      admin.id
+                    )
+                  }
                   style={{
-                    width: "50px",
-                    backgroundColor: "#f5222d", // Red for 'add task'
-                    color: "#fff", // White text
+                    width: "105px",
+                    background: "#1E1E",
+                    border: "none",
+                    color: "white",
+
+                    boxShadow: "0 0 10px rgba(0, 255, 0, 0.7)", // Green glow effect around the button
+                    transition: "box-shadow 0.3s ease-in-out", // Smooth glow transition
                   }}
-                />
-
-
+                  onMouseEnter={(e) =>
+                    (e.target.style.boxShadow = "0 0 25px rgba(0, 255, 0, 1)") // Brighter green on hover
+                  }
+                  onMouseLeave={(e) =>
+                    (e.target.style.boxShadow = "0 0 15px rgba(0, 255, 0, 0.7)") // Reset to original green glow
+                  }
+                >
+                  FINISHED
+                </Button>
 
               </div>
             </div>

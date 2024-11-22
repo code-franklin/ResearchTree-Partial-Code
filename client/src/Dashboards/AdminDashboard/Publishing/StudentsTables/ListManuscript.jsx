@@ -469,14 +469,14 @@ const fetchTaskProgress = async (studentId) => {
                   onClick={() =>
                     handleViewManuscript(student._id, student.channelId)
                   }
-                  style={{  marginBottom: '12px', width: "105px" }}>
+                  style={{  marginBottom: '0px', width: "105px" }}>
                      <img className="mr-[-4px]" src="/src/assets/view-docs.png" />
                   Document
                   </Button>
 
                 <Button
                   onClick={() => openTaskModal(student)}
-                  style={{  width: "105px" }}
+                  style={{  marginBottom: '10px', width: "105px" }}
                   >
                     <img className="mr-[-4px]" src="/src/assets/addtask.png" />
                     Add Task

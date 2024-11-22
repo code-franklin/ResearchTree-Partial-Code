@@ -423,7 +423,7 @@ const fetchTaskProgress = async (studentId) => {
                 <Button  
                 onClick={() => handleViewManuscript(student._id, student.channelId)}                   
                 
-                 style={{ marginBottom: "10px", width: "105px" }}
+                 style={{ marginBottom: "0px", width: "105px" }}
                 >
                  <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
                  Revise
