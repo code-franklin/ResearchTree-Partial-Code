@@ -402,10 +402,10 @@ const fetchTaskProgress = async (studentId) => {
                 <p style={{ color: "#ffffff" }}><span className='font-bold'>Leader :</span> {student.name}</p>
                 <br />
                 <Avatar
-                src={`http://localhost:7000/public/uploads/${student.chosenAdvisor.profileImage || 'No advisor chosen'}`}
-                sx={{ width: 79, height: 79 }}
-              />
-              <p style={{ color: "#ffffff" }}><span className='font-bold'>Advisor:</span> {student.chosenAdvisor.name}</p>
+                  src={`http://localhost:7000/public/uploads/${student.chosenAdvisor ? student.chosenAdvisor.profileImage || 'default-images.png' : 'default-images.png'}`}
+                  sx={{ width: 79, height: 79 }}
+                />
+                <p style={{ color: "#ffffff" }}><span className='font-bold'>Advicer :</span> {student.chosenAdvisor ? student.chosenAdvisor.name : 'No advisor chosen'}</p>
               </div>
 
               <div style={{

@@ -1015,7 +1015,7 @@ export const fetchPanelistInfoWithStudents = async (req: Request, res: Response)
       const panelistStudents = await User.find(
         { panelists: panelist._id, advisorStatus: 'accepted', role: 'student' }, // Check if advisorStatus 'accepted' condition is being met
         'name groupMembers channelId course profileImage chosenAdvisor manuscriptStatus proposals panelists tasks'
-      ).lean();
+      ).populate('chosenAdvisor', 'name profileImage').lean();
 
       // Step 3: Process each student to include panelist names and latest proposal information
       const panelistStudentData = await Promise.all(panelistStudents.map(async (student) => {
