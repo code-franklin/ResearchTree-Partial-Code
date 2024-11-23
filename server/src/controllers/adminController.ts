@@ -552,7 +552,7 @@ export const getPendingUsersAdvicer = async (req: Request, res: Response) => {
 
 export const getPendingUsersStudent = async (req: Request, res: Response) => {
   try {
-    const users = await User.find({ isApproved: false });
+    const users = await User.find({ isApproved: false, role: 'student' });
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
@@ -918,8 +918,8 @@ export const fetchAllStudentManuscript = async (req: Request, res: Response) => 
     // Fetch students with relevant manuscript and proposal data
     const students = await User.find(
       { role: 'student' }, 
-      'name groupMembers channelId panelists course profileImage manuscriptStatus proposals tasks advisorStatus'
-    ).lean();
+      'name groupMembers channelId panelists chosenAdvisor course profileImage manuscriptStatus proposals tasks advisorStatus'
+    ).populate('chosenAdvisor', 'name profileImage').lean();
 
     // Process each student to include panelist names and latest proposal details
     const studentData = await Promise.all(students.map(async (student) => {
@@ -936,6 +936,7 @@ export const fetchAllStudentManuscript = async (req: Request, res: Response) => 
         groupMembers: student.groupMembers,
         channelId: student.channelId,
         panelists: panelistNameList,
+        chosenAdvisor: student.chosenAdvisor, // Fetch name of chosenAdvisor
         course: student.course,
         profileImage: student.profileImage,
         manuscriptStatus: student.manuscriptStatus,

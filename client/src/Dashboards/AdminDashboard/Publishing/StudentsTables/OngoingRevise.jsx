@@ -393,7 +393,15 @@ const fetchTaskProgress = async (studentId) => {
            
                
                 <p style={{ color: "#ffffff", marginTop: '10px'}}><span className='font-bold'>Course : </span>{student.course}</p>
-                <p style={{ color: "#ffffff" }}><span className='font-bold'>Leader :</span> {student.name}</p>
+                <p style={{ color: "#ffffff" }}><span className='font-bold'>Leader:</span> {student.name}</p>
+
+                <br />
+
+                <Avatar
+                src={`http://localhost:7000/public/uploads/${student.chosenAdvisor.profileImage || 'No advisor chosen'}`}
+                sx={{ width: 79, height: 79 }}
+              />
+              <p style={{ color: "#ffffff" }}><span className='font-bold'>Advisor:</span> {student.chosenAdvisor.name}</p>
               </div>
 
               <div style={{
@@ -569,9 +577,9 @@ const fetchTaskProgress = async (studentId) => {
           ]}
         >
 
-          <Text strong style={{ fontSize: "18px", color: "#000000" }}>
+          {/* <Text strong style={{ fontSize: "18px", color: "#000000" }}>
             {currentTaskStudent?.proposalTitle || "Proposal Title"}
-          </Text>
+          </Text> */}
 
           <Input
             placeholder='Enter a task'

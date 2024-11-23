@@ -61,6 +61,10 @@ const ArticleList = () => {
   };
 
   const filterArticlesByYear = (year) => {
+    if (year === "AnyTime") {
+      setFilteredArticles(articles); // Show all articles
+      return;
+    }
     const filtered = articles.filter((article) => {
       const date = new Date(article.datePublished);
       return date.getFullYear() === year;
@@ -68,10 +72,20 @@ const ArticleList = () => {
     setFilteredArticles(filtered);
   };
 
+  const getUniqueYears = (articles) => {
+    const years = new Set(
+      articles.map((article) => new Date(article.datePublished).getFullYear())
+    );
+    return Array.from(years).sort((a, b) => b - a); // Sort in descending order
+  };
+  
+  
+
   useEffect(() => {
     const fetchArticles = async () => {
       try {
         const response = await axios.get('http://localhost:7000/api/student/articles/search');
+        console.log('Fetched Articles:', response.data); // Debugging
         setArticles(response.data);
         setFilteredArticles(response.data); // Show all articles initially
       } catch (error) {
@@ -84,7 +98,6 @@ const ArticleList = () => {
   const handleArticleClick = (pdfUrl) => {
     setSelectedPdf(`http://localhost:7000/public/files/${pdfUrl}`);
   };
-  
 
   return (
     <div className="min-h-screen text-white p-6 ml-[300px]">
@@ -146,28 +159,23 @@ const ArticleList = () => {
 
 
       <div className="w-1/4 fixed text-right p-4 ml-[1200px] mb-[50px] w-[auto]">
-        <p className="text-red-500 mr-[12.3px] mb-2 cursor-pointer">AnyTime</p>
+      <p
+        className="text-red-500 mr-[12.3px] mb-2 cursor-pointer"
+        onClick={() => filterArticlesByYear("AnyTime")}
+      >
+        AnyTime
+      </p>
+      {getUniqueYears(articles).map((year) => (
         <p
-        className="text-green-500 mb-2 cursor-pointer hover:text-red-500"
-        onClick={() => filterArticlesByYear(2024)}
-      >
-        Since 2024
-      </p>
-      <p
-        className="text-green-500 mb-2 cursor-pointer hover:text-red-500"
-        onClick={() => filterArticlesByYear(2023)}
-      >
-        Since 2023
-      </p>
-      <p
-        className="text-green-500 mb-2 cursor-pointer hover:text-red-500"
-        onClick={() => filterArticlesByYear(2022)}
-      >
-        Since 2022
-      </p>
-
-      </div>
-
+          key={year}
+          className="text-green-500 mb-2 cursor-pointer hover:text-red-500"
+          onClick={() => filterArticlesByYear(year)}
+        >
+          Since {year}
+        </p>
+      ))}
+    </div>
+    
       {error && <p className="absolute mt-[4px] ml-[900px] text-red-500"><span className='mt-5'><ErrorIcon/></span>{error}</p>}
 
      {/* Loading Spinner */}
@@ -188,7 +196,7 @@ const ArticleList = () => {
             {filteredArticles.map((article, index) => (
               <div
                 key={index}
-                onClick={() => handleArticleClick(article.pdf)}
+                onClick={() => article.pdf && handleArticleClick(article.pdf)}
                 className="p-4 mb-4 rounded-lg cursor-pointer hover:bg-[#2F2F2F] transition duration-300 ease-in-out"
               >
                 <h2 className="text-xl font-bold mb-2">{highlightText(article.title, query)}</h2>

@@ -182,7 +182,7 @@ export default function TabsPricingExample() {
           Pending
         </Tab>
         <Tab disableIndicator variant='soft' sx={{ flexGrow: 1 }}>
-          Student Panelist
+          Panelists
         </Tab>
       </TabList>
 

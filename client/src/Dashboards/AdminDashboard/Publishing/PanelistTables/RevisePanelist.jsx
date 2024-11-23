@@ -402,7 +402,7 @@ Modal.confirm({
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "-30px",
+                    marginTop: "-20px",
                     position: "absolute",
                   }}
                   format={(percent) => (
@@ -435,7 +435,13 @@ Modal.confirm({
                     color: "#fff", // White text
                   }}
                 /> */}
-
+                <Button
+                  onClick={() => openTaskModal(student)}
+                  style={{  width: "105px" }}
+                  >
+                    <img className="mr-[-4px]" src="/src/assets/addtask.png" />
+                    Add Task
+                </Button>
              
 
                 {/* <Button
@@ -460,6 +466,7 @@ Modal.confirm({
                     <img className="mr-[-4px]" src="/src/assets/addtask.png" />
                     Add Task
                 </Button>
+                
 
                 <Button
                   

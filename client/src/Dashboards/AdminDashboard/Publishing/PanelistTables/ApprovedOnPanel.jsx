@@ -412,7 +412,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "40px",
+                    marginTop: "-10px",
                     position: "absolute",
                   }}
                   format={(percent) => (
@@ -427,7 +427,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                   Document
                   </Button>
 
-                <Button
+                {/* <Button
                   
                   onClick={() =>
                     updatePanelManuscriptStatus(
@@ -440,7 +440,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                 >
                  <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
                  Revise 
-                 </Button>
+                 </Button> */}
 
              
                 {/* <Button
@@ -460,7 +460,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                   View Grade 
               </Button>
 
-                <Button
+                {/* <Button
                   
                
                   onClick={() => openTaskModal(student)}
@@ -468,9 +468,9 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                   >
                     <img className="mr-[-4px]" src="/src/assets/addtask.png" />
                     View Task
-                </Button>
+                </Button> */}
                 
-                <Button
+                {/* <Button
                   
                   onClick={() =>
                     updatePanelManuscriptStatus(
@@ -496,7 +496,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                   }
                 >
                   FINISHED
-                </Button>
+                </Button> */}
 
 
 

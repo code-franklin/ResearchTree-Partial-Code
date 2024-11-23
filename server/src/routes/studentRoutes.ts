@@ -12,7 +12,7 @@ import {
     markTaskAsCompleted,
     getTasks, 
     getTaskProgress,
-/*     getAllArticles, */
+    getAllArticles,
     searchArticles,
     editUserProfile,
     resetUserPassword
@@ -52,7 +52,7 @@ router.get("/fetch-rubrics", fetchRubrics);
 router.get('/fetch-student/grades/:userId', fetchGrades);
 router.get('/fetch-student/FinalGrades/:userId/:rubricId', fetchFinalGrade);
 
-/* router.get('/articles', getAllArticles); */
+router.get('/articles', getAllArticles);
 router.get('/articles/search', searchArticles);
 /* router.post('/upload-manuscript', postUploadManuscript); */
 

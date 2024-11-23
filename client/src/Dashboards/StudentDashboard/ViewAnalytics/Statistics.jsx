@@ -194,7 +194,11 @@ export const Cards = () => {
                     </div>
                     <div className="card-content">
                        <p className="card-title">Group Mates</p>
-                        <p className="card-value-2 text-white ml-[60px]"></p>
+                        <p className="card-value-2 text-[15px] text-white ml-[1.5px] mt-[3.3px]">
+                        {user.groupMembers
+                          .map(member => member.replace(/([a-z])([A-Z])/g, '$1 $2')) // Insert space between lowercase and uppercase letters
+                          .join(', ')}
+                        </p>
                     </div>
                 </div>
                 

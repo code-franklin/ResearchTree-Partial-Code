@@ -628,7 +628,7 @@ import { ObjectId } from 'mongodb';
 
 export const getAllArticles = async (req: Request, res: Response): Promise<void> => {
   try {
-      const articles = await Article.find({}, 'title authors dateUploaded datePublished');
+      const articles = await Article.find({}, 'title authors dateUploaded datePublished pdf');
       res.status(200).json(articles);
   } catch (error) {
       if (error instanceof Error) {
@@ -647,7 +647,7 @@ export const searchArticles = async (req: Request, res: Response): Promise<void>
               { title: new RegExp(query as string, 'i') },
               { authors: new RegExp(query as string, 'i') }
           ]
-      }, 'title authors dateUploaded datePublished');
+      }, 'title authors dateUploaded datePublished pdf');
       res.status(200).json(articles);
   } catch (error) {
       if (error instanceof Error) {
