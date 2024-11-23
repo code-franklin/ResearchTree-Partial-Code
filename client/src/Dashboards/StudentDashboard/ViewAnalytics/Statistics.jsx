@@ -178,22 +178,23 @@ export const Cards = () => {
         
         </div>
         <div className="bg-[#1E1E1E] p-[20px] rounded-[8px] border border-[#4B4B4B] w-[340px] h-[110px]">
-                    <div className="card-icon-2">
-                 
+                    <div className="absolute left-[290px] bottom-[56px]">
+                    <img className="ml-[0px]" src="/src/assets/totalManuscript-icon.png"  />
                     </div>
                     <div className="card-content">
-                        <p className="card-title">Most Uploads</p>
-                        <p className="card-value-2 text-white"></p>
-                    </div>
-                </div>
-        
-                <div className="bg-[#1E1E1E] p-[20px] rounded-[8px] border border-[#4B4B4B] w-[340px] h-[110px]">
-                    <div className="card-icon-2">
-
-                    </div>
-                    <div className="card-content">
+                       
                         <p className="card-title">Total Manuscript</p>
                         <p className="card-value-2 text-white ml-[60px]">{pdfCount} Manuscripts</p>
+                    </div>
+                </div>
+              
+                <div className="bg-[#1E1E1E] p-[20px] rounded-[8px] border border-[#4B4B4B] w-[340px] h-[110px]">
+                    <div className="absolute">
+                    <img className="ml-[270px] mt-[-5px] " src="/src/assets/student-handle.png"  />
+                    </div>
+                    <div className="card-content">
+                       <p className="card-title">Group Mates</p>
+                        <p className="card-value-2 text-white ml-[60px]"></p>
                     </div>
                 </div>
                 
