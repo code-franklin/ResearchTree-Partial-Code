@@ -443,8 +443,8 @@ export default function NewTables() {
                   }
                   style={{ marginBottom: "10px", width: "105px" }}
                 >
-                 <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
-                 Revise
+                 <img className="mr-[-4px]" src="/src/assets/view-docs.png" /> 
+                 Document
                 </Button>
                 
 
@@ -454,14 +454,7 @@ export default function NewTables() {
                   style={{ marginBottom: "20px", width: "100px" }}
                 /> */}
                 
-                <Button
-                  onClick={() => updatePanelManuscriptStatus(student._id, 'Approved on Panel')}
-                  style={{ marginBottom: "10px", width: "105px" }}
-                > 
-                  <img className="mr-[-4px]" src="/src/assets/approved.png" />
-                Approved
-                </Button>
-
+               
                 <Button
                   onClick={() => handleViewGrade(student._id)}
                   style={{ marginBottom: "10px", width: "105px" }}
@@ -480,6 +473,13 @@ export default function NewTables() {
                 </Button>
 
 
+                <Button
+                  onClick={() => updatePanelManuscriptStatus(student._id, 'Approved on Panel')}
+                  style={{ marginBottom: "10px", width: "105px" }}
+                > 
+                  <img className="mr-[-4px]" src="/src/assets/approved.png" />
+                Approved
+                </Button>
 
 
                 

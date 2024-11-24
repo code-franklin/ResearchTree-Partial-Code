@@ -337,7 +337,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                 {student.manuscriptStatus === "Revise on Panelist" ? (
                   <>
                     <Button
-                      icon={<EditOutlined />}
+                
                       onClick={() =>
                         handleViewManuscript(student._id, student.channelId)
                       }
@@ -348,7 +348,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                     </Button>
 
                     <Button
-                      type='primary'
+                   
                       onClick={() => openTaskModal(student)}
                      style={{ marginBottom: "10px", width: "105px" }}
                     >
@@ -360,8 +360,8 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                       onClick={() => resetVotes(student._id)}
                       style={{marginBottom: '10px', width: "105px" }}
                     >
-                      <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
-                      Reset 
+                      <img className="mr-[-4px]" src="/src/assets/approved.png" /> 
+                      Done
                     </Button>
 
 {/*                     <Button
@@ -376,6 +376,21 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                   </>
                 ) : (
                   <>
+
+              <Button
+                
+                onClick={() =>
+                  handleViewManuscript(student._id, student.channelId)
+                }
+                style={{ marginBottom: "10px", width: "105px" }}
+              >
+               <img className="mr-[-4px]" src="/src/assets/view-docs.png" />
+                Document
+              </Button>
+
+
+
+
                     <Button
                     
                       onClick={() => openTaskModal(student)}
@@ -396,19 +411,13 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                     
                     <Button
                       onClick={() => handleViewGrade(student._id)}
-                      style={{ width: "105px" }}
+                      style={{ marginBottom: '10px', width: "105px" }}
                         > 
                           <img className="mr-[-4px]" src="/src/assets/grade.png" />
                         View Grade 
                     </Button>
 
-                    <Button
-                      onClick={() => resetVotes(student._id)}
-                      style={{marginBottom: '10px', width: "105px" }}
-                    >
-                      <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
-                      Reset 
-                    </Button>
+                 
                     
                   </>
                 )}

@@ -407,17 +407,7 @@ export default function NewTables() {
                  Revise
                 </Button>
 
-                <Button
               
-                  onClick={() =>
-                    updateManuscriptStatus(student._id, "Ready to Defense")
-                  }
-                  style={{ marginBottom: "10px", width: "105px" }}
-                > 
-                  <img className="mr-[-4px]" src="/src/assets/approved.png" />
-                Approved
-                
-                </Button>
 
                 <Button
                 
@@ -427,6 +417,18 @@ export default function NewTables() {
                     <img className="mr-[-4px]" src="/src/assets/addtask.png" />
                     Add Task
                 </Button>
+
+                <Button
+              
+              onClick={() =>
+                updateManuscriptStatus(student._id, "Ready to Defense")
+              }
+              style={{ marginBottom: "10px", width: "105px" }}
+            > 
+              <img className="mr-[-4px]" src="/src/assets/approved.png" />
+            Approved
+            
+            </Button>
               </div>
             </div>
           </List.Item>

@@ -41,7 +41,7 @@ const Tables = ({ adviserName, adviserImage, students }) => {
           position: 'fixed',
           borderBottom: 1,
           borderColor: 'divider',
-          width: '33.7%',
+          width: '29.7%',
           marginTop: '35px',
           marginLeft: '40px',
         }}>

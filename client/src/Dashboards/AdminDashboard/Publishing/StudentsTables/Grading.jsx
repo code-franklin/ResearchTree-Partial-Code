@@ -150,8 +150,7 @@ export default function GradingTable({ panelistId, studentId }) {
   return (
     <div className="h-[700px] text-[14px] p-4 w-[1400px] ml-[390px] mt-[380px]">
 
-     
-    {/* Panelist Buttons */}
+     {/* Panelist Buttons */}
 {panelists.length > 0 ? (
   <div className="flex justify-center mb-4">
     {panelists.map((panelist) => (
@@ -174,9 +173,24 @@ export default function GradingTable({ panelistId, studentId }) {
       </button>
     )}
   </div>
-) : (
-  <p className=""></p>
-)}
+) : null}
+
+{/* Rubrics Buttons */}
+<div className="flex justify-center mb-4">
+  {rubrics.map((rubric) => (
+    <button
+      key={rubric._id}
+      className={`h-[50px] w-[1500px] text-[20px] m-2 text-white rounded ${
+        selectedRubricId === rubric._id ? 'bg-[#4B4B4B]' : 'bg-[#2B2B2B]'
+      }`}
+      onClick={() => setSelectedRubricId(rubric._id)}
+    >
+      {rubric.title}
+    </button>
+  ))}
+</div>
+
+
 
 {/* Grading Table */}
 {categories.length > 0 && grades.length > 0 ? (
@@ -245,7 +259,7 @@ export default function GradingTable({ panelistId, studentId }) {
     <p className="text-[14px]">Graded At: {new Date(gradeSummary.gradedAt).toLocaleString()}</p>
   </div>
 ) : (
-  <p className="text-center text-white text-[30px] mt-[300px]">No grade yet.</p>
+  <p className="text-center text-[#FF0000] text-[30px] mt-[300px]">No grade yet.</p>
 )}
 
         {/* Final Grade Modal */}

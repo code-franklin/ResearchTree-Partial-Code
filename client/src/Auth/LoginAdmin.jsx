@@ -75,7 +75,7 @@ const LoginFunction = () => {
           <Input
             prefix={<UserOutlined />}
             placeholder='Email'
-            className='Username'
+            className='w-[364px] h-[52px] bg-[#F0EDFFCC] rounded-[20px] absolute'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -88,7 +88,7 @@ const LoginFunction = () => {
           <Input.Password
             prefix={<LockOutlined />}
             placeholder='Password'
-            className='Password'
+            className='w-[364px] h-[52px] bg-[#F0EDFFCC] rounded-[20px] absolute mt-[10px]'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -105,7 +105,7 @@ const LoginFunction = () => {
             width: "104px",
             height: "52px",
             marginLeft: "130px",
-            marginTop: "12px",
+            marginTop: "35px",
             border: "none",
             background: "#0BF677",
             borderRadius: "20px",
@@ -127,7 +127,7 @@ const LoginFunction = () => {
       </Form>
 
       <h1 className='Register'>
-        <span className='text1 ml-[-20px]'>Don’t have an Account, contact the admin?</span>
+        <span className='text1 ml-[30px]'>Only admin can access here!</span>
       </h1>
     </div>
   );

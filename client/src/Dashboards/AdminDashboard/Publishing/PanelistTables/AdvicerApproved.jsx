@@ -486,7 +486,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                 </Button>
 
                 <Button
-                  icon={<CheckOutlined />}
+             
                   onClick={() =>
                     updatePanelManuscriptStatus(
                       student._id,
@@ -510,7 +510,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                     (e.target.style.boxShadow = "0 0 15px rgba(0, 255, 0, 0.7)") // Reset to original green glow
                   }
                 >
-                  FINISHED
+                  Approved
                 </Button>
 
               </div>

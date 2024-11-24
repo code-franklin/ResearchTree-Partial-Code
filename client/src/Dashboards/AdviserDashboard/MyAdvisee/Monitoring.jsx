@@ -529,8 +529,8 @@ export default function NewTables() {
                       onClick={() => resetVotes(student._id)}
                       style={{marginBottom: '10px', width: "105px" }}
                     >
-                      <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
-                      Reset 
+                      <img className="mr-[-4px]" src="/src/assets/approved.png" /> 
+                      Done
                     </Button>
 
                    
@@ -538,6 +538,18 @@ export default function NewTables() {
                   </>
                 ) : (
                   <>
+
+                <Button
+                  
+                  onClick={() =>
+                    handleViewManuscript(student._id, student.channelId)
+                  }
+                  style={{ marginBottom: "10px", width: "105px" }}
+                >
+                 <img className="mr-[-4px]" src="/src/assets/view-docs.png" /> 
+                 Document
+                </Button>
+                
                     <Button
                       
                       onClick={() => openTaskModal(student)}
@@ -555,13 +567,13 @@ export default function NewTables() {
                       View Grade
                     </Button>
 
-                    <Button
+                    {/* <Button
                       onClick={() => resetVotes(student._id)}
                       style={{marginBottom: '10px', width: "105px" }}
                     >
                       <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
                       Reset 
-                    </Button>
+                    </Button> */}
                   </>
                 )}
               </div>

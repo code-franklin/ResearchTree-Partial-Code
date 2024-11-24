@@ -104,7 +104,7 @@ const ListManuscript = () => {
       borderBottom: 1,
       borderColor: 'divider',
      
-      width: '33.7%',
+      width: '29.7%',
       marginTop: '-55px',
       marginLeft: '40px',
     }}

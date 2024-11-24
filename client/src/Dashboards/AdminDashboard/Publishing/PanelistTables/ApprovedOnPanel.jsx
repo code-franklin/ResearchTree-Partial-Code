@@ -495,13 +495,13 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                   View Grade 
               </Button>
 
-              <Button
+              {/* <Button
                   onClick={() => resetVotes(student._id)}
                   style={{marginBottom: '10px', width: "105px" }}
                   >
                    <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
-                   Reset 
-              </Button>
+                   2nd Defense
+              </Button> */}
 
                 {/* <Button
                   

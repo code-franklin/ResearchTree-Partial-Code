@@ -482,8 +482,8 @@ Modal.confirm({
                   onClick={() => resetVotes(student._id)}
                   style={{marginBottom: '10px', width: "105px" }}
                   >
-                   <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
-                   Reset 
+                   <img className="mr-[-4px]" src="/src/assets/approved.png" /> 
+                   Done
                 </Button>
              
 

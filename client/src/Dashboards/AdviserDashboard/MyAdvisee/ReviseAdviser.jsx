@@ -393,8 +393,8 @@ export default function NewTables() {
                   }
                   style={{ marginBottom: "10px", width: "105px" }}
                 >
-                 <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
-                 Revise
+                 <img className="mr-[-4px]" src="/src/assets/view-docs.png" /> 
+                 Document
                 </Button>
 
                 {/*                 <Button
@@ -403,14 +403,7 @@ export default function NewTables() {
                   style={{ marginBottom: "20px", width: "100px" }}
                 /> */}
 
-                <Button
-                  onClick={() =>
-                    updateManuscriptStatus(student._id, "Ready to Defense")
-                  }
-                  style={{ marginBottom: "10px", width: "105px" }}> 
-                    <img className="mr-[-4px]" src="/src/assets/approved.png" />
-                  Approved
-                </Button>
+              
 
                 <Button
                     onClick={() => openTaskModal(student)}
@@ -420,6 +413,14 @@ export default function NewTables() {
                   Add Task
                 </Button>
 
+                <Button
+                  onClick={() =>
+                    updateManuscriptStatus(student._id, "Ready to Defense")
+                  }
+                  style={{ marginBottom: "10px", width: "105px" }}> 
+                    <img className="mr-[-4px]" src="/src/assets/approved.png" />
+                  Approved
+                </Button>
 
 
               </div>
