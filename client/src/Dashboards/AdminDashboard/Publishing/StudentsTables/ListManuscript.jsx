@@ -444,13 +444,12 @@ const fetchTaskProgress = async (studentId) => {
                 
 
               <div className="absolute flex">
-              <Avatar
-                  src={`http://localhost:7000/public/uploads/${student.chosenAdvisor ? student.chosenAdvisor.profileImage || 'default-images.png' : 'default-images.png'}`}
-                  sx={{  }}
-                  style={{}}
-                />
+                <Avatar
+                    src={`http://localhost:7000/public/uploads/${student.chosenAdvisor ? student.chosenAdvisor.profileImage || 'default-images.png' : 'default-images.png'}`}
+                    sx={{  }}
+                    style={{}}
+                  />
                 <p style={{ color: "#ffffff", marginTop: '2px',}}><span className='font-bold ml-[10px]'></span> {student.chosenAdvisor ? student.chosenAdvisor.name : 'No advisor chosen'}</p>
-
               </div>
                
               </div>

@@ -9,6 +9,7 @@ import {
   Checkbox,
   ConfigProvider,
   Select,
+  Avatar,
 } from "antd";
 import {
   EditOutlined,
@@ -284,6 +285,20 @@ export default function NewTables() {
                 <br />
                 <p style={{ color: "#ffffff", marginTop: '10px'}}><span className='font-bold'>Course : </span>{student.course}</p>
                 <p style={{ color: "#ffffff" }}><span className='font-bold'>Leader :</span> {student.name}</p>
+
+                <br />
+
+                {/* Advicer Profile */}
+
+                <div className="absolute flex">
+                  <Avatar
+                      src={`http://localhost:7000/public/uploads/${student.chosenAdvisor ? student.chosenAdvisor.profileImage || 'default-images.png' : 'default-images.png'}`}
+                      sx={{  }}
+                      style={{}}
+                    />
+                  <p style={{ color: "#ffffff", marginTop: '2px',}}><span className='font-bold ml-[10px]'></span> {student.chosenAdvisor ? student.chosenAdvisor.name : 'No advisor chosen'}</p>
+                </div>
+
               </div>
               <div
                 style={{
