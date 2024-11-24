@@ -390,7 +390,6 @@ export const getPanelistStudentsAccepted = async (req: Request, res: Response) =
   }
 };
 
-
 export const getNewUploadsByAdviser = async (req: Request, res: Response) => {
   const { adviserId } = req.params;
 

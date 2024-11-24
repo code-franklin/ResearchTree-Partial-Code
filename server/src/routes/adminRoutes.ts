@@ -38,6 +38,8 @@ import {
 
 // View Analytics
 import {
+    getAllAdvicers,
+    countStudentsWithPanelists,
     countStudentsByCourse,
     countStudentsWithoutAdvisors,
     countAcceptedStudentsForAdvisors,
@@ -108,6 +110,8 @@ router.put('/specializations/:id', updateSpecialization);
 router.delete('/specializations/:id', deleteSpecialization);
 
 // View AnalyticsS
+router.get('/students/Panelist',getAllAdvicers)
+router.get('/students/AllPanelist', countStudentsWithPanelists);
 router.get('/students/courses', countStudentsByCourse);
 router.get('/students/without-advisors', countStudentsWithoutAdvisors);
 router.get('/advisors/accepted-students-count', countAcceptedStudentsForAdvisors);

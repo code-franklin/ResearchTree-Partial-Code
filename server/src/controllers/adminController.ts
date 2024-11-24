@@ -539,6 +539,25 @@ export const declineUser = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllAdvicers = async (req: Request, res: Response) => {
+  try {
+    // Count total students who are not approved
+    const totalStudentsPending = await User.countDocuments({ isApproved: false, role: 'student' });
+    const totalAdvicerPending = await User.countDocuments({ isApproved: false, role: 'adviser' });
+
+    const totalStudentsApproved = await User.countDocuments({ isApproved: true, role: 'student' });
+    const totalAdvicersApproved = await User.countDocuments({ isApproved: true, role: 'adviser' });
+
+    res.json({ 
+      totalStudentsPending, 
+      totalAdvicerPending, 
+      totalStudentsApproved, 
+      totalAdvicersApproved 
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
 
 export const getPendingUsersAdvicer = async (req: Request, res: Response) => {
   try {
@@ -553,14 +572,12 @@ export const getPendingUsersAdvicer = async (req: Request, res: Response) => {
 export const getPendingUsersStudent = async (req: Request, res: Response) => {
   try {
     const users = await User.find({ isApproved: false, role: 'student' });
+
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
 };
-
-
-
 
 
 export const getAllUsersAdvicer = async (req: Request, res: Response) => {
@@ -796,7 +813,37 @@ export const deleteSpecialization = async (req: Request, res: Response) => {
 };
 
 
+
 // View Analytics
+
+export const countStudentsWithPanelists = async (req: Request, res: Response) => {
+  try {
+    // Use aggregation to count students who have panelists
+    const result = await User.aggregate([
+      {
+        $match: {
+          role: 'student', // Ensure we are counting students
+          panelists: { $ne: [] }, // Check if panelists array is not empty
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 }, // Count the total number of students with panelists
+        },
+      },
+    ]);
+
+    const count = result.length > 0 ? result[0].count : 0; // Extract the count or default to 0 if no matches
+
+    res.status(200).json({ count }); // Send the count in the response
+  } catch (error) {
+    console.error('Error counting students with panelists:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+
 
 export const countStudentsByCourse = async (req: Request, res: Response): Promise<void> => {
   try {

@@ -25,6 +25,13 @@ export const Cards = () => {
   const [reviseOnAdvicerCount, setReviseOnAdvicerCount] = useState(0);
   const [reviseOnPanelCount, setReviseOnPanelCount] = useState(0);
   const [ApprovedOnPanelCount, setApprovedOnPanelCount] = useState(0);
+
+  const [TotalPanelistsStudentCount, setTotalPanelistsStudentCount] = useState(0);
+  const [TotalAdvisersPending, setTotalAdvisersPending] = useState(0);
+  const [TotalStudentsPending, setTotalStudentsPending] = useState(0);
+  const [TotalAdvisersApproved, setTotalAdvisersApproved] = useState(0);
+  const [TotalStudentsApproved, setTotalStudentsApproved] = useState(0);
+
   const [pdfCount, setPdfCount] = useState(0); // State for storing PDF count
 
   const user = JSON.parse(localStorage.getItem('user'));
@@ -40,6 +47,21 @@ export const Cards = () => {
   
   useEffect(() => {
 
+    const fetchTotalAllUsers = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:7000/api/admin/students/Panelist" // Correct endpoint
+        );
+        setTotalAdvisersPending(response.data.totalStudentsPending);
+        setTotalStudentsPending(response.data.totalAdvicerPending); 
+
+        setTotalAdvisersApproved(response.data.totalStudentsApproved);
+        setTotalStudentsApproved(response.data.totalAdvicersApproved); 
+      } catch (error) {
+        console.error("Error fetching ready-to-defense data:", error);
+      }
+    };
+
     const fetchTotalCouses = async () => {
       try {
         const response = await axios.get(
@@ -47,6 +69,18 @@ export const Cards = () => {
         );
         setTotalBSITStudents(response.data.totalBSITStudents);
         setTotalBSCSStudents(response.data.totalBSCSStudents); 
+      } catch (error) {
+        console.error("Error fetching ready-to-defense data:", error);
+      }
+    };
+    
+
+    const fetchStudentPanelistsCount = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:7000/api/admin/students/AllPanelist" // Correct endpoint
+        );
+        setTotalPanelistsStudentCount(response.data.count); // Update state with the backend response
       } catch (error) {
         console.error("Error fetching ready-to-defense data:", error);
       }
@@ -142,7 +176,9 @@ export const Cards = () => {
     };
 
     fetchPdfCount();
+    fetchTotalAllUsers();
     fetchTotalCouses();
+    fetchStudentPanelistsCount();
     fetchStudentNoAdvicerCount();
     fetchAcceptedStudentAdvicerCount();
     fetchNoStatusData();
@@ -262,28 +298,28 @@ export const Cards = () => {
       {/* Pending Advisers Section */}
       <div className="tooltip-item mb-2">
         <span className="tooltip-text text-sm text-white">
-          Pending Advisers: <strong className="text-yellow-600">7</strong>
+          Pending Advisers: <strong className="text-yellow-600">{TotalAdvisersPending}</strong>
         </span>
       </div>
       
       {/* Registered Advisers Section */}
       <div className="tooltip-item mb-2">
         <span className="tooltip-text text-sm text-white">
-          Registered Advisers: <strong className="text-green-600">15</strong>
+          Registered Advisers: <strong className="text-green-600">{TotalAdvisersApproved}</strong>
         </span>
       </div>
       
       {/* Pending Students Section */}
       <div className="tooltip-item mb-2">
         <span className="tooltip-text text-sm text-white">
-          Pending Students: <strong className="text-yellow-600">12</strong>
+          Pending Students: <strong className="text-yellow-600">{TotalStudentsPending}</strong>
         </span>
       </div>
       
       {/* Registered Students Section */}
       <div className="tooltip-item">
         <span className="tooltip-text text-sm text-white">
-          Registered Students: <strong className="text-green-600">30</strong>
+          Registered Students: <strong className="text-green-600">{TotalStudentsApproved}</strong>
         </span>
       </div>
     </div>
@@ -309,7 +345,7 @@ export const Cards = () => {
     </div>
     <div className="card-content">
       <p className="card-title">Panelist Student</p>
-      <p className="card-value-3">{}</p>
+      <p className="card-value-3">{TotalPanelistsStudentCount}</p>
     </div>
   </div>
 
