@@ -69,7 +69,6 @@ router.get('/specializations', getSpecializations);
 
 // Data Analytics
 router.get('/:adviserId/panelist-accepted-count', getPanelistStudentsAccepted);
-
 router.get('/:adviserId/course-count', getBSITBSCStudentsByAdviser);
 
 router.get('/:adviserId/newUploads-count', getNewUploadsByAdviser);

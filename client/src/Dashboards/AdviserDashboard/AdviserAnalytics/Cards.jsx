@@ -22,6 +22,10 @@ export const Cards = () => {
   const [bsitCount, setBSITCount] = useState(0);
   const [bscsCount, setBSCSCount] = useState(0);
 
+  const [proposalAccepted, setProposalAccepted] = useState(0);
+  const [proposalDeclined, setProposalDeclined] = useState(0);
+  const [proposalPending, setProposalPending] = useState(0);
+
   const [open, setOpen] = React.useState(false); // State for alert box
 
   // Function to handle button click for alert
@@ -44,6 +48,22 @@ export const Cards = () => {
         console.error("Error fetching PDF count:", error);
       }
     };
+
+    const fetchProposalStudentCounts = async () => {
+      try {
+          const response = await axios.get(`http://localhost:7000/api/advicer/advisor-students/${user._id}`);
+          const counts = response.data.counts; // Access the counts object from the response
+          setProposalAccepted(counts.accepted);
+          setProposalDeclined(counts.declined);
+          setProposalPending(counts.pending);
+
+      } catch (err) {
+          console.error('Error fetching student counts:', err);
+          setError('Failed to fetch student counts');
+      } finally {
+          setLoading(false);
+      }
+  };
 
     const fetchPanelistStudentCount = async () => {
       try {
@@ -125,6 +145,7 @@ export const Cards = () => {
     
     fetchNewUploadCount();
     fetchReviseOnAdvicerCount();
+    fetchProposalStudentCounts();
     fetchReadyToDefenseCount();
     fetchPanelistStudentCount();
     fetchApprovedOnAdvicerCount();
@@ -257,7 +278,7 @@ export const Cards = () => {
       <div className="tooltip-item flex items-center gap-2 mb-2 ">
         <img className="icon " src="/src/assets/accept-proposal.png" alt="Accepted Icon" />
         <span className="tooltip-text text-sm text-white">
-          Accepted: <strong className="text-green-600">10</strong>
+          Accepted: <strong className="text-green-600">{proposalAccepted}</strong>
         </span>
       </div>
       
@@ -265,7 +286,7 @@ export const Cards = () => {
       <div className="tooltip-item flex items-center gap-2 mb-2">
         <img className="icon " src="/src/assets/decline-proposal.png" alt="Declined Icon" />
         <span className="tooltip-text text-sm text-white">
-          Declined: <strong className="text-red-600">5</strong>
+          Declined: <strong className="text-red-600">{proposalDeclined}</strong>
         </span>
       </div>
       
@@ -273,7 +294,7 @@ export const Cards = () => {
       <div className="tooltip-item flex items-center gap-2">
         <img className="icon " src="/src/assets/pending-proposal-icon.png" alt="Pending Icon" />
         <span className="tooltip-text text-sm text-white">
-          Pending: <strong className="text-yellow-600">7</strong>
+          Pending: <strong className="text-yellow-600">{proposalPending}</strong>
         </span>
       </div>
     </div>
@@ -285,7 +306,7 @@ export const Cards = () => {
     </div>
     <div className="card-content">
       <p className="card-title">Proposals Status</p>
-      <p className="card-value-3">{}</p>
+      <p className="card-value-3"></p>
     </div>
   </div>
 </Tooltip>

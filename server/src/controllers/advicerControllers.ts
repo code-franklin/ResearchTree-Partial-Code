@@ -845,8 +845,18 @@ export const getAdviserStudents = async (req: Request, res: Response) => {
       })
     );
 
+    // Calculate counts
+    const acceptedCount = acceptedStudents.length;
+    const declinedCount = declinedStudents.length;
+    const pendingCount = studentsToManage.length;
+
     // Send the response back to the client
     res.json({
+      counts: {
+        accepted: acceptedCount,
+        declined: declinedCount,
+        pending: pendingCount,
+      },
       acceptedStudents: studentData,
       declinedStudents: declinedStudentData,
       pendingStudents: pendingStudentData,
@@ -856,6 +866,44 @@ export const getAdviserStudents = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// export const getAdviserStudentsCount = async (req: Request, res: Response) => {
+//   const { advisorId } = req.params;
+
+//   try {
+//     // Count accepted students
+//     const acceptedCount = await User.countDocuments({
+//       chosenAdvisor: advisorId,
+//       advisorStatus: 'accepted',
+//       role: 'student',
+//     });
+
+//     // Count declined students
+//     const declinedCount = await User.countDocuments({
+//       chosenAdvisor: advisorId,
+//       advisorStatus: 'declined',
+//       role: 'student',
+//     });
+
+//     // Count pending students
+//     const pendingCount = await User.countDocuments({
+//       chosenAdvisor: advisorId,
+//       advisorStatus: 'pending',
+//       role: 'student',
+//     });
+
+//     // Send the counts as the response
+//     res.json({
+//       accepted: acceptedCount,
+//       declined: declinedCount,
+//       pending: pendingCount,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching student counts:", error);
+//     res.status(500).json({ message: "Internal Server Error" });
+//   }
+// };
+
 
 
 export const getPanelistStudents = async (req: Request, res: Response) => {
