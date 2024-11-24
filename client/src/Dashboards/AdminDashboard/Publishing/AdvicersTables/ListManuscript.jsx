@@ -206,11 +206,11 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
         renderItem={(student) => (
           <List.Item key={student._id}>
             <div style={{
-              height: "270px", padding: "30px", borderRadius: "8px",
+              height: "auto", padding: "30px", borderRadius: "8px",
               display: "flex", justifyContent: "space-between",
               alignItems: "center", backgroundColor: "#2B2B2B", marginBottom: "16px"
             }}>
-              <div style={{ flex: 1 }}>
+               <div style={{ flex: 1, maxWidth: '890px'}}>
                 <Text
                   style={{
                     color: "#ffffff",

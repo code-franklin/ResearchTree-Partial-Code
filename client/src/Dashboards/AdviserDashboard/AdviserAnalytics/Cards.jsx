@@ -261,12 +261,12 @@ export const Cards = () => {
           </div>
 
           <div className="card ml-[18px]">
-          <div className="card-icon-4">
+          <div className="absolute ml-[204px] bottom-[56px]">
           <img className="" src="/src/assets/adviserAnalytics-icon-5.png" />
           </div>
           <div className="card-content">
             <p className="card-title">Finished</p>
-            <p className="card-value-3">{approvedOnPanelCount}</p>
+            <p className="card-value-2">{approvedOnPanelCount}</p>
           </div>
 
         </div>
@@ -306,7 +306,7 @@ export const Cards = () => {
     </div>
     <div className="card-content">
       <p className="card-title">Proposals Status</p>
-      <p className="card-value-3"></p>
+      <p className="card-value-3">{proposalAccepted} | {proposalDeclined} | {proposalPending}</p>
     </div>
   </div>
 </Tooltip>

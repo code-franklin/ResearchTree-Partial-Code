@@ -198,21 +198,21 @@ export default function GradingTable({ userId }) {
         )}
 
      {/* Rubric Section */}
-{rubrics.length > 0 && (
-  <div className="flex justify-center mb-4">
-    {rubrics.map((rubric) => (
-      <button
-        key={rubric._id}
-        className={`h-[50px] w-[1500px] text-[20px] m-2 text-white rounded ${
-          selectedRubricId === rubric._id ? 'bg-[#4B4B4B]' : 'bg-[#2B2B2B]'
-        }`}
-        onClick={() => setSelectedRubricId(rubric._id)}
-      >
-        {rubric.title}
-      </button>
-    ))}
-  </div>
-)}
+      {rubrics.length > 0 && (
+        <div className="flex justify-center mb-4">
+          {rubrics.map((rubric) => (
+            <button
+              key={rubric._id}
+              className={`h-[50px] w-[1500px] text-[20px] m-2 text-white rounded ${
+                selectedRubricId === rubric._id ? 'bg-[#4B4B4B]' : 'bg-[#2B2B2B]'
+              }`}
+              onClick={() => setSelectedRubricId(rubric._id)}
+            >
+              {rubric.title}
+            </button>
+          ))}
+        </div>
+      )}
 
 {/* Grading Table */}
 {categories.length > 0 && grades.length > 0 && (

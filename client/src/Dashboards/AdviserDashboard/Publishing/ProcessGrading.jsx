@@ -104,6 +104,13 @@ export default function GradingTable({ studentId, panelistId }) {
       }
     }
   };
+
+  const gradeColors = {
+    excellent: 'bg-green-500',
+    good: 'bg-blue-500',
+    satisfactory: 'bg-yellow-500',
+    needsImprovement: 'bg-red-500',
+  };
   
 
   // Get the selected rubric
@@ -145,16 +152,24 @@ export default function GradingTable({ studentId, panelistId }) {
           <div className="grid grid-cols-5 gap-2 text-white text-center ">
             {/* Table Header */}
             <div className="bg-[#575757] font-bold p-4">Criterion</div>
-            {['4', '3', '2', '1'].map(score => (
-              <div key={score} className="p-4 font-bold bg-[#575757] ">
-                {score}
-              </div>
-            ))}
+            {['4', '3', '2', '1'].map((score) => {
+              const labelColor = {
+                '4': 'bg-green-500', // Excellent
+                '3': 'bg-blue-500', // Good
+                '2': 'bg-yellow-500', // Satisfactory
+                '1': 'bg-red-500', // Needs Improvement
+              }[score];
 
+              return (
+                <div key={score} className={`p-4 font-bold ${labelColor}`}>
+                  {score}
+                </div>
+              );
+            })}
             {/* Criteria Rows */}
             {selectedRubric.criteria.map(criterion => (
               <React.Fragment key={criterion._id}>
-                <div className="bg-[#2B2B2B] text-[20px] font-bold p-4 capitalize">
+                <div className="bg-[transparent] text-[20px] font-bold p-4 capitalize">
                   {criterion.category}
                 </div>
                 {['4', '3', '2', '1'].map(score => {
@@ -168,7 +183,8 @@ export default function GradingTable({ studentId, panelistId }) {
                   return (
                     <div
                       key={score}
-                      className={`p-4 cursor-pointer ${isSelected ? 'bg-green-500' : 'bg-gray-600'}`}
+                      className={`p-4 cursor-pointer ${isSelected ? 'bg-[#4b4b4b] border border-white ' : 'bg-[#2b2b2b]'} `}
+
                       onClick={() => handleGradeSelection(criterion._id, parseInt(score))}
                     >
                       <p>{scoreLabel}</p>
@@ -206,22 +222,26 @@ export default function GradingTable({ studentId, panelistId }) {
 
       {/* Success Modal */}
       {successModalVisible && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg w-80">
-            <h3 className="text-lg font-bold text-center text-green-500">Grades submitted successfully!</h3>
-            <div className="flex justify-center mt-4">
-              <button 
-                onClick={() => {
-                    setSuccessModalVisible(false); // Close the modal
-                    window.location.reload(); // Refresh the page
-                }} 
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-              >
-                OK
-              </button>
-            </div>
+        <div className="fixed inset-0 bg-[#1E1E1E] bg-opacity-80 flex justify-center items-center z-50">
+        <div className="bg-[#2B2B2B] p-6 rounded-lg w-90 shadow-lg">
+          <h3 className="text-lg font-bold text-center text-green-500 mb-4">Grades Submitted Successfully!</h3>
+          <p className="text-center text-white mb-6">
+            Your grades have been successfully submitted. 
+          </p>
+          <div className="flex justify-center">
+            <button 
+              onClick={() => {
+                setSuccessModalVisible(false); // Close the modal
+                window.location.reload(); // Refresh the page
+              }} 
+              className="bg-green-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-600 transition duration-200"
+            >
+              OK
+            </button>
           </div>
         </div>
+      </div>
+      
       )}
 
 

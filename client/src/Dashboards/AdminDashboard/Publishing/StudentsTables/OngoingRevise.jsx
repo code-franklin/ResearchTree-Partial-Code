@@ -399,7 +399,7 @@ const fetchTaskProgress = async (studentId) => {
 
                 {/* Advicer Profile */}
 
-                <div className="absolute flex">
+                <div className="flex">
                   <Avatar
                       src={`http://localhost:7000/public/uploads/${student.chosenAdvisor ? student.chosenAdvisor.profileImage || 'default-images.png' : 'default-images.png'}`}
                       sx={{  }}

@@ -185,7 +185,7 @@ export const Cards = () => {
 
         <div className="card">
           <div className="card-icon-1">
-          <img className="ml-[290px]" src="/src/assets/adviserAnalytics-icon-2.png" />
+          <img className="ml-[290px]" src="/src/assets/student-handle.png" />
           </div>
           <div className="card-content">
             <p className="card-title"> <span className="ml-1"></span> Student No Adviser</p>
@@ -250,10 +250,70 @@ export const Cards = () => {
               <img className="" src="/src/assets/adviserAnalytics-icon-5.png" />
             </div>
             <div className="card-content">
-              <p className="card-title">Approved</p>
+              <p className="card-title">Finished</p>
               <p className="card-value-2">{ApprovedOnPanelCount}</p>
             </div>
           </div>
+
+          <Tooltip 
+  followCursor 
+  title={
+    <div className="tooltip-content flex flex-col items-start p-4 bg-[gray-700] rounded-md">
+      {/* Pending Advisers Section */}
+      <div className="tooltip-item mb-2">
+        <span className="tooltip-text text-sm text-white">
+          Pending Advisers: <strong className="text-yellow-600">7</strong>
+        </span>
+      </div>
+      
+      {/* Registered Advisers Section */}
+      <div className="tooltip-item mb-2">
+        <span className="tooltip-text text-sm text-white">
+          Registered Advisers: <strong className="text-green-600">15</strong>
+        </span>
+      </div>
+      
+      {/* Pending Students Section */}
+      <div className="tooltip-item mb-2">
+        <span className="tooltip-text text-sm text-white">
+          Pending Students: <strong className="text-yellow-600">12</strong>
+        </span>
+      </div>
+      
+      {/* Registered Students Section */}
+      <div className="tooltip-item">
+        <span className="tooltip-text text-sm text-white">
+          Registered Students: <strong className="text-green-600">30</strong>
+        </span>
+      </div>
+    </div>
+  }
+>
+  {/* Tooltip Trigger Card */}
+  <div className="card ml-[18px]">
+    <div className="absolute ml-[177px] bottom-[56px]">
+      <img className="ml-[20px]" src="/src/assets/all-users.png" alt="Users Overview" />
+    </div>
+    <div className="card-content">
+      <p className="card-title">All Users</p>
+      <p className="card-value-3">{/* Dynamic Value */}</p>
+    </div>
+  </div>
+</Tooltip>
+
+
+        
+  <div className="card ml-[18px]">
+    <div className="absolute ml-[177px] bottom-[56px]">
+      <img className="ml-[20px]" src="/src/assets/panelist-student-icon.png" alt="Pending Proposal" />
+    </div>
+    <div className="card-content">
+      <p className="card-title">Panelist Student</p>
+      <p className="card-value-3">{}</p>
+    </div>
+  </div>
+
+
         </div>
       </div>
 

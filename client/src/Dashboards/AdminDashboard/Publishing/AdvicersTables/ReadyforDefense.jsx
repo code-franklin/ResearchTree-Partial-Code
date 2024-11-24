@@ -222,7 +222,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
               display: "flex", justifyContent: "space-between",
               alignItems: "center", backgroundColor: "#2B2B2B", marginBottom: "16px"
             }}>
-              <div style={{ flex: 1 }}>
+             <div style={{ flex: 1, maxWidth: '890px'}}>
                 <Text style={{  
                     color: "#ffffff",
                     fontSize: "22px",
@@ -243,7 +243,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                     <span className="font-bold">Date Uploaded:</span> {new Date(student.submittedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </Text>
                 )}
-                <Text style={{ color: "#ffffff" }}>
+                <Text style={{ color: "#ffffff", display: 'none' }}>
                   <span className="font-bold">Manuscript Status: </span>{" "}{student.manuscriptStatus || "N/A"}
                 </Text>
                 <br />

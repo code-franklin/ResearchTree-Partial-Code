@@ -404,7 +404,7 @@ const fetchTaskProgress = async (studentId) => {
                 <br />
                 {/* Advicer Profile */}
 
-                <div className="absolute flex">
+                <div className="flex">
                   <Avatar
                       src={`http://localhost:7000/public/uploads/${student.chosenAdvisor ? student.chosenAdvisor.profileImage || 'default-images.png' : 'default-images.png'}`}
                       sx={{  }}
@@ -431,7 +431,7 @@ const fetchTaskProgress = async (studentId) => {
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "40px",
+                    marginTop: "-30px",
                     position: "absolute",
                   }}
                   format={(percent) => (
@@ -483,7 +483,7 @@ const fetchTaskProgress = async (studentId) => {
                     Add Task
                 </Button>
 
-                <Button
+                {/* <Button
                   onClick={() =>
                     updatePanelManuscriptStatus(
                       student._id,
@@ -508,7 +508,7 @@ const fetchTaskProgress = async (studentId) => {
                   }
                 >
                   FINISHED
-                </Button>
+                </Button> */}
 
               </div>
             </div>

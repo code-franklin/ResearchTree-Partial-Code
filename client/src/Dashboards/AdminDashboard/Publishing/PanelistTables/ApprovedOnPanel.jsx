@@ -348,7 +348,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
         renderItem={(student) => (
           <List.Item key={student._id}>
             <div style={{
-              height: "270px", padding: "30px", borderRadius: "8px",
+              height: "auto", padding: "30px", borderRadius: "8px",
               display: "flex", justifyContent: "space-between",
               alignItems: "center", backgroundColor: "#2B2B2B", marginBottom: "16px"
             }}>
@@ -398,7 +398,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
                 <br />
                 {/* Advicer Profile */}
 
-                <div className="absolute flex">
+                <div className="flex">
                   <Avatar
                       src={`http://localhost:7000/public/uploads/${student.chosenAdvisor ? student.chosenAdvisor.profileImage || 'default-images.png' : 'default-images.png'}`}
                       sx={{  }}

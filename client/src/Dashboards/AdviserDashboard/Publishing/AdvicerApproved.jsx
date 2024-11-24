@@ -645,9 +645,15 @@ export default function NewTables() {
         onClose={closeGradingModal}
         fullWidth
         maxWidth='xl'
+        // PaperProps={{
+        //   style: {
+        //     backgroundColor: 'transparent',
+        //     boxShadow: 'none', // Removes any shadow if present
+        //   },
+        // }}
       >
         
-        <DialogContent sx={{ background: '#1E1E1E',height: "auto", marginTop:'-400px', marginLeft: '-350px'}}>
+        <DialogContent sx={{  background: '#1E1E1E', height: "auto", marginTop:'-400px', marginLeft: '-350px'}}>
           
           {gradingStudentId && (
             
