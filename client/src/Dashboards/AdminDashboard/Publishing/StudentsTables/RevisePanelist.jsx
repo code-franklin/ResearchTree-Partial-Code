@@ -453,7 +453,7 @@ const fetchTaskProgress = async (studentId) => {
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "-30px",
+                    marginTop: "0px",
                     position: "absolute",
                   }}
                   format={(percent) => (

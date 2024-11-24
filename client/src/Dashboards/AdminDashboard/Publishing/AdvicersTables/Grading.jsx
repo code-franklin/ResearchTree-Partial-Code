@@ -251,50 +251,105 @@ export default function GradingTable({ panelistId, studentId }) {
 
 {/* Grade Summary */}
 {gradeSummary ? (
-  <div className="text-white mt-4 p-4 rounded flex flex-col items-center justify-center text-center">
-   <img className="inset-0 fixed mt-[40px] ml-[1750px] w-[120px] h-[120px]" src="/src/assets/legend.png" />
+  <div className="text-white mt-4 p-4 bg-[#2B2B2B] rounded flex flex-col items-center justify-center text-center">
     <h3 className="text-[20px] font-bold mb-2">Grade Summary</h3>
     <p className="text-[16px]">Total Grade: {gradeSummary.totalGradeValue}</p>
     <p className="text-[16px]">Overall Grade: {gradeSummary.overallGradeLabel}</p>
     <p className="text-[14px]">Graded At: {new Date(gradeSummary.gradedAt).toLocaleString()}</p>
   </div>
-  ) : (
-    <p className="text-center text-[red] text-[30px] mt-[20px] ">No grade yet.</p>
-)}
+) : (
+  <p className="text-center text-white text-[30px] mt-[0px]">
+    <div className=''>
+    <l-bouncy
 
-        {/* Final Grade Modal */}
-    <Dialog
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+size="45"
+speed="1.75"
+color="#1e1e" 
+></l-bouncy>
+
+<p>No grade yet.</p>
+    </div>
+</p>
+)}
+{/* Final Grade Modal */}
+<Dialog
+  open={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+  fullWidth
+  maxWidth="sm"
+  PaperProps={{
+    style: {
+      backgroundColor: '#1E1E1E',
+      color: 'white',
+    },
+  }}
+>
+  <DialogTitle style={{ backgroundColor: '#1E1E1E', color: 'white' }}>
+    Final Grades
+  </DialogTitle>
+  <DialogContent style={{ backgroundColor: '#1E1E1E' }}>
+    {finalGradeData ? (
+      <>
+        {finalGradeData.rubrics.map((rubric) => (
+          <div
+            key={rubric.rubricId}
+            className="mb-4 text-center"
+            style={{
+              color: 'white',
+              border: '1px solid #333',
+              borderRadius: '8px',
+              padding: '16px',
+              margin: '8px auto',
+              maxWidth: '500px',
+            }}
+          >
+            <Typography
+              variant="h6"
+              style={{ fontWeight: 'bold', marginBottom: '8px' }}
+            >
+              {rubric.rubricTitle}
+            </Typography>
+            <Typography style={{ marginBottom: '4px' }}>
+              <strong>Student:</strong> {finalGradeData.student.name}
+            </Typography>
+            <Typography>
+              <strong>Final Grade:</strong> {rubric.totalGradeValue} (
+              {rubric.overallGradeLabel})
+            </Typography>
+          </div>
+        ))}
+      </>
+    ) : (
+      <Typography
+        style={{
+          color: 'white',
+          textAlign: 'center',
+          marginTop: '20px',
+        }}
+      >
+        No final grade data available.
+      </Typography>
+    )}
+  </DialogContent>
+</Dialog>
+
+      {/* Material UI Modal for Grading */}
+      <Dialog
+        open={isGradeForStudentModalOpen}
+        onClose={closeGradingModal}
         fullWidth
-        maxWidth="sm"
-        >
-        <DialogTitle>Final Grade</DialogTitle>
-        <DialogContent>
-            {finalGradeData ? (
-            <>
-                <Typography>
-                <strong>Student:</strong> {finalGradeData.student.name}
-                </Typography>
-                {finalGradeData.rubrics.map((rubric) => (
-                <div key={rubric.rubricId} className="mb-2">
-                    <Typography variant="h6">{rubric.rubricTitle}</Typography>
-                    <Typography>
-                    Final Grade: {rubric.totalGradeValue} ({rubric.overallGradeLabel})
-                    </Typography>
-                </div>
-                ))}
-            </>
-            ) : (
-            <Typography>No final grade data available.</Typography>
-            )}
+        maxWidth='xl'
+      >
+        <DialogContent sx={{ height: "1200px", background: '#1E1E1E'}}>
+        {selectedStudentId && selectedPanelistId && (
+            <GradingProcess
+              studentId={selectedStudentId}
+              panelistId={selectedPanelistId}
+            />
+          )}
         </DialogContent>
-        <DialogActions>
-            <Button onClick={() => setIsModalOpen(false)} color="primary">
-            Close
-            </Button>
-        </DialogActions>
-    </Dialog>
+      
+      </Dialog>
 
     </div>
   );

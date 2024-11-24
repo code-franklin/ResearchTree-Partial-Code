@@ -205,6 +205,13 @@ const ResearchCard = () => {
     }
   };
 
+  const manuscriptColors = {
+    "Revise On Advicer": "#faad14", // Yellow
+    "Ready to Defense": "#7695FF", // Blue
+    "Revise on Panelist": "#faad14", // Yellow
+    "Approved on Panel": "#1E1E", // Black
+    default: "transparent", // Transparent for null or unrecognized statuses
+  };
   // Function to display status message based on advisorStatus
   const getStatusMessage = (advisorStatus, advisorInfo) => {
     if (advisorStatus === 'accepted') {
@@ -251,7 +258,24 @@ const ResearchCard = () => {
       <div className="ml-[320px] border border-[#4B4B4B] bg-[#1E1E1E] p-[40px] pl-[80px] rounded-lg shadow-lg text-white">
         <div className="flex items-center mb-4 ">
           <span className="bg-[#868686] text-white px-2 py-0 mr-2">Research Title</span>
+         
           <span className="bg-[#1E1E] text-white px-2 py-0 mr-2">{user.course}</span>
+          <Tag
+          color={manuscriptColors[manuscriptStatus] || manuscriptColors.default}
+          style={{
+            borderRadius: 0,
+            padding: '2px',
+            
+            paddingRight: 2,
+            position: "absolute",
+            color: "white",
+            marginTop: "0px",
+            marginLeft: "178px",
+            fontSize: "15px",
+          }}
+        >
+          {manuscriptStatus}
+        </Tag>
           <div className="absolute ml-[920px]"></div>
         
         </div>
@@ -374,7 +398,7 @@ const ResearchCard = () => {
       />
 
     </div>
-
+    
 {/* <p><strong>Text:</strong> {proposal?.proposalText}</p>  */}
         {/* Advisor */}
         <p className="text-gray-400 mb-2">
@@ -394,33 +418,7 @@ const ResearchCard = () => {
         
         <div className="text-gray-400 mb-4">
         <span><span className="font-bold text-white">Date of Uploaded:</span> <span className="mr-5">{proposal?.submittedAt && new Date(proposal?.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span></span>
-        <Tag
-          
-            color={
-              manuscriptStatus === "Revise On Advisor"
-                ? "#faad14" // Yellow for Revise On Advisor
-                : manuscriptStatus === "Ready to Defense"
-                ? "#7695FF" // Green for Ready to Defense
-                : manuscriptStatus === "Revise on Panelist"
-                ? "#faad14" // Yellow for Revise on Panelist
-                : manuscriptStatus === "Approved on Panel"
-                ? "#1E1E" // Black for Approved on Panel
-                : "transparent" // Blue for default (null or any unrecognized status)
-            }
-            style={{
-              borderRadius: 0,
-              padding: '2px',
-              position: "absolute",
-              color: "white",
-              marginTop: "-153px",
-              marginLeft: "-75px",
-              fontSize: "15px",
-              // Optional background color for default or fallback
-              // backgroundColor: manuscriptStatus === "Ready to Defense" ? "#4CAF50" : "#868686",
-            }}
-          >
-            {manuscriptStatus}
-          </Tag>
+      
 
         
         {/* <span><span className="font-bold text-white">Manuscript Status : </span> <span className="mr-5">{manuscriptStatus || "N/A"}</span></span> */}
