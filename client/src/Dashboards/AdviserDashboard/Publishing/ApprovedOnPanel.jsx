@@ -157,6 +157,30 @@ export default function NewTables() {
     }
   };
 
+  const resetVotes = async (userId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:7000/api/advicer/reset-manuscript-status/${userId}`  // Corrected URL
+      );
+  
+      const { message: successMessage } = response.data;
+      message.success(successMessage);
+  
+    } catch (error) {
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        message.error(
+          `Error: ${error.response.data.message || "Failed to reset votes"}`
+        );
+      } else {
+        console.error("Error:", error.message);
+        message.error("Error resetting votes");
+      }
+    }
+  };
+
+  
+
   const openTaskModal = (student) => {
     setCurrentTaskStudent(student);
     setIsModalVisible(true);

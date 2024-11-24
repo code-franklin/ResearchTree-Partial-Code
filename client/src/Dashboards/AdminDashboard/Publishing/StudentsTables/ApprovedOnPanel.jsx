@@ -97,6 +97,28 @@ export default function ListManuscript({ studentData  }) {
     }
   };
 
+  const resetVotes = async (userId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:7000/api/advicer/reset-manuscript-status/${userId}`  // Corrected URL
+      );
+  
+      const { message: successMessage } = response.data;
+      message.success(successMessage);
+  
+    } catch (error) {
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        message.error(
+          `Error: ${error.response.data.message || "Failed to reset votes"}`
+        );
+      } else {
+        console.error("Error:", error.message);
+        message.error("Error resetting votes");
+      }
+    }
+  };
+
   const updatePanelManuscriptStatus = async (channelId, newStatus, userId) => {
     try {
       const response = await axios.patch(
@@ -455,21 +477,9 @@ const fetchTaskProgress = async (studentId) => {
                     Document
                 </Button>
 
-                {/* <Button
-                  icon={<LoadingOutlined />}
-                  onClick={() =>
-                    updatePanelManuscriptStatus(
-                      student._id,
-                      "Revise on Panelist",
-                      admin.id
-                    )
-                  }
-                  style={{
-                    width: "50px",
-                    backgroundColor: "#faad14", // Yellow for 'revise'
-                    color: "#fff", // White text
-                  }}
-                />
+
+
+                {/* 
 
                 <Button
                   icon={<CheckOutlined />}
@@ -494,6 +504,14 @@ const fetchTaskProgress = async (studentId) => {
                     > 
                       <img className="mr-[-4px]" src="/src/assets/grade.png" />
                     View Grade 
+                </Button>
+
+                <Button
+                  onClick={() => resetVotes(student._id)}
+                  style={{marginBottom: '10px', width: "105px" }}
+                  >
+                   <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
+                   Reset 
                 </Button>
 
                 {/* <Button

@@ -6,6 +6,7 @@ import {
 } from '../controllers/adminController';
 
 
+
 // Profile Management
 import { 
     registerAdmin, 
@@ -87,7 +88,6 @@ router.get('/student-pending', getPendingUsersStudent);
 
 // Fetch Panelist Advicers
 router.get('/fetch-advisors', fetchPanelists);
-
 router.get('/student-users', getAllUsersStudent);
 router.get('/advicer-users', getAllUsersAdvicer);
 
@@ -138,6 +138,7 @@ router.get('/grades/student/:studentId', fetchGrades);
 router.get('/fetch/admin-FinalGrades/grades/:studentId', fetchFinalStudentGrades);
 router.get('/rubrics/grades', fetchAllGrades);
 
+// Reset Voting
 
 
 export default router;

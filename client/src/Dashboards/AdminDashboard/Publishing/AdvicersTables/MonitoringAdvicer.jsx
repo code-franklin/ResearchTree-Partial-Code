@@ -101,6 +101,27 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
     });
   }, [filteredStudents]);
 
+  const resetVotes = async (userId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:7000/api/advicer/reset-manuscript-status/${userId}`  // Corrected URL
+      );
+  
+      const { message: successMessage } = response.data;
+      message.success(successMessage);
+  
+    } catch (error) {
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        message.error(
+          `Error: ${error.response.data.message || "Failed to reset votes"}`
+        );
+      } else {
+        console.error("Error:", error.message);
+        message.error("Error resetting votes");
+      }
+    }
+  };
 
   const fetchTasks = async (studentId) => {
     try {
@@ -335,6 +356,14 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                       Add Task
                     </Button>
 
+                    <Button
+                      onClick={() => resetVotes(student._id)}
+                      style={{marginBottom: '10px', width: "105px" }}
+                    >
+                      <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
+                      Reset 
+                    </Button>
+
 {/*                     <Button
                       icon={<CheckOutlined />}
                       onClick={() =>
@@ -355,7 +384,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                        <img className="mr-[-4px]" src="/src/assets/addtask.png" />
                       View Task
                     </Button>
-{/*                     <Button
+{/*                 <Button
                       icon={<EditOutlined />}
                       onClick={() =>
                         handleViewManuscript(student._id, student.channelId)
@@ -364,13 +393,22 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                     >
                       Edit
                     </Button> */}
-                <Button
-                  onClick={() => handleViewGrade(student._id)}
-                  style={{ width: "105px" }}
-                    > 
-                      <img className="mr-[-4px]" src="/src/assets/grade.png" />
-                    View Grade 
-                </Button>
+                    
+                    <Button
+                      onClick={() => handleViewGrade(student._id)}
+                      style={{ width: "105px" }}
+                        > 
+                          <img className="mr-[-4px]" src="/src/assets/grade.png" />
+                        View Grade 
+                    </Button>
+
+                    <Button
+                      onClick={() => resetVotes(student._id)}
+                      style={{marginBottom: '10px', width: "105px" }}
+                    >
+                      <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
+                      Reset 
+                    </Button>
                     
                   </>
                 )}

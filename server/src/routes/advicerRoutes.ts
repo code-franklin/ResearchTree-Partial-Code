@@ -20,6 +20,11 @@ import {
     resetAdvicerPassword
 } from '../controllers/advicerControllers';
 
+// Reset Voting
+import { 
+  resetVotes
+} from '../controllers/advicerControllers';
+
 // Grading
 import { 
   fetchRubrics,
@@ -119,6 +124,8 @@ router.get('/fetch/adviser-FinalGrades/grades/:studentId/:rubricId', fetchFinalS
 router.get('/students-manage/:advisorId', listStudentsManage);
 router.put('/update-student-status', updateStatusStudent);
 
+// Reset Voting
+router.post('/reset-manuscript-status/:userId', resetVotes);
 
 
 

@@ -468,7 +468,6 @@ const fetchTaskProgress = async (studentId) => {
                 </Button>
 
                 <Button
-                  
                   onClick={() =>
                     updatePanelManuscriptStatus(
                       student._id,

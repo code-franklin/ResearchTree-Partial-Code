@@ -97,6 +97,28 @@ export default function NewTables() {
     fetchStudents();
   }, [user._id]);
 
+  const resetVotes = async (userId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:7000/api/advicer/reset-manuscript-status/${userId}`  // Corrected URL
+      );
+  
+      const { message: successMessage } = response.data;
+      message.success(successMessage);
+  
+    } catch (error) {
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        message.error(
+          `Error: ${error.response.data.message || "Failed to reset votes"}`
+        );
+      } else {
+        console.error("Error:", error.message);
+        message.error("Error resetting votes");
+      }
+    }
+  };
+
   const handleViewManuscript = (studentId, channelId) => {
     setSelectedStudentId(studentId);
     setSelectedChannelId(channelId);
@@ -504,15 +526,11 @@ export default function NewTables() {
                     </Button> */}
                     
                     <Button
-                     
-                      onClick={() =>
-                        updateManuscriptStatus(student._id, "Ready to Defense")
-                      }
-                      style={{ background: '#1E1E', color: 'white', border: 'none', fontWeight: '700',marginBottom: "10px", width: "105px" }}
+                      onClick={() => resetVotes(student._id)}
+                      style={{marginBottom: '10px', width: "105px" }}
                     >
-                    
-                      Submit
-
+                      <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
+                      Reset 
                     </Button>
 
                    
@@ -535,6 +553,14 @@ export default function NewTables() {
                     >
                     <img className="mr-[-4px]" src="/src/assets/grade.png" />
                       View Grade
+                    </Button>
+
+                    <Button
+                      onClick={() => resetVotes(student._id)}
+                      style={{marginBottom: '10px', width: "105px" }}
+                    >
+                      <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
+                      Reset 
                     </Button>
                   </>
                 )}

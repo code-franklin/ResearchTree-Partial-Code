@@ -1096,6 +1096,36 @@ export const updateManuscriptStatus = async (req: Request, res: Response) => {
   }
 };
 
+export const resetVotes = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+
+  try {
+    const student = await User.findById(userId);
+
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    // Reset the panelistVotes and publishingVotes
+    student.panelistVotes = [];
+    student.publishingVotes = [];
+
+    // Optionally, set the manuscriptStatus to a default value or 'null'
+    student.manuscriptStatus = "Ready to Defense";
+
+    // Save the changes to the database
+    await student.save();
+
+    res.status(200).json({
+      message: 'Votes reset successfully',
+      student,  // Optional: Return the updated student object if needed
+    });
+  } catch (error) {
+    console.error('Error resetting votes:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 export const updatePanelManuscriptStatus = async (req: Request, res: Response) => {
   const { channelId, manuscriptStatus, userId } = req.body;
 
