@@ -332,7 +332,7 @@ export const Cards = () => {
     </div>
     <div className="card-content">
       <p className="card-title">All Users</p>
-      <p className="card-value-3">{/* Dynamic Value */}</p>
+      <p className="card-value-2 ml-[46px]">{TotalAdvisersPending} | {TotalAdvisersApproved} | {TotalStudentsPending} | {TotalStudentsApproved}</p>
     </div>
   </div>
 </Tooltip>
