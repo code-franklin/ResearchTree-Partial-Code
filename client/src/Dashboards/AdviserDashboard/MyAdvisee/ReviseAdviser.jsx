@@ -307,7 +307,7 @@ export default function NewTables() {
           <List.Item key={student._id}>
             <div
               style={{
-                height: "270px", padding: "30px",
+                height: "auto", padding: "30px",
                 borderRadius: "8px",
                 display: "flex",
                 justifyContent: "space-between",
@@ -316,7 +316,7 @@ export default function NewTables() {
                 marginBottom: "16px",
               }}
             >
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1,   maxWidth: '890px',}}>
                 <Text
                   style={{
                     color: "#ffffff",

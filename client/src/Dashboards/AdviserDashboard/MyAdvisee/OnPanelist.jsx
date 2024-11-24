@@ -356,7 +356,7 @@ export default function NewTables() {
           <List.Item key={student._id}>
             <div
               style={{
-                height: "270px", padding: "30px",
+                height: "auto", padding: "30px",
                 borderRadius: "8px",
                 display: "flex",
                 justifyContent: "space-between",
@@ -427,7 +427,7 @@ export default function NewTables() {
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "-5px",
+                    marginTop: "25px",
                     position: "absolute",
                   }}
                   format={(percent) => (

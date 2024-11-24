@@ -235,7 +235,7 @@ export default function NewTables() {
           <List.Item key={student._id}>
             <div
               style={{
-                height: "270px", padding: "30px",
+                height: "auto", padding: "30px",
                 borderRadius: "8px",
                 display: "flex",
                 justifyContent: "space-between",
@@ -244,7 +244,7 @@ export default function NewTables() {
                 marginBottom: "16px",
               }}
             >
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1,   maxWidth: '890px',}}>
                 <Text
                   style={{
                     color: "#ffffff",
@@ -290,7 +290,7 @@ export default function NewTables() {
 
                 {/* Advicer Profile */}
 
-                <div className="absolute flex">
+                <div className="flex">
                   <Avatar
                       src={`http://localhost:7000/public/uploads/${student.chosenAdvisor ? student.chosenAdvisor.profileImage || 'default-images.png' : 'default-images.png'}`}
                       sx={{  }}

@@ -370,7 +370,7 @@ export default function NewTables() {
           <List.Item key={student._id}>
             <div
               style={{
-                height: "270px", padding: "30px",
+                height: "auto", padding: "30px",
                 borderRadius: "8px",
                 display: "flex",
                 justifyContent: "space-between",
@@ -379,13 +379,33 @@ export default function NewTables() {
                 marginBottom: "16px",
               }}
             >
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1,   maxWidth: '890px',}}>
+              <Tag
+                  icon={<StarOutlined />}
+                  color={
+                    student.manuscriptStatus === "Revise on Panelist"
+                      ? "#faad14"
+                      : student.manuscriptStatus === "Approved on Panel"
+                      ? "#1E1E"
+                      : "#1E90FF" // Default color
+                  }
+                  style={{
+                    padding: "2px",
+                    
+                    color: "white",
+                
+                    fontSize: "15px",
+                  }}
+                >
+                  {student.manuscriptStatus || "N/A"}
+                </Tag>
+                <br />
                 <Text
                   style={{
                     color: "#ffffff",
                     fontSize: "22px",
                     fontWeight: "bold",
-                    
+                   
                   }}
                 >
                   {student.proposalTitle}
@@ -413,26 +433,7 @@ export default function NewTables() {
                     })}
                   </Text>
                 )}
-               <Tag
-                  icon={<StarOutlined />}
-                  color={
-                    student.manuscriptStatus === "Revise on Panelist"
-                      ? "#faad14"
-                      : student.manuscriptStatus === "Approved on Panel"
-                      ? "#1E1E"
-                      : "#1E90FF" // Default color
-                  }
-                  style={{
-                    padding: "2px",
-                    position: "absolute",
-                    color: "white",
-                    marginTop: "-110px",
-                    marginLeft: "-202px",
-                    fontSize: "15px",
-                  }}
-                >
-                  {student.manuscriptStatus || "N/A"}
-                </Tag>
+              
 
                 <br />
                  <p style={{ color: "#ffffff", marginTop: '10px'}}><span className='font-bold'>Course : </span>{student.course}</p>
