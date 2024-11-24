@@ -61,7 +61,7 @@ const LoginFunction = () => {
         style={{
           position: "absolute",
           left: "50px",
-          top: "300px",
+          top: "280px",
           display: "block",
         }}
         name='login'
