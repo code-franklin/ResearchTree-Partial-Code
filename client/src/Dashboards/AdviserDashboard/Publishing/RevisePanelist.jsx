@@ -133,6 +133,28 @@ export default function NewTables() {
     }
   };
 
+  const resetVotes = async (userId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:7000/api/advicer/reset-manuscript-status/${userId}`  // Corrected URL
+      );
+  
+      const { message: successMessage } = response.data;
+      message.success(successMessage);
+  
+    } catch (error) {
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        message.error(
+          `Error: ${error.response.data.message || "Failed to reset votes"}`
+        );
+      } else {
+        console.error("Error:", error.message);
+        message.error("Error resetting votes");
+      }
+    }
+  };
+
   const fetchTaskProgress = async (studentId) => {
     if (!studentId) {
       console.log("No selectedStudentId found."); // Debug statement
@@ -516,6 +538,15 @@ export default function NewTables() {
                     <img className="mr-[-4px]" src="/src/assets/addtask.png" />
                     Add Task
                 </Button>
+
+                {/* <Button
+                      onClick={() => resetVotes(student._id)}
+                      style={{marginBottom: '15px', width: "105px" }}
+                    >
+                      <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
+                      Defense 
+                </Button> */}
+
               </div>
             </div>
           </List.Item>

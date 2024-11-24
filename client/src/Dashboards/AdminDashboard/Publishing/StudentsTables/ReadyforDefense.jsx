@@ -351,11 +351,11 @@ const fetchTaskProgress = async (studentId) => {
         renderItem={(student) => (
           <List.Item key={student._id}>
             <div style={{
-              height: "270px", padding: "30px",  borderRadius: "8px",
+              height: "auto", padding: "30px",  borderRadius: "8px",
               display: "flex", justifyContent: "space-between",
               alignItems: "center", backgroundColor: "#2B2B2B", marginBottom: "16px"
             }}>
-              <div style={{ flex: 1 }}>
+              <div style={{ maxWidth: "899px",flex: 1 }}>
                 <Text
                    style={{
                     color: "#ffffff",
@@ -437,14 +437,13 @@ const fetchTaskProgress = async (studentId) => {
                   )}
                 />
 
-                <Button 
-               
-                onClick={() => handleViewManuscript(student._id, student.channelId)}
-
-                style={{ marginBottom: "0px", width: "105px" }}
-                >
-                 <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
-                 Revise
+                <Button
+                  onClick={() =>
+                    handleViewManuscript(student._id, student.channelId)
+                  }
+                  style={{  marginBottom: '0px', width: "105px" }}>
+                     <img className="mr-[-4px]" src="/src/assets/view-docs.png" />
+                  Document
                 </Button>
 
 {/*                 <Button

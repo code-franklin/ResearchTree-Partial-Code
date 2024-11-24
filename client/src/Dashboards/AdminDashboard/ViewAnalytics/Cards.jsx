@@ -52,11 +52,11 @@ export const Cards = () => {
         const response = await axios.get(
           "http://localhost:7000/api/admin/students/Panelist" // Correct endpoint
         );
-        setTotalAdvisersPending(response.data.totalStudentsPending);
-        setTotalStudentsPending(response.data.totalAdvicerPending); 
+        setTotalAdvisersPending(response.data.totalAdvicerPending);
+        setTotalStudentsPending(response.data.totalStudentsPending); 
 
-        setTotalAdvisersApproved(response.data.totalStudentsApproved);
-        setTotalStudentsApproved(response.data.totalAdvicersApproved); 
+        setTotalAdvisersApproved(response.data.totalAdvicersApproved);
+        setTotalStudentsApproved(response.data.totalStudentsApproved); 
       } catch (error) {
         console.error("Error fetching ready-to-defense data:", error);
       }

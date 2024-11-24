@@ -364,7 +364,7 @@ Modal.confirm({
               display: "flex", justifyContent: "space-between",
               alignItems: "center", backgroundColor: "#2B2B2B", marginBottom: "16px"
             }}>
-              <div style={{ flex: 1 }}>
+              <div style={{ maxWidth: "899px",flex: 1 }}>
                 <Text
                   style={{
                     color: "#ffffff",
@@ -403,7 +403,6 @@ Modal.confirm({
                   {student.manuscriptStatus || "N/A"}
                 </Text>
                 <br />
-                <br />
                 <p style={{ color: "#ffffff", marginTop: '10px'}}><span className='font-bold'>Course : </span>{student.course}</p>
                 <p style={{ color: "#ffffff" }}><span className='font-bold'>Leader :</span> {student.name}</p>
                 
@@ -437,7 +436,7 @@ Modal.confirm({
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "-20px",
+                    marginTop: "4px",
                     position: "absolute",
                   }}
                   format={(percent) => (

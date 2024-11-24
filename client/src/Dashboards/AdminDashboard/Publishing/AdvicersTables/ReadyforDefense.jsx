@@ -260,11 +260,11 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
         renderItem={(student) => (
           <List.Item key={student._id}>
             <div style={{
-               height: "270px",  padding: "30px", borderRadius: "8px",
+               height: "auto",  padding: "30px", borderRadius: "8px",
               display: "flex", justifyContent: "space-between",
               alignItems: "center", backgroundColor: "#2B2B2B", marginBottom: "16px"
             }}>
-             <div style={{ flex: 1, maxWidth: '890px'}}>
+             <div style={{ flex: 1, maxWidth: '899px'}}>
                 <Text style={{  
                     color: "#ffffff",
                     fontSize: "22px",
@@ -289,7 +289,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                   <span className="font-bold">Manuscript Status: </span>{" "}{student.manuscriptStatus || "N/A"}
                 </Text>
                 <br />
-                <p style={{ color: "#ffffff", marginTop: '10px'}}><span className='font-bold'>Course : </span>{student.course}</p>
+                <p style={{ color: "#ffffff", marginTop: '0px'}}><span className='font-bold'>Course : </span>{student.course}</p>
                 <p style={{ color: "#ffffff" }}><span className='font-bold'>Leader :</span> {student.name}</p>
               </div>
 
@@ -308,7 +308,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "-15px",
+                    marginTop: "25px",
                     position: "absolute",
                   }}
                   format={(percent) => (

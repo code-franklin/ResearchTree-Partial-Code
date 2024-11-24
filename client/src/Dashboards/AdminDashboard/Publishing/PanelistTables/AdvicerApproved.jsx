@@ -353,7 +353,7 @@ export default function ListManuscript({ panelName, panelImage, panelistStudents
               display: "flex", justifyContent: "space-between",
               alignItems: "center", backgroundColor: "#2B2B2B", marginBottom: "16px"
             }}>
-              <div style={{ flex: 1 }}>
+              <div style={{ maxWidth: "899px",flex: 1 }}>
                 <Text
                   style={{
                     color: "#ffffff",

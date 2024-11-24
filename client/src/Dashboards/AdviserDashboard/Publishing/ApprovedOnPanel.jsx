@@ -179,7 +179,6 @@ export default function NewTables() {
     }
   };
 
-  
 
   const openTaskModal = (student) => {
     setCurrentTaskStudent(student);
@@ -363,6 +362,14 @@ export default function NewTables() {
                       <img className="mr-[-4px]" src="/src/assets/grade.png" />
                     View Grade 
                 </Button>
+
+                {/* <Button
+                      onClick={() => resetVotes(student._id)}
+                      style={{marginBottom: '10px', width: "105px" }}
+                    >
+                <img className="mr-[-4px]" src="/src/assets/revise.png" /> 
+                Reset 
+              </Button> */}
               </div>
             </div>
           </List.Item>

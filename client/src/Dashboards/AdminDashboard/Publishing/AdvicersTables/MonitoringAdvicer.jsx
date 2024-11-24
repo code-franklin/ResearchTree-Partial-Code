@@ -325,7 +325,7 @@ export default function ListManuscript({ adviserName, adviserImage, students }) 
                     width: "50px",
                     height: "50px",
                     marginLeft: "-350px",
-                    marginTop: "-12px",
+                    marginTop: "4px",
                     position: "absolute",
                   }}
                   format={(percent) => (
