@@ -382,6 +382,19 @@ const chooseAdvisor = async (advisorId) => {
                 {advisorInfo.name}
               </p>
 
+              <Flex
+             style={{position: 'absolute', marginTop: "-140px", marginLeft: '350px', maxWidth: '300px' }}
+             gap="4px 0"
+             wrap
+             className=""
+           >
+             {advisorInfo.specializations.map((specialization) => (
+               <Tag key={specialization} color="#4E4E4E">
+                 {specialization}
+               </Tag>
+             ))}
+           </Flex>
+
               <h2 className='font-bold ml-[266px] text-[19px] mt-[66px]'>
                 Your Panelists
               </h2>
@@ -456,7 +469,7 @@ const chooseAdvisor = async (advisorId) => {
         
         <p className={`text-sm mt-2 ${matchColor}`}>
         <span className="whitespace-nowrap text-white font-bold">{advisor.name}</span> 
-        <span className="inline-block whitespace-nowrap">Match: {matchPercentage}%</span>
+        <span className="inline-block ml-1 whitespace-nowrap">Match: {matchPercentage}%</span>
         </p>
        
       </li>

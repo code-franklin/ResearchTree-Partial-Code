@@ -315,7 +315,7 @@ Modal.confirm({
           style={{position: 'absolute', width: 100, height: 100, marginTop: '-200px' }}
         // sx={{ width: 79, height: 79 }}
       />
-      <h2 style={{ position: 'absolute',color: "#ffffff", marginTop: '-150px', marginLeft: '120px', }}>Defenders</h2>
+      <h2 style={{ position: 'absolute',color: "#ffffff", marginTop: '-150px', marginLeft: '123px', }}>Panelist</h2>
       <h2 style={{ position: 'absolute',color: "#ffffff", marginTop: '-200px', marginLeft: '120px', fontSize: '40px', fontWeight: 'bolder'}}>{panelName}</h2>
       
       <Select

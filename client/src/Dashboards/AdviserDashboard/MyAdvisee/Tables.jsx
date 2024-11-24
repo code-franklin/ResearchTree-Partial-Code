@@ -165,7 +165,7 @@ const ListManuscript = () => {
             backgroundColor: 'green', // Customize active background color
           },
         }}
-        label="Ready for Defense"
+        label="Defenders"
         {...a11yProps(2)}
       />
 

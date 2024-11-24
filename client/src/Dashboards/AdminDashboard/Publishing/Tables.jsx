@@ -54,7 +54,7 @@ const Tables = ({ adviserName, adviserImage, students }) => {
           >
             <Tab label="New Uploads" sx={tabStyles} />
             <Tab label="Ongoing Revision" sx={tabStyles} />
-            <Tab label="Ready for Defense" sx={tabStyles} />
+            <Tab label="Defenders" sx={tabStyles} />
             <Tab label="Monitoring" sx={tabStyles} />
           </Tabs>
         </Box>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogActions, Button } from '@mui/material';
 
-import { Modal, Checkbox, Divider, Typography, List } from 'antd';
+import { Modal, Checkbox, Divider, Typography, List, Tag } from 'antd';
 
 import CkEditorDocuments from './CkEditorDocuments';
 import './Styles/descriptions.css';
@@ -9,7 +9,7 @@ import Categories from './Categories';
 import { Tooltip } from '@mui/material';
 
 import { DonutChart } from "bizcharts";
-import { SyncOutlined } from '@ant-design/icons';
+import { SyncOutlined,StarOutlined,CloseOutlined } from '@ant-design/icons';
 
 
 
@@ -17,6 +17,7 @@ import { SyncOutlined } from '@ant-design/icons';
 const { Title, Text } = Typography;
 
 const ResearchCard = () => {
+  
   const [advisorInfo, setAdvisorInfo] = useState(null);
   const [advisorStatus, setAdvisorStatus] = useState(null);
   const [panelists, setPanelists] = useState([]);
@@ -388,9 +389,41 @@ const ResearchCard = () => {
           </p>
         )}
         
+
+
+        
         <div className="text-gray-400 mb-4">
         <span><span className="font-bold text-white">Date of Uploaded:</span> <span className="mr-5">{proposal?.submittedAt && new Date(proposal?.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span></span>
-        <span><span className="font-bold text-white">Manuscript Status : </span> <span className="mr-5">{manuscriptStatus || "N/A"}</span></span>
+        <Tag
+          
+            color={
+              manuscriptStatus === "Revise On Advisor"
+                ? "#faad14" // Yellow for Revise On Advisor
+                : manuscriptStatus === "Ready to Defense"
+                ? "#7695FF" // Green for Ready to Defense
+                : manuscriptStatus === "Revise on Panelist"
+                ? "#faad14" // Yellow for Revise on Panelist
+                : manuscriptStatus === "Approved on Panel"
+                ? "#1E1E" // Black for Approved on Panel
+                : "transparent" // Blue for default (null or any unrecognized status)
+            }
+            style={{
+              borderRadius: 0,
+              padding: '2px',
+              position: "absolute",
+              color: "white",
+              marginTop: "-153px",
+              marginLeft: "-75px",
+              fontSize: "15px",
+              // Optional background color for default or fallback
+              // backgroundColor: manuscriptStatus === "Ready to Defense" ? "#4CAF50" : "#868686",
+            }}
+          >
+            {manuscriptStatus}
+          </Tag>
+
+        
+        {/* <span><span className="font-bold text-white">Manuscript Status : </span> <span className="mr-5">{manuscriptStatus || "N/A"}</span></span> */}
 
         
           {/* <br />
@@ -414,14 +447,14 @@ const ResearchCard = () => {
           </Button>
 
       {/* Material UI Modal for CKEditor */}
-      <Dialog open={isEditorOpen} onClose={closeEditorModal} fullWidth maxWidth="xxl">
-        <DialogContent sx={{ height: '1000px' }}>
+      <Dialog sx={{}}open={isEditorOpen} onClose={closeEditorModal} fullWidth maxWidth="xxl">
+        <DialogContent sx={{height: '1000px',  }}>
           {user && (
             <CkEditorDocuments userId={user._id} channelId={channelId} />
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeEditorModal}  color="primary">Close</Button>
+          <Button sx={{marginTop: '-1680px', }}onClick={closeEditorModal}  color="primary"><img className="inline-block mr-2 mb-1 h-[30px] w-[30px]" src="/src/assets/close.png" alt="My Manuscript" /></Button>
         </DialogActions>
       </Dialog>
 
