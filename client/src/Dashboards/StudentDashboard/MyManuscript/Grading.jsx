@@ -271,18 +271,26 @@ export default function GradingTable({ userId }) {
 )}
 
 {/* Grade Summary */}
-{gradeSummary && (
+{gradeSummary ? (
   <div className="text-white mt-4 p-4 bg-[#2B2B2B] rounded flex flex-col items-center justify-center text-center">
-    <img
-      className="absolute ml-[-1200px] w-[120px] h-[120px]"
-      src="/src/assets/legend.png"
-      alt="Legend"
-    />
     <h3 className="text-[20px] font-bold mb-2">Grade Summary</h3>
     <p className="text-[16px]">Total Grade: {gradeSummary.totalGradeValue}</p>
     <p className="text-[16px]">Overall Grade: {gradeSummary.overallGradeLabel}</p>
     <p className="text-[14px]">Graded At: {new Date(gradeSummary.gradedAt).toLocaleString()}</p>
   </div>
+) : (
+  <p className="text-center text-white text-[20px] mt-[300px]">
+    <div className=''>
+    <l-bouncy
+
+size="45"
+speed="1.75"
+color="#1e1e" 
+></l-bouncy>
+
+<p>Not graded yet</p>
+    </div>
+</p>
 )}
 
 {/* Final Grade Modal */}
