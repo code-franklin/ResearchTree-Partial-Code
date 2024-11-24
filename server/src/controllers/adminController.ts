@@ -470,10 +470,11 @@ export const editAdminProfile = async (req: Request, res: Response) => {
       updateData.profileImage = profileImage;
     }
 
-    // Find the admin and update with new details
-    const updatedAdmin = await Admin.findByIdAndUpdate(id, updateData, { new: true });
-
-    res.json({ message: "Admin profile updated successfully", admin: updatedAdmin });
+    const updatedAdmin = await Admin.findByIdAndUpdate(id, updateData, { new: true }).lean();
+    res.json({ 
+      message: "Admin profile updated successfully", 
+      admin: updatedAdmin ? { ...updatedAdmin, id: updatedAdmin._id } : null // Add `id` if necessary
+    });
     
   } catch (error) {
     console.error("Error updating admin profile:", error);

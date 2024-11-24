@@ -94,6 +94,7 @@ router.get('/advicer-users', getAllUsersAdvicer);
 router.put('/student-users/:id', uploadProfile.single('profileImage'),updateUserStudent);
 router.put('/advicer-users/:id', uploadProfile.single('profileImage'),updateUserAdvicer);
 router.put('/users/:id/reset-password', resetUserPassword);
+
 router.put('/admin-user/:id', uploadProfile.single('profileImage'),editAdminProfile);
 router.put('/admin-user/:id/reset-password', resetAdminPassword);
 // router.delete("/users/:id/delete-image", deleteProfileImage);

@@ -27,7 +27,8 @@ export default function AccountMenu() {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setAdmin(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setAdmin(parsedUser);
     }
   }, []);
   
@@ -59,38 +60,41 @@ export default function AccountMenu() {
     }
   };
 
-  const saveProfileChanges = async () => {
-    const formData = new FormData();
-    formData.append("name", updatedProfile.name);
-    formData.append("email", updatedProfile.email);
-    if (updatedProfile.profileImage) formData.append("profileImage", updatedProfile.profileImage);
+const saveProfileChanges = async () => {
+  const formData = new FormData();
+  formData.append("name", updatedProfile.name);
+  formData.append("email", updatedProfile.email);
+  if (updatedProfile.profileImage) formData.append("profileImage", updatedProfile.profileImage);
 
-    try {
-      const { data } = await axios.put(`http://localhost:7000/api/admin/admin-user/${admin.id}`, formData);
-      const updatedAdmin = data.admin;
+  try {
+    const { data } = await axios.put(
+      `http://localhost:7000/api/admin/admin-user/${admin.id}`, 
+      formData
+    );
+    const updatedAdmin = data.admin;
 
-      // Update localStorage with new profile data
-      localStorage.setItem("user", JSON.stringify(updatedAdmin));
-      setAdmin(updatedAdmin);
-      setIsModalOpen(false);
+    // Update localStorage with the new profile data
+    localStorage.setItem("user", JSON.stringify(updatedAdmin));
+    setAdmin(updatedAdmin);
+    setIsModalOpen(false);
 
-      
-      // Refresh the page        // Show success Snackbar
-      setSnackbarMessage("Profile updated successfully!");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
-    } catch (error) {
-      setSnackbarMessage("Failed to update profile");
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
-    }
-  };
+    setSnackbarMessage("Profile updated successfully!");
+    setSnackbarSeverity("success");
+    setSnackbarOpen(true);
+  } catch (error) {
+    setSnackbarMessage("Failed to update profile");
+    setSnackbarSeverity("error");
+    setSnackbarOpen(true);
+  }
+};
+
 
   const handleResetPassword = async () => {
     try {
-      await axios.put(`http://localhost:7000/api/admin/admin-user/${admin.id}/reset-password`, {
-        newPassword
-      });
+      await axios.put(
+        `http://localhost:7000/api/admin/admin-user/${admin.id}/reset-password`,
+        { newPassword }
+      );
       setResetPasswordModalOpen(false);
       setNewPassword("");
       
@@ -102,9 +106,7 @@ export default function AccountMenu() {
       setSnackbarSeverity("error");
       setSnackbarOpen(true);
     }
-  }; 
-
-  console.log("Admin :", admin)
+  };
 
   return (
     <React.Fragment>

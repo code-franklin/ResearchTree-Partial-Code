@@ -674,12 +674,12 @@ export const resetAdvicerPassword = async (req: Request, res: Response) => {
 
 /* ckeditor API */
 export const getToken = async (req: Request, res: Response) => {
-  const accessKey = process.env.ACCESS_KEY || 'OxD87DrWZyfxdTVpe4C0SA0BoHINXaKvHmnoBtwpNguQJP0e71DdVkwx3BUD';
-  const environmentId = process.env.ENVIRONMENT_ID || 'WDEpU5WDnTLVaiP5CRd6';
+  const accessKey = process.env.ACCESS_KEY || 'a5dNxn8ql3vvlvgRKUCFpcb8GdWswtwFqHvnAqemFSxeVEaFxL194fHldxMT';
+  const environmentId = process.env.ENVIRONMENT_ID || 'IRDnx5LV1pB6eg928INN';
 
   try {
     const userId = req.params.userId;
-    console.log('Fetching user with ID:', userId);
+    // console.log('Fetching user with ID:', userId);
 
     // Search for the user in both User and Admin collections
     const user = await User.findById(userId).exec();
@@ -718,7 +718,7 @@ export const getToken = async (req: Request, res: Response) => {
       },
     };
 
-    console.log('Payload for JWT:', payload);
+    // console.log('Payload for JWT:', payload);
 
     const token = jwt.sign(payload, accessKey, { algorithm: 'HS256', expiresIn: '24h' });
     res.send(token);

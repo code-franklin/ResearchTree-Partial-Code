@@ -32,7 +32,7 @@ const loadNlpManager = async () => {
 };
 
 // Load NlpManager at the start
-loadNlpManager().catch(err => console.error('Failed to load NlpManager:', err));
+// loadNlpManager().catch(err => console.error('Failed to load NlpManager:', err));
 
 // Get all rubrics
 export const fetchRubrics  = async (req: Request, res: Response) => {
@@ -676,7 +676,7 @@ export const markTaskAsCompleted = async (req: Request, res: Response) => {
 
     // Mark task as completed
     task.isCompleted = true;
-    console.log('Task before saving:', task); // Log the task state
+    // console.log('Task before saving:', task); // Log the task state
     await student.save();
 
     // After saving the student
@@ -691,14 +691,14 @@ export const markTaskAsCompleted = async (req: Request, res: Response) => {
 export const getTasks = async (req: Request, res: Response) => {
   const { userId } = req.params; // Use studentId instead of taskId
 
-  console.log('Received studentId:', userId); // Log the received studentId
+  // console.log('Received studentId:', userId); // Log the received studentId
 
   try {
     // Find the student and populate tasks
     const student = await User.findById(userId).select('tasks');
     
     if (!student) {
-      console.log('No student found with studentId:', userId);
+      // console.log('No student found with studentId:', userId);
       return res.status(404).json({ message: 'Student not found' });
     }
 
@@ -797,7 +797,7 @@ export const trainModel = async (req: Request, res: Response) => {
 
           specializations.forEach(spec => {
             const keywordText = `This proposal is related to ${spec} and involves ${keywords.join(', ')}`;
-            console.log('Adding document:', keywordText);
+            // console.log('Adding document:', keywordText);
             manager.addDocument(language, keywordText, sentiment);
           });
         } else {
