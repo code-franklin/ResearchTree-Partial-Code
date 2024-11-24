@@ -57,11 +57,11 @@ export const PieChart = () => {
       type: "variablepie",
       backgroundColor: "#1E1E1E",
       spacingBottom: 10,
-      spacingTop: 0,
+      spacingTop: 10,
       spacingLeft: 0,
       spacingRight: 0,
-      height: 545,
-      width: 552,
+      height: 425,
+      width: 502,
       borderColor: "#4B4B4B",
       borderWidth: 3,
     },
@@ -96,7 +96,7 @@ export const PieChart = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-[566px] mt-[130px] ml-[-180px] border-t border-[#4B4B4B] rounded-t">
+    <div className="flex justify-center items-center w-[566px] mt-[250px] ml-[-155px] border-t border-[#4B4B4B] rounded-t">
        {loading ? (
 
 

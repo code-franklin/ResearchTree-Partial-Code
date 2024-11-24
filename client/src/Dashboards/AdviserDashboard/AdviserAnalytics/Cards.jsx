@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
 
+import { Tooltip } from '@mui/material';
 export const Cards = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const [pdfCount, setPdfCount] = useState(0); 
@@ -16,6 +17,8 @@ export const Cards = () => {
   const [approvedOnAdvicerCount, setApprovedOnAdvicerCount] = useState(null);
   const [reviseOnPanelCount, setReviseOnPanelCount] = useState(null);
   const [approvedOnPanelCount, setApprovedOnPanelCount] = useState(null);
+  const [panelistStudentCount, setPanelistStudentCount] = useState(0);
+  const [acceptedCountStudent, setAcceptedCountStudent] = useState(0);
   const [bsitCount, setBSITCount] = useState(0);
   const [bscsCount, setBSCSCount] = useState(0);
 
@@ -42,11 +45,22 @@ export const Cards = () => {
       }
     };
 
+    const fetchPanelistStudentCount = async () => {
+      try {
+        const response = await axios.get(`http://localhost:7000/api/advicer/${user._id}/panelist-accepted-count`);
+        setPanelistStudentCount(response.data.count);
+      } catch (error) {
+        console.error("Error fetching Ready to Defense count:", error);
+      }
+    };
+
     const fetchStudentCounts = async () => {
         try {
             const response = await axios.get(`http://localhost:7000/api/advicer/${user._id}/course-count`);
             setBSITCount(response.data.bsitCount);
             setBSCSCount(response.data.bscsCount);
+            setAcceptedCountStudent(response.data.acceptedStudentsCount);
+
         } catch (err) {
             console.error('Error fetching student counts:', err);
             setError('Failed to fetch student counts');
@@ -112,7 +126,7 @@ export const Cards = () => {
     fetchNewUploadCount();
     fetchReviseOnAdvicerCount();
     fetchReadyToDefenseCount();
-
+    fetchPanelistStudentCount();
     fetchApprovedOnAdvicerCount();
     fetchReviseOnPanelCount();
     fetchApprovedOnPanelCount();
@@ -156,14 +170,24 @@ export const Cards = () => {
           </div>
           <div className="card-content">
             <p className="card-title">Student Handle</p>
-            <p className="card-value-1 ml-[80px]">{user.handleNumber} Groups</p>
+            <p className="card-value-1 ml-[70px]">{acceptedCountStudent}/{user.handleNumber} Groups</p>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-icon-4">
+            <img className="ml-[290px]" src="/src/assets/adviserAnalytics-icon-rdefense.png" />
+          </div>
+          <div className="card-content">
+            <p className="card-title">Panelists Student</p>
+            <p className="card-value-3">{panelistStudentCount}</p>
           </div>
         </div>
 
         {/* New Uploads Card displaying PDF count */}
         <div className="card">
           <div className="card-icon-2">
-            <img className="ml-[295px]" src="/src/assets/adviserAnalytics-icon-1.png" />
+            <img className="ml-[295px]"  src="/src/assets/adviserAnalytics-icon-2.png" />
           </div>
           <div className="card-content">
             <p className="card-title">New Uploads</p>
@@ -181,15 +205,8 @@ export const Cards = () => {
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-icon-4">
-            <img className="ml-[290px]" src="/src/assets/adviserAnalytics-icon-rdefense.png" />
-          </div>
-          <div className="card-content">
-            <p className="card-title">Ready for Defense</p>
-            <p className="card-value-3">{readyToDefenseCount}</p>
-          </div>
-        </div>
+
+    
 
         <div className="flex absolute mt-[125px]">
           <div className="card">
@@ -197,8 +214,8 @@ export const Cards = () => {
               <img className="mt-[50px]" src="/src/assets/adviserAnalytics-icon-6.png" />
             </div>
             <div className="card-content">
-              <p className="card-title">Defenders</p>
-              <p className="card-value-2">{approvedOnAdvicerCount}</p>
+              <p className="card-title">Adviser's Defenders</p>
+              <p className="card-value-2">{readyToDefenseCount}</p>
             </div>
           </div>
 
@@ -207,8 +224,8 @@ export const Cards = () => {
               <img className="" src="/src/assets/adviserAnalytics-icon-7.png" />
             </div>
             <div className="card-content">
-              <p className="card-title">Defender's Revision</p>
-              <p className="card-value-2">{reviseOnPanelCount}</p>
+              <p className="card-title">Panelist's Defenders</p>
+              <p className="card-value-2">{approvedOnAdvicerCount}</p>
             </div>
           </div>
 
@@ -217,10 +234,63 @@ export const Cards = () => {
               <img className="" src="/src/assets/adviserAnalytics-icon-5.png" />
             </div>
             <div className="card-content">
-              <p className="card-title">Approved</p>
-              <p className="card-value-2">{approvedOnPanelCount}</p>
+              <p className="card-title">Panelist's Revisions</p>
+              <p className="card-value-2">{reviseOnPanelCount}</p>
             </div>
           </div>
+
+          <div className="card ml-[18px]">
+          <div className="card-icon-4">
+          <img className="" src="/src/assets/adviserAnalytics-icon-5.png" />
+          </div>
+          <div className="card-content">
+            <p className="card-title">Finished</p>
+            <p className="card-value-3">{approvedOnPanelCount}</p>
+          </div>
+
+        </div>
+        <Tooltip 
+  followCursor 
+  title={
+    <div className="tooltip-content flex flex-col items-start p-4 bg-[gray-700] rounded-md">
+      {/* Accepted Section */}
+      <div className="tooltip-item flex items-center gap-2 mb-2 ">
+        <img className="icon " src="/src/assets/accept-proposal.png" alt="Accepted Icon" />
+        <span className="tooltip-text text-sm text-white">
+          Accepted: <strong className="text-green-600">10</strong>
+        </span>
+      </div>
+      
+      {/* Declined Section */}
+      <div className="tooltip-item flex items-center gap-2 mb-2">
+        <img className="icon " src="/src/assets/decline-proposal.png" alt="Declined Icon" />
+        <span className="tooltip-text text-sm text-white">
+          Declined: <strong className="text-red-600">5</strong>
+        </span>
+      </div>
+      
+      {/* Pending Section */}
+      <div className="tooltip-item flex items-center gap-2">
+        <img className="icon " src="/src/assets/pending-proposal-icon.png" alt="Pending Icon" />
+        <span className="tooltip-text text-sm text-white">
+          Pending: <strong className="text-yellow-600">7</strong>
+        </span>
+      </div>
+    </div>
+  }
+>
+  <div className="card ml-[18px]">
+    <div className="absolute ml-[180px] bottom-[56px]">
+      <img className="ml-[20px]" src="/src/assets/pending-proposal.png" alt="Pending Proposal" />
+    </div>
+    <div className="card-content">
+      <p className="card-title">Proposals Status</p>
+      <p className="card-value-3">{}</p>
+    </div>
+  </div>
+</Tooltip>
+
+
         </div>
       </div>
 

@@ -38,7 +38,8 @@ import {
   } from '../controllers/advicerControllers';
 
   // Data Analytics
-  import { 
+  import {
+    getPanelistStudentsAccepted,
     getBSITBSCStudentsByAdviser,
     getNewUploadsByAdviser,
     getReadyToReviseOnAdvicerByAdviser,
@@ -67,6 +68,8 @@ router.get('/get-ckeditor-token/:userId', getToken);
 router.get('/specializations', getSpecializations);
 
 // Data Analytics
+router.get('/:adviserId/panelist-accepted-count', getPanelistStudentsAccepted);
+
 router.get('/:adviserId/course-count', getBSITBSCStudentsByAdviser);
 
 router.get('/:adviserId/newUploads-count', getNewUploadsByAdviser);

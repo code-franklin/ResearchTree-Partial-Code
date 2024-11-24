@@ -271,7 +271,8 @@ export const getBSITBSCStudentsByAdviser = async (req: Request, res: Response) =
     }
 
     // Fetch the adviser by ID and populate the acceptedStudents field
-    const adviser = await User.findById(adviserId).populate('acceptedStudents');
+    const adviser = await User.findById(adviserId)
+    .populate('acceptedStudents');
 
     if (!adviser) {
       return res.status(404).json({ error: 'Adviser not found' });
@@ -280,11 +281,13 @@ export const getBSITBSCStudentsByAdviser = async (req: Request, res: Response) =
     // Filter the acceptedStudents to count BSIT and BSCS students
     const bsitStudents = adviser.acceptedStudents.filter(student => student.course === 'BSIT');
     const bscsStudents = adviser.acceptedStudents.filter(student => student.course === 'BSCS');
+    const acceptedStudentsCount = adviser.acceptedStudents.length;
 
     // Return the counts for BSIT and BSCS
     res.status(200).json({
       bsitCount: bsitStudents.length,
-      bscsCount: bscsStudents.length
+      bscsCount: bscsStudents.length,
+      acceptedStudentsCount,
     });
 
   } catch (error) {
@@ -292,6 +295,9 @@ export const getBSITBSCStudentsByAdviser = async (req: Request, res: Response) =
     res.status(500).json({ error: 'Failed to fetch students by adviser' });
   }
 };
+
+// Data Analytics: Count Panelists
+
 
 export const getReadyToDefenseStudentByAdviser = async (req: Request, res: Response) => {
   const { adviserId } = req.params;
@@ -354,6 +360,36 @@ export const getReadyToReviseOnAdvicerByAdviser = async (req: Request, res: Resp
     return res.status(500).json({ message: 'Server error' });
   }
 };
+
+export const getPanelistStudentsAccepted = async (req: Request, res: Response) => {
+  const { adviserId } = req.params;
+
+  try {
+    // Use aggregation to count panelist students with advisorStatus 'accepted'
+    const result = await User.aggregate([
+      {
+        $match: {
+          panelists: new mongoose.Types.ObjectId(adviserId), // Match students where the advisor is a panelist
+          advisorStatus: 'accepted', // Ensure the advisor's status is 'accepted'
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 } // Count the number of students with advisorStatus 'accepted'
+        }
+      }
+    ]);
+
+    const count = result.length > 0 ? result[0].count : 0; // Get the count of students or 0 if no results
+
+    res.status(200).json({ count }); // Send the count in the response
+  } catch (error) {
+    console.error('Error fetching panelist students with accepted status:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
 
 export const getNewUploadsByAdviser = async (req: Request, res: Response) => {
   const { adviserId } = req.params;

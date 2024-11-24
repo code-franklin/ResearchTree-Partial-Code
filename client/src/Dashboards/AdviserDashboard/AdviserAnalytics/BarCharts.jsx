@@ -41,9 +41,9 @@ export const BarChart = () => {
   }
 
   return (
-    <div className="p-10 mr-5  mt-[125px] rounded-lg shadow-custom-shadow bg-[#1E1E1E] border border-[#4B4B4B]  w-[865px]">
+    <div className="p-10 mr-5  mt-[125px] rounded-lg shadow-custom-shadow bg-[#1E1E1E] border border-[#4B4B4B]  w-[925px]">
       <h2 className="text-[#0BF677] text-xl mb-4">Top 10 Trending Manuscript</h2>
-      <Chart height={300}   width={810}  autoFit data={sortedData} interactions={['active-region']} >
+      <Chart height={300}   width={870}  autoFit data={sortedData} interactions={['active-region']} >
         <Axis name="value" visible={true} />
         <Axis name="category" label={null} visible={true} />
         <Legend 
