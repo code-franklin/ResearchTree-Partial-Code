@@ -253,6 +253,7 @@ export default function GradingTable({ panelistId, studentId }) {
 {/* Grade Summary */}
 {gradeSummary ? (
   <div className="text-white mt-4 p-4 bg-[#2B2B2B] rounded flex flex-col items-center justify-center text-center">
+        <img className="fixed inset-0 mr-2 mb-1 w-[150px] h-[150px] ml-[1750px] mt-[120px]" src="/src/assets/legend.png" />
     <h3 className="text-[20px] font-bold mb-2">Grade Summary</h3>
     <p className="text-[16px]">Total Grade: {gradeSummary.totalGradeValue}</p>
     <p className="text-[16px]">Overall Grade: {gradeSummary.overallGradeLabel}</p>

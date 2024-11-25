@@ -119,7 +119,7 @@ export default function GradingTable({ studentId, panelistId }) {
   return (
     <div className="bg-[#1E1E1E]">
       {/* <h2 className="text-center text-black">Grading Table</h2> */}
-
+      <img className="fixed inset-0 mr-2 mb-1 w-[150px] h-[150px] ml-[1750px] mt-[35px]" src="/src/assets/legend.png" />
        {/* Submit Button */}
        <div className="fixed mt-[-5px] ml-[1300px]  ">
         <button

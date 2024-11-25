@@ -197,18 +197,18 @@ export const Cards = () => {
 
         <div className="card">
           <div className="card-icon-4">
-            <img className="ml-[290px]" src="/src/assets/adviserAnalytics-icon-rdefense.png" />
+            <img className="ml-[290px]" src="/src/assets/adviserAnalytics-icon-3.png" />
           </div>
           <div className="card-content">
             <p className="card-title">Panelists Student</p>
-            <p className="card-value-3">{panelistStudentCount}</p>
+            <p className="card-value-2">{panelistStudentCount}</p>
           </div>
         </div>
 
         {/* New Uploads Card displaying PDF count */}
         <div className="card">
           <div className="card-icon-2">
-            <img className="ml-[295px]"  src="/src/assets/adviserAnalytics-icon-2.png" />
+            <img className="ml-[295px]"  src="/src/assets/groupmates.png" />
           </div>
           <div className="card-content">
             <p className="card-title">New Uploads</p>
@@ -218,7 +218,7 @@ export const Cards = () => {
 
         <div className="card">
           <div className="card-icon-3">
-            <img className="ml-[290px]" src="/src/assets/adviserAnalytics-icon-3.png" />
+            <img className="ml-[290px]" src="/src/assets/adviserAnalytics-icon-1.png" />
           </div>
           <div className="card-content">
             <p className="card-title">Ongoing Revision</p>
@@ -252,7 +252,7 @@ export const Cards = () => {
 
           <div className="card ml-[18px]">
             <div className="absolute ml-[204px] bottom-[56px]">
-              <img className="" src="/src/assets/adviserAnalytics-icon-5.png" />
+              <img className="" src="/src/assets/adviserAnalytics-icon-3.png" />
             </div>
             <div className="card-content">
               <p className="card-title">Panelist's Revisions</p>
