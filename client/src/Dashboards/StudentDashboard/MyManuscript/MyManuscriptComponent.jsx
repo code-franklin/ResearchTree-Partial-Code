@@ -5,12 +5,12 @@ import Grading from './Grading'
 function MyManuscriptComponent() {
   
   return (
-    <div className="h-[1400px]">
+    <div className="">
 
       <div>
       </div>
 
-    <div className=" absolute">
+    <div className="absolute">
       <Grading  />
     
     </div>

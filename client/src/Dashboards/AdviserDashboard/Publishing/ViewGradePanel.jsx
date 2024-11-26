@@ -212,10 +212,9 @@ export default function GradingTable({ panelistId, studentId }) {
 
 
         
-{/* Grading Table */}
-{categories.length > 0 && grades.length > 0 && (
-  <div className=" grid grid-cols-5 gap-2 text-white text-center mt-4">
-    <div className="bg-[#575757] font-bold p-4">Criterion</div>
+{categories.length > 0 ? (
+  <div className="grid grid-cols-5 gap-2 text-white text-center mt-4">
+    <div className="bg-[#575757] font-bold p-4">Criteria</div>
     {['4', '3', '2', '1'].map((score) => {
       const labelColor = {
         '4': 'bg-green-500', // Excellent
@@ -266,32 +265,34 @@ export default function GradingTable({ panelistId, studentId }) {
       );
     })}
   </div>
-  
-)}
-
-{/* Grade Summary */}
-{gradeSummary ? (
-  <div className="text-white mt-4 p-4 bg-[#2B2B2B] rounded flex flex-col items-center justify-center text-center">
-        <img className="fixed inset-0 mr-2 mb-1 w-[150px] h-[150px] ml-[1750px] mt-[40px]" src="/src/assets/legend.png" />
-    <h3 className="text-[20px] font-bold mb-2">Grade Summary</h3>
-    <p className="text-[16px]">Total Grade: {gradeSummary.totalGradeValue}</p>
-    <p className="text-[16px]">Overall Grade: {gradeSummary.overallGradeLabel}</p>
-    <p className="text-[14px]">Graded At: {new Date(gradeSummary.gradedAt).toLocaleString()}</p>
-  </div>
 ) : (
-  <p className="text-center text-white text-[30px] mt-[0px]">
-    <div className=''>
-    <l-bouncy
-
-size="45"
-speed="1.75"
-color="#1e1e" 
-></l-bouncy>
-
-<p>No grade yet.</p>
-    </div>
-</p>
+  <p className='text-white text-[30px]  h-[200px]'> 
+  <div className='fixed inset-0 mt-[450px] ml-[870px]'> No graded yet</div></p>
 )}
+
+      {/* Grade Summary */}
+      {gradeSummary ? (
+        <div className="text-white mt-4 p-4 bg-[#2B2B2B] rounded flex flex-col items-center justify-center text-center">
+              <img className="fixed inset-0 mr-2 mb-1 w-[150px] h-[150px] ml-[1750px] mt-[40px]" src="/src/assets/legend.png" />
+          <h3 className="text-[20px] font-bold mb-2">Grade Summary</h3>
+          <p className="text-[16px]">Total Grade: {gradeSummary.totalGradeValue}</p>
+          <p className="text-[16px]">Overall Grade: {gradeSummary.overallGradeLabel}</p>
+          <p className="text-[14px]">Graded At: {new Date(gradeSummary.gradedAt).toLocaleString()}</p>
+        </div>
+      ) : (
+        <p className="text-center text-white text-[30px] mt-[0px]">
+          <div className=''>
+          <l-bouncy
+
+      size="45"
+      speed="1.75"
+      color="#1e1e" 
+      ></l-bouncy>
+
+      <p></p>
+          </div>
+      </p>
+      )}
 {/* Final Grade Modal */}
 <Dialog
   open={isModalOpen}

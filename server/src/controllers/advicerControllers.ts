@@ -1360,11 +1360,11 @@ export const postSearch = async (req: Request, res: Response) => {
       ?.map(entity => entity.name?.toLowerCase())
       .filter((name): name is string => Boolean(name)) || [];
 
-    console.log("Identified entities:", entities);
+    // console.log("Identified entities:", entities);
 
     // Fetch synonyms for each entity and expand the search terms
     const expandedQueryTerms = await expandEntitiesWithSynonyms(entities);
-    console.log("Expanded search terms:", expandedQueryTerms);
+    // console.log("Expanded search terms:", expandedQueryTerms);
 
     // Search the database for matching terms
     const searchResults = await PdfSchema.find({

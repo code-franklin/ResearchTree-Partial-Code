@@ -7,6 +7,7 @@ import GradingProcess from './ProcessGrading';
 export default function GradingTable({ panelistId, studentId }) {
   const [rubrics, setRubrics] = useState([]); // All rubrics
   const [selectedRubricId, setSelectedRubricId] = useState(null); // Selected rubricId
+  const [panelistGradesMap, setPanelistGradesMap] = useState({});
   const [categories, setCategories] = useState([]);
   const [grades, setGrades] = useState([]);
   const [title, setTitle] = useState('');
@@ -71,58 +72,65 @@ export default function GradingTable({ panelistId, studentId }) {
     fetchGrades();
   }, [studentId]);
 
-  // Update categories, grade labels, and panelists when a rubric is selected
   useEffect(() => {
     if (selectedRubricId && gradesData.length > 0) {
       const rubricGrades = gradesData.filter(
         (grade) => grade.rubricId?._id === selectedRubricId
       );
-
+  
       if (rubricGrades.length > 0) {
         const rubric = rubricGrades[0].rubricId || {};
         setTitle(rubric.title || 'No Title');
-
+  
         const parsedCategories = rubric.criteria?.map((c) => c.category) || [];
         setCategories(parsedCategories);
-
+  
         const parsedGradeLabels = rubric.criteria?.reduce((acc, c) => {
           acc[c.category] = c.gradeLabels || {};
           return acc;
         }, {}) || {};
         setGradeLabels(parsedGradeLabels);
-
+  
+        // Set panelists for the selected rubric
         const panelistIds = rubricGrades.map((g) => g.panelistId);
         setPanelists(panelistIds);
-
-        // Pre-select the first panelist
+  
+        // Populate the grades map for all panelists
+        const newGradesMap = rubricGrades.reduce((map, grade) => {
+          map[grade.panelistId._id] = {
+            grades: grade.grades,
+            summary: {
+              totalGradeValue: grade.totalGradeValue,
+              overallGradeLabel: grade.overallGradeLabel,
+              gradedAt: grade.gradedAt,
+            },
+          };
+          return map;
+        }, {});
+  
+        setPanelistGradesMap(newGradesMap);
+  
+        // Auto-select the first panelist and display their grades
         if (panelistIds.length > 0) {
-          handlePanelistClick(panelistIds[0]._id, rubricGrades);
+          handlePanelistClick(panelistIds[0]);
         }
       } else {
-        console.warn('No grades found for selected rubric:', selectedRubricId);
+        console.warn('No grades found for selected rubric.');
       }
     }
   }, [selectedRubricId, gradesData]);
 
-  // Handle panelist selection and update grades
   const handlePanelistClick = (panelistId, rubricGrades) => {
     setSelectedPanelist(panelistId);
-
-    const panelistGrades = rubricGrades.find(
-      (g) => g.panelistId?._id === panelistId
-    );
-
-    if (panelistGrades?.grades?.length) {
-      setGrades(panelistGrades.grades);
-      setGradeSummary({
-        totalGradeValue: panelistGrades.totalGradeValue,
-        overallGradeLabel: panelistGrades.overallGradeLabel,
-        gradedAt: panelistGrades.gradedAt,
-      });
+  
+    // Check if grades are already in the map
+    if (panelistGradesMap[panelistId]) {
+      const panelistGradeData = panelistGradesMap[panelistId];
+      setGrades(panelistGradeData.grades || []);
+      setGradeSummary(panelistGradeData.summary || null);
     } else {
-      // Reset grade summary if no grades available for the panelist
-      setGradeSummary(null);
       console.warn('No grades available for panelist:', panelistId);
+      setGradeSummary(null);
     }
   };
 
@@ -186,36 +194,8 @@ export default function GradingTable({ panelistId, studentId }) {
         ))}
       </div> */}
 
-{panelists.length > 0 && (
-          <div className="ml-[-200px]flex justify-center mb-4">
-            {panelists.map((panelist) => (
-              <button
-                key={panelist._id}
-                className={`px-4 py-2 m-2 text-white rounded ${
-                  selectedPanelist === panelist._id ? 'bg-[#4B4B4B]' : 'bg-[#2B2B2B]'
-                }`}
-                onClick={() => handlePanelistClick(panelist._id, gradesData)}
-              >
-                {panelist.name}
-              </button>
-            ))}
-
-            {grades.length > 0 && (
-              <button
-                className="bg-blue-600 text-white px-4 py-2 m-2 rounded"
-                onClick={fetchFinalGrade}
-              >
-                Final Grade
-              </button>
-            )}
-
-            
-          </div>
-          
-        )}
-
-     {/* Rubric Section */}
-      {rubrics.length > 0 && (
+           {/* Rubric Section */}
+           {rubrics.length > 0 && (
         <div className="flex justify-center mb-4">
           {rubrics.map((rubric) => (
             <button
@@ -231,19 +211,49 @@ export default function GradingTable({ panelistId, studentId }) {
         </div>
       )}
 
-<div className="bg-[#222222] fixed mt-[-150px] ml-[600px] border-2 border-white shadow-lg">
-  <button
-    className="text-white px-4 py-0 m-2 rounded hover:text-[#1E1E]"
-    onClick={() => handleGrade(studentId, panelistId)}
-  >
-    <img 
-      className="inline-block mr-2 mb-1" 
-      src="/src/assets/edit-rubrics.png" 
-      alt="Edit Rubrics"
-    />
-    Set Grading
-  </button>
-</div>
+{panelists.length > 0 && (
+          <div className="ml-[30px] flex justify-center mb-4">
+            {panelists.map((panelist) => (
+              <button
+                key={panelist._id}
+                className={`px-4 py-2 m-2 text-white rounded ${
+                  selectedPanelist === panelist._id ? 'bg-[#4B4B4B]' : 'bg-[#2B2B2B]'
+                }`}
+                onClick={() => handlePanelistClick(panelist._id, gradesData)}
+              >
+                {panelist.name}
+              </button>
+            ))}
+
+            {panelists.length >= 3 && grades.length > 0 && (
+              <button
+                className="bg-blue-600 text-white px-4 py-2 m-2 rounded"
+                onClick={fetchFinalGrade}
+              >
+                Final Grade
+              </button>
+            )}
+
+            
+          </div>
+          
+        )}
+
+
+
+      <div className="bg-[#222222] fixed mt-[-165px] ml-[1475px] border-2 border-white shadow-lg">
+        <button
+          className="text-white px-4 py-0 m-2 rounded hover:text-[#1E1E]"
+          onClick={() => handleGrade(studentId, panelistId)}
+        >
+          <img 
+            className="inline-block mr-2 mb-1" 
+            src="/src/assets/edit-rubrics.png" 
+            alt="Edit Rubrics"
+          />
+          Set Grading
+        </button>
+      </div>
 
 
       {/* Rubric Title */}
@@ -254,7 +264,7 @@ export default function GradingTable({ panelistId, studentId }) {
 
       
 {/* Grading Table */}
-{categories.length > 0 && grades.length > 0 && (
+{categories.length ? (
   <div className=" grid grid-cols-5 gap-2 text-white text-center mt-4">
     <div className="bg-[#575757] font-bold p-4">Criterion</div>
     {['4', '3', '2', '1'].map((score) => {
@@ -307,28 +317,36 @@ export default function GradingTable({ panelistId, studentId }) {
       );
     })}
   </div>
-  
+) : (
+  <p className='text-white text-[30px]  h-[200px]'> 
+  <div className='fixed inset-0 mt-[450px] ml-[800px]'> Set grade for this manuscript</div></p>
 )}
-
 {/* Grade Summary */}
 {gradeSummary ? (
   <div className="text-white mt-4 p-4 bg-[#2B2B2B] rounded flex flex-col items-center justify-center text-center">
     <h3 className="text-[20px] font-bold mb-2">Grade Summary</h3>
     <p className="text-[16px]">Total Grade: {gradeSummary.totalGradeValue}</p>
     <p className="text-[16px]">Overall Grade: {gradeSummary.overallGradeLabel}</p>
-    <p className="text-[14px]">Graded At: {new Date(gradeSummary.gradedAt).toLocaleString()}</p>
+    <p className="text-[14px]">
+      Graded At: {new Date(gradeSummary.gradedAt).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })}
+    </p>
+
   </div>
 ) : (
   <p className="text-center text-white text-[30px] mt-[0px]">
     <div className=''>
     <l-bouncy
 
-size="45"
-speed="1.75"
-color="#1e1e" 
-></l-bouncy>
+      size="45"
+      speed="1.75"
+      color="#1e1e" 
+      ></l-bouncy>
 
-<p>No grade yet.</p>
+<p className='ml-[35px] text-[20px]'></p>
     </div>
 </p>
 )}
