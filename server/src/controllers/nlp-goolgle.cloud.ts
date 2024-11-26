@@ -144,13 +144,13 @@ export const chooseAdvisor = async (req: Request, res: Response) => {
 
     if (
       student.chosenAdvisor || 
-      student.declinedAdvisors.includes(advisor._id as mongoose.Schema.Types.ObjectId)
+      student.declinedAdvisors.includes(advisor._id as unknown as mongoose.Schema.Types.ObjectId)
     ) {
       return res.status(400).json({ message: 'You cannot choose this advisor' });
     }
 
     // Updated the third error fix in the advisor assignment logic
-    student.chosenAdvisor = advisor._id as mongoose.Schema.Types.ObjectId;
+    student.chosenAdvisor = advisor._id as unknown as mongoose.Schema.Types.ObjectId;
     student.advisorStatus = 'pending'; // Set advisor status to pending
     await student.save();
 

@@ -33,13 +33,26 @@ const path_1 = __importDefault(require("path"));
 const advicerRoutes_1 = __importDefault(require("./routes/advicerRoutes"));
 const adminRoutes_1 = __importDefault(require("./routes/adminRoutes"));
 const studentRoutes_1 = __importDefault(require("./routes/studentRoutes"));
+const language_1 = require("@google-cloud/language");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const app = (0, express_1.default)();
+const client = new language_1.LanguageServiceClient({
+    keyFilename: process.env.GOOGLE_API_KEY,
+});
 // Middleware
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use('/public', express_1.default.static(path_1.default.join(__dirname, 'public')));
+// app.use("/public/files", express.static("public/files"));
+app.use('/public/files', express_1.default.static(path_1.default.join(__dirname, 'public', 'files')));
+// Middleware to set CORS headers
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    next();
+});
+// Routes for Users
 app.use('/api/student', studentRoutes_1.default);
 app.use('/api/advicer', advicerRoutes_1.default);
 app.use('/api/admin', adminRoutes_1.default);
@@ -49,7 +62,7 @@ mongoose_1.default.connect(MONGO_URI)
     .then(() => {
     console.log('Connected to MongoDB');
     app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
+        console.log(`Server is running on port http://localhost:${PORT}`);
     });
 })
     .catch(err => {
