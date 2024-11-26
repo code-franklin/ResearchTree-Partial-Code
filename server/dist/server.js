@@ -52,19 +52,28 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET');
     next();
 });
+
+app.get('/hello', (req, res) => {
+    res.send('Hello, World!');
+});
+
 // Routes for Users
 app.use('/api/student', studentRoutes_1.default);
 app.use('/api/advicer', advicerRoutes_1.default);
 app.use('/api/admin', adminRoutes_1.default);
-const PORT = process.env.PORT;
-const MONGO_URI = process.env.MONGO_URI || 'your_default_mongo_uri';
-mongoose_1.default.connect(MONGO_URI)
-    .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-        console.log(`Server is running on port http://localhost:${PORT}`);
-    });
-})
-    .catch(err => {
-    console.error('Database connection error:', err);
+
+app.listen(3000, () => {
+    console.log(`Server is running on port http://localhost:3000`);
 });
+// const PORT = process.env.PORT;
+// const MONGO_URI = process.env.MONGO_URI || 'your_default_mongo_uri';
+// mongoose_1.default.connect(MONGO_URI)
+//     .then(() => {
+//     console.log('Connected to MongoDB');
+//     app.listen(PORT, () => {
+//         console.log(`Server is running on port http://localhost:${PORT}`);
+//     });
+// })
+//     .catch(err => {
+//     console.error('Database connection error:', err);
+// });

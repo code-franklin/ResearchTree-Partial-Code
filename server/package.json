@@ -2,10 +2,13 @@
   "name": "server-typescript",
   "version": "1.0.0",
   "description": "",
-  "main": "server.ts",
+  "main": "server.js",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "build": "tsc",
-    "start": "nodemon src/server.ts",
+    "start": "node dist/server.js",
     "dev": "ts-node src/server.ts"
   },
   "keywords": [],
