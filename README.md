@@ -20,15 +20,11 @@ Advisors and panels can input grades, remarks, and recommendations.
 🛠 Advanced Document Features
 Real-Time Collaboration (Powered by CKEditor 5)
 
-Live editing between multiple users
-
-Inline comments and suggestions
-
-Version history / revision tracking
-
-Document change annotations
-
-AI-Powered Tools (Integrated at the API level)
+• Live editing between multiple users
+• Inline comments and suggestions
+• Version history / revision tracking
+• Document change annotations
+• AI-Powered Tools (Integrated at the API level)
 
 🤖 NLP-based Document Search
 Quickly locate proposals, manuscripts, references, or comments using natural language queries.
@@ -55,8 +51,10 @@ MongoDB
 
 # 🎯 Purpose
 ResearchTree showcases my ability to build full-stack, research-oriented platforms featuring:
+
 • Real-time collaboration
 • AI/NLP integrations
 • Structured academic workflows
 • Secure and scalable backend systems
 • It reflects strong experience in complex system design, data handling, and modern collaborative UX.
+
